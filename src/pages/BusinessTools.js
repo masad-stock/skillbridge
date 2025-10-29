@@ -4,6 +4,7 @@ import { useUser } from '../context/UserContext';
 import { useOffline } from '../context/OfflineContext';
 
 function BusinessTools() {
+    // eslint-disable-next-line no-unused-vars
     const { user } = useUser();
     const isOnline = useOffline();
     const [activeTab, setActiveTab] = useState('inventory');

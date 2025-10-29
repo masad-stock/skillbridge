@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import * as tf from '@tensorflow/tfjs';
 
 // Skills categories based on the research objectives

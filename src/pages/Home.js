@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 
 function Home() {
+    // eslint-disable-next-line no-unused-vars
     const { isAuthenticated, user, skillsProfile } = useUser();
 
     const features = [

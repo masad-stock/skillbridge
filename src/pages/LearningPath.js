@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Container, Row, Col, Card, Button, ProgressBar, Badge, Modal, Alert } from 'react-bootstrap';
 import { useUser } from '../context/UserContext';
 import { useOffline } from '../context/OfflineContext';
-import { aiAssessment, SKILL_CATEGORIES } from '../services/aiAssessment';
+import { SKILL_CATEGORIES } from '../services/aiAssessment';
 
 function LearningPath() {
-    const { learningPath, progress, skillsProfile, dispatch } = useUser();
+    const { learningPath, progress, dispatch } = useUser();
     const isOnline = useOffline();
     const [selectedModule, setSelectedModule] = useState(null);
     const [showModule, setShowModule] = useState(false);

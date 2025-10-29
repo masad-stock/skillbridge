@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Card, Button, ProgressBar, Alert, Badge } from 'react-bootstrap';
 import { useUser } from '../context/UserContext';
 import { aiAssessment, SKILL_CATEGORIES, COMPETENCY_LEVELS } from '../services/aiAssessment';
@@ -13,15 +13,15 @@ function SkillsAssessment() {
     const [timeStarted, setTimeStarted] = useState(null);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
 
+    const initializeAssessment = useCallback(async () => {
+        await aiAssessment.initializeModel();
+        setQuestions(getAssessmentQuestions());
+    }, []);
+
     useEffect(() => {
         initializeAssessment();
         setTimeStarted(new Date());
-    }, []);
-
-    const initializeAssessment = async () => {
-        await aiAssessment.initializeModel();
-        setQuestions(getAssessmentQuestions());
-    };
+    }, [initializeAssessment]);
 
     const getAssessmentQuestions = () => {
         return [

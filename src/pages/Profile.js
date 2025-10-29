@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, Button, Alert, Modal, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Button, Alert, Badge } from 'react-bootstrap';
 import { useUser } from '../context/UserContext';
 
 function Profile() {
     const { user, isAuthenticated, dispatch } = useUser();
     const [isEditing, setIsEditing] = useState(false);
+    // eslint-disable-next-line no-unused-vars
     const [showLoginModal, setShowLoginModal] = useState(!isAuthenticated);
     const [isLogin, setIsLogin] = useState(true);
     const [message, setMessage] = useState('');
