@@ -98,20 +98,7 @@ function Dashboard() {
         return Math.floor(totalSeconds / 60); // Convert to minutes
     };
 
-    const getVideoCompletionRate = () => {
-        const progressEntries = Object.values(progress || {});
-        if (progressEntries.length === 0) return 0;
 
-        const videoModules = progressEntries.filter(p => p?.lessonProgress);
-        if (videoModules.length === 0) return 0;
-
-        const totalVideoLessons = videoModules.reduce((total, p) =>
-            total + Object.keys(p.lessonProgress || {}).length, 0);
-        const completedVideoLessons = videoModules.reduce((total, p) =>
-            total + Object.values(p.lessonProgress || {}).filter(l => l.completed).length, 0);
-
-        return totalVideoLessons > 0 ? Math.round((completedVideoLessons / totalVideoLessons) * 100) : 0;
-    };
 
     if (!user) {
         return (

@@ -48,6 +48,7 @@ const YouTubePlayer = ({
                 player.destroy();
             }
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [videoId]);
 
     const initializePlayer = () => {
