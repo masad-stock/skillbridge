@@ -9,6 +9,9 @@ import LearningPath from './pages/LearningPath';
 import BusinessTools from './pages/BusinessTools';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import AssessmentInfo from './pages/AssessmentInfo';
+import LearningInfo from './pages/LearningInfo';
+import BusinessToolsInfo from './pages/BusinessToolsInfo';
 import OfflineIndicator from './components/OfflineIndicator';
 import { UserProvider } from './context/UserContext';
 import { OfflineProvider } from './context/OfflineContext';
@@ -41,8 +44,11 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/assessment" element={<SkillsAssessment />} />
+                <Route path="/assessment-info" element={<AssessmentInfo />} />
                 <Route path="/learning" element={<LearningPath />} />
+                <Route path="/learning-info" element={<LearningInfo />} />
                 <Route path="/business-tools" element={<BusinessTools />} />
+                <Route path="/business-tools-info" element={<BusinessToolsInfo />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/profile" element={<Profile />} />
               </Routes>

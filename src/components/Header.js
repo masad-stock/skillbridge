@@ -17,10 +17,10 @@ function Header() {
 
     const navItems = [
         { path: '/', label: 'Home', icon: '🏠' },
+        { path: '/dashboard', label: 'Dashboard', icon: '📈' },
         { path: '/assessment', label: 'Assessment', icon: '📊' },
         { path: '/learning', label: 'Learning', icon: '📚' },
-        { path: '/business-tools', label: 'Business Tools', icon: '💼' },
-        { path: '/dashboard', label: 'Dashboard', icon: '📈' }
+        { path: '/business-tools', label: 'Business Tools', icon: '💼' }
     ];
 
     return (
@@ -29,7 +29,7 @@ function Header() {
                 <Container>
                     <Navbar.Brand as={Link} to="/" className="fw-bold">
                         <span className="me-2">🎓</span>
-                        SkillBridge
+                        SkillBridge254
                     </Navbar.Brand>
 
                     {/* Connection Status Indicator */}
@@ -95,7 +95,7 @@ function Header() {
                 <Offcanvas.Header closeButton closeVariant="white">
                     <Offcanvas.Title>
                         <span className="me-2">🎓</span>
-                        SkillBridge
+                        SkillBridge254
                     </Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>

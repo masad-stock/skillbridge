@@ -92,6 +92,27 @@ function Dashboard() {
         return Object.values(progress || {}).filter(p => p && p.completed).length;
     };
 
+    const getTotalWatchTime = () => {
+        const totalSeconds = Object.values(progress || {})
+            .reduce((total, p) => total + (p?.totalWatchTime || 0), 0);
+        return Math.floor(totalSeconds / 60); // Convert to minutes
+    };
+
+    const getVideoCompletionRate = () => {
+        const progressEntries = Object.values(progress || {});
+        if (progressEntries.length === 0) return 0;
+
+        const videoModules = progressEntries.filter(p => p?.lessonProgress);
+        if (videoModules.length === 0) return 0;
+
+        const totalVideoLessons = videoModules.reduce((total, p) =>
+            total + Object.keys(p.lessonProgress || {}).length, 0);
+        const completedVideoLessons = videoModules.reduce((total, p) =>
+            total + Object.values(p.lessonProgress || {}).filter(l => l.completed).length, 0);
+
+        return totalVideoLessons > 0 ? Math.round((completedVideoLessons / totalVideoLessons) * 100) : 0;
+    };
+
     if (!user) {
         return (
             <Container className="py-5">
@@ -100,7 +121,7 @@ function Dashboard() {
                         <Card className="border-0 shadow-sm">
                             <Card.Body className="p-5">
                                 <div className="fs-1 mb-4">👋</div>
-                                <h3 className="fw-bold mb-3">Welcome to SkillBridge!</h3>
+                                <h3 className="fw-bold mb-3">Welcome to SkillBridge254!</h3>
                                 <p className="text-muted mb-4">
                                     To view your dashboard, you need to login or create an account first.
                                 </p>
@@ -171,9 +192,9 @@ function Dashboard() {
                 <Col md={3} className="mb-3">
                     <Card className="border-0 bg-warning text-white h-100 hover-lift">
                         <Card.Body className="text-center">
-                            <div className="fs-2 mb-2">🔥</div>
-                            <h4 className="mb-1">{completedThisWeek}</h4>
-                            <small>This Week</small>
+                            <div className="fs-2 mb-2">🎥</div>
+                            <h4 className="mb-1">{getTotalWatchTime()}</h4>
+                            <small>Minutes Watched</small>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -375,12 +396,12 @@ function Dashboard() {
                                 <Col md={3} className="mb-3">
                                     <Button
                                         as={Link}
-                                        to="/assessment"
+                                        to="/assessment-info"
                                         variant="outline-info"
                                         className="w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3 hover-lift"
                                     >
                                         <div className="fs-2 mb-2">📊</div>
-                                        <span>Retake Assessment</span>
+                                        <span>Assessment Info</span>
                                     </Button>
                                 </Col>
                                 <Col md={3} className="mb-3">

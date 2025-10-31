@@ -1,4 +1,4 @@
-# 🎓 SkillBridge - AI-Powered Digital Skills Platform
+# 🎓 SkillBridge254 - AI-Powered Digital Skills Platform
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/your-badge-id/deploy-status)](https://app.netlify.com/sites/your-site-name/deploys)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -13,7 +13,7 @@
 
 ## 📖 Overview
 
-SkillBridge is a comprehensive Progressive Web Application (PWA) designed to bridge the digital divide and promote economic empowerment through technology-enabled learning. Built specifically for youth (18-35 years) in Kiharu Constituency, Murang'a County, Kenya, this platform transforms how digital skills are learned and applied in rural communities.
+SkillBridge254 is a comprehensive Progressive Web Application (PWA) designed to bridge the digital divide and promote economic empowerment through technology-enabled learning. Built specifically for youth (18-35 years) in Kiharu Constituency, Murang'a County, Kenya, this platform transforms how digital skills are learned and applied in rural communities.
 
 ## Research Context
 

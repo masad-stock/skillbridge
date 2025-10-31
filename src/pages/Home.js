@@ -35,7 +35,7 @@ function Home() {
     ];
 
     const stats = [
-        { number: '17,100+', label: 'Youth in Kiharu', icon: '👥' },
+        { number: '54,000+', label: 'Youth in Kiharu', icon: '👥' },
         { number: '95.2%', label: 'Mobile Phone Access', icon: '📱' },
         { number: '31%', label: 'Job-Ready Skills', icon: '💼' },
         { number: '100%', label: 'Free Training', icon: '🎓' }
@@ -84,9 +84,9 @@ function Home() {
                                         Continue Learning
                                     </Button>
                                     {!skillsProfile && (
-                                        <Button as={Link} to="/assessment" variant="outline-light" size="lg">
+                                        <Button as={Link} to="/assessment-info" variant="outline-light" size="lg">
                                             <span className="me-2">📊</span>
-                                            Take Assessment
+                                            Learn About Assessment
                                         </Button>
                                     )}
                                 </div>
@@ -96,9 +96,9 @@ function Home() {
                                         <span className="me-2">🚀</span>
                                         Get Started
                                     </Button>
-                                    <Button as={Link} to="/assessment" variant="outline-light" size="lg">
+                                    <Button as={Link} to="/assessment-info" variant="outline-light" size="lg">
                                         <span className="me-2">📊</span>
-                                        Try Assessment
+                                        Learn About Assessment
                                     </Button>
                                 </div>
                             )}
@@ -146,7 +146,7 @@ function Home() {
                 <Container>
                     <Row className="text-center mb-5">
                         <Col>
-                            <h2 className="display-5 fw-bold mb-3">Why Choose SkillBridge?</h2>
+                            <h2 className="display-5 fw-bold mb-3">Why Choose SkillBridge254?</h2>
                             <p className="lead text-muted">
                                 Built specifically for the needs of youth in Kiharu Constituency
                             </p>
@@ -268,13 +268,13 @@ function Home() {
 
                     <Row className="text-center mt-4">
                         <Col>
-                            <Button as={Link} to="/assessment" variant="primary" size="lg" className="me-3">
+                            <Button as={Link} to="/assessment-info" variant="primary" size="lg" className="me-3">
                                 <span className="me-2">🚀</span>
                                 Start Your Journey
                             </Button>
-                            <Button as={Link} to="/learning" variant="outline-primary" size="lg">
+                            <Button as={Link} to="/learning-info" variant="outline-primary" size="lg">
                                 <span className="me-2">📚</span>
-                                Explore Courses
+                                Explore Learning
                             </Button>
                         </Col>
                     </Row>
@@ -376,9 +376,9 @@ function Home() {
                                     <span className="me-2">🚀</span>
                                     Create Free Account
                                 </Button>
-                                <Button as={Link} to="/assessment" variant="outline-light" size="lg">
+                                <Button as={Link} to="/assessment-info" variant="outline-light" size="lg">
                                     <span className="me-2">📊</span>
-                                    Take Skills Test
+                                    Learn About Assessment
                                 </Button>
                             </div>
                             <div className="mt-4">

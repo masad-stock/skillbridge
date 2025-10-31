@@ -68,7 +68,7 @@ function Profile() {
         // Simulate login (in real app, this would call an API)
         const userData = {
             id: Date.now(),
-            name: 'SkillBridge User',
+            name: 'SkillBridge254 User',
             phone: loginForm.phone,
             email: '',
             joinedAt: new Date().toISOString()
@@ -164,7 +164,7 @@ function Profile() {
                             <Card.Header className="bg-primary text-white text-center py-4">
                                 <h3 className="mb-0">
                                     <span className="me-2">🎓</span>
-                                    SkillBridge
+                                    SkillBridge254
                                 </h3>
                             </Card.Header>
                             <Card.Body className="p-5">
@@ -384,20 +384,20 @@ function Profile() {
                                 <div>
                                     <h4 className="mb-1 fw-bold">
                                         <span className="me-2">👤</span>
-                                        Wasifu Wako
+                                        Your Profile
                                     </h4>
-                                    <p className="text-muted mb-0">Dhibiti taarifa zako za kibinafsi</p>
+                                    <p className="text-muted mb-0">Manage your personal information</p>
                                 </div>
                                 <div>
                                     {!isEditing ? (
                                         <Button variant="primary" onClick={() => setIsEditing(true)}>
                                             <span className="me-2">✏️</span>
-                                            Hariri
+                                            Edit
                                         </Button>
                                     ) : (
                                         <Button variant="secondary" onClick={() => setIsEditing(false)}>
                                             <span className="me-2">❌</span>
-                                            Ghairi
+                                            Cancel
                                         </Button>
                                     )}
                                 </div>
@@ -510,15 +510,15 @@ function Profile() {
                                         </Col>
                                         <Col md={6}>
                                             <Form.Group className="mb-3">
-                                                <Form.Label>Jinsia</Form.Label>
+                                                <Form.Label>Gender</Form.Label>
                                                 <Form.Select
                                                     value={profileForm.gender}
                                                     onChange={(e) => setProfileForm({ ...profileForm, gender: e.target.value })}
                                                 >
-                                                    <option value="">Chagua jinsia</option>
-                                                    <option value="Mwanaume">Mwanaume</option>
-                                                    <option value="Mwanamke">Mwanamke</option>
-                                                    <option value="Mengineyo">Mengineyo</option>
+                                                    <option value="">Select gender</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                    <option value="Other">Other</option>
                                                 </Form.Select>
                                             </Form.Group>
                                         </Col>
@@ -527,12 +527,12 @@ function Profile() {
                                     <Row>
                                         <Col md={6}>
                                             <Form.Group className="mb-3">
-                                                <Form.Label>Kiwango cha Elimu</Form.Label>
+                                                <Form.Label>Education Level</Form.Label>
                                                 <Form.Select
                                                     value={profileForm.education}
                                                     onChange={(e) => setProfileForm({ ...profileForm, education: e.target.value })}
                                                 >
-                                                    <option value="">Chagua kiwango</option>
+                                                    <option value="">Select level</option>
                                                     {educationLevels.map(level => (
                                                         <option key={level} value={level}>{level}</option>
                                                     ))}
@@ -541,7 +541,7 @@ function Profile() {
                                         </Col>
                                         <Col md={6}>
                                             <Form.Group className="mb-3">
-                                                <Form.Label>Mahali</Form.Label>
+                                                <Form.Label>Location</Form.Label>
                                                 <Form.Control
                                                     type="text"
                                                     value={profileForm.location}
@@ -552,12 +552,12 @@ function Profile() {
                                     </Row>
 
                                     <Form.Group className="mb-4">
-                                        <Form.Label>Aina ya Biashara/Kazi</Form.Label>
+                                        <Form.Label>Business/Work Type</Form.Label>
                                         <Form.Select
                                             value={profileForm.businessType}
                                             onChange={(e) => setProfileForm({ ...profileForm, businessType: e.target.value })}
                                         >
-                                            <option value="">Chagua aina</option>
+                                            <option value="">Select type</option>
                                             {businessTypes.map(type => (
                                                 <option key={type} value={type}>{type}</option>
                                             ))}
@@ -567,10 +567,10 @@ function Profile() {
                                     <div className="d-flex gap-3">
                                         <Button type="submit" variant="success">
                                             <span className="me-2">💾</span>
-                                            Hifadhi Mabadiliko
+                                            Save Changes
                                         </Button>
                                         <Button type="button" variant="secondary" onClick={() => setIsEditing(false)}>
-                                            Ghairi
+                                            Cancel
                                         </Button>
                                     </div>
                                 </Form>
@@ -584,7 +584,7 @@ function Profile() {
                                 </small>
                                 <Button variant="outline-danger" size="sm" onClick={handleLogout}>
                                     <span className="me-2">🚪</span>
-                                    Toka
+                                    Logout
                                 </Button>
                             </div>
                         </Card.Footer>

@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, ProgressBar, Badge, Modal, Alert } f
 import { useUser } from '../context/UserContext';
 import { useOffline } from '../context/OfflineContext';
 import { SKILL_CATEGORIES } from '../services/aiAssessment';
+import YouTubePlayer from '../components/YouTubePlayer';
 
 function LearningPath() {
     const { learningPath, progress, dispatch } = useUser();
@@ -11,6 +12,8 @@ function LearningPath() {
     const [showModule, setShowModule] = useState(false);
     const [currentLesson, setCurrentLesson] = useState(0);
     const [moduleProgress, setModuleProgress] = useState(0);
+    const [lessonProgress, setLessonProgress] = useState({});
+    const [videoCompleted, setVideoCompleted] = useState(false);
 
     const getCategoryName = (category) => {
         const names = {
@@ -151,27 +154,62 @@ function LearningPath() {
         setSelectedModule(module);
         setCurrentLesson(0);
         setModuleProgress(0);
+        setLessonProgress({});
+        setVideoCompleted(false);
         setShowModule(true);
+    };
+
+    const handleVideoProgress = (progressData) => {
+        const lessonKey = `${selectedModule.id}_${currentLesson}`;
+        setLessonProgress(prev => ({
+            ...prev,
+            [lessonKey]: progressData
+        }));
+    };
+
+    const handleVideoComplete = (completionData) => {
+        setVideoCompleted(true);
+        const lessonKey = `${selectedModule.id}_${currentLesson}`;
+        setLessonProgress(prev => ({
+            ...prev,
+            [lessonKey]: { ...completionData, completed: true }
+        }));
     };
 
     const completeLesson = () => {
         const moduleContent = getModuleContent(selectedModule.id);
+        const currentLessonData = moduleContent.lessons[currentLesson];
+
+        // For video lessons, ensure video is completed before proceeding
+        if (currentLessonData.type === 'video' && !videoCompleted) {
+            alert('Please complete watching the video before proceeding to the next lesson.');
+            return;
+        }
+
         const nextLesson = currentLesson + 1;
         const newProgress = (nextLesson / moduleContent.lessons.length) * 100;
 
         setModuleProgress(newProgress);
+        setVideoCompleted(false); // Reset for next lesson
 
         if (nextLesson < moduleContent.lessons.length) {
             setCurrentLesson(nextLesson);
         } else {
-            // Module completed
+            // Module completed - calculate overall score based on video watch progress
+            const lessonScores = Object.values(lessonProgress).map(p => p.progress || 0);
+            const averageScore = lessonScores.length > 0
+                ? lessonScores.reduce((a, b) => a + b, 0) / lessonScores.length
+                : 100;
+
             dispatch({
                 type: 'UPDATE_PROGRESS',
                 moduleId: selectedModule.id,
                 progress: {
                     completed: true,
                     completedAt: new Date().toISOString(),
-                    score: 100
+                    score: Math.round(averageScore),
+                    lessonProgress: lessonProgress,
+                    totalWatchTime: Object.values(lessonProgress).reduce((total, p) => total + (p.watchTime || 0), 0)
                 }
             });
             setShowModule(false);
@@ -364,32 +402,26 @@ function LearningPath() {
                                         <div className="lesson-content">
                                             <div className="mb-4">
                                                 {currentLessonData.type === 'video' && (
-                                                    <div className="bg-light p-4 rounded text-center">
-                                                        <div className="fs-1 mb-3">🎥</div>
-                                                        <h6>Training Video</h6>
-                                                        <p className="text-muted">{currentLessonData.content}</p>
-                                                        {(currentLessonData.youtubeUrl || selectedModule.youtubeUrl) && (
-                                                            <div className="mt-3">
-                                                                <Button
-                                                                    variant="danger"
-                                                                    href={currentLessonData.youtubeUrl || selectedModule.youtubeUrl}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    size="lg"
-                                                                >
-                                                                    <span className="me-2">▶️</span>
-                                                                    Watch on YouTube
-                                                                </Button>
-                                                                {selectedModule.instructor && (
-                                                                    <p className="small text-muted mt-2">
-                                                                        <strong>Instructor:</strong> {selectedModule.instructor}
-                                                                    </p>
-                                                                )}
-                                                                <p className="small text-success mt-2">
-                                                                    <span className="me-1">✨</span>
-                                                                    Real professional course content
-                                                                </p>
-                                                            </div>
+                                                    <div className="mb-4">
+                                                        <div className="mb-3">
+                                                            <p className="text-muted">{currentLessonData.content}</p>
+                                                        </div>
+
+                                                        {(currentLessonData.youtubeUrl || selectedModule.youtubeUrl) ? (
+                                                            <YouTubePlayer
+                                                                videoUrl={currentLessonData.youtubeUrl || selectedModule.youtubeUrl}
+                                                                title={currentLessonData.title}
+                                                                instructor={selectedModule.instructor}
+                                                                duration={currentLessonData.duration}
+                                                                onProgress={handleVideoProgress}
+                                                                onComplete={handleVideoComplete}
+                                                                autoplay={false}
+                                                            />
+                                                        ) : (
+                                                            <Alert variant="warning">
+                                                                <Alert.Heading className="h6">Video Not Available</Alert.Heading>
+                                                                <p className="mb-0">The video content for this lesson is not currently available.</p>
+                                                            </Alert>
                                                         )}
                                                     </div>
                                                 )}
@@ -434,22 +466,37 @@ function LearningPath() {
                                                     <span className="me-1">⏱️</span>
                                                     Duration: {currentLessonData.duration} minutes
                                                 </small>
-                                                <Button
-                                                    variant="primary"
-                                                    onClick={completeLesson}
-                                                >
-                                                    {currentLesson < moduleContent.lessons.length - 1 ? (
-                                                        <>
-                                                            <span className="me-2">➡️</span>
-                                                            Next Lesson
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <span className="me-2">✅</span>
-                                                            Complete Module
-                                                        </>
+                                                <div className="d-flex align-items-center gap-2">
+                                                    {currentLessonData.type === 'video' && !videoCompleted && (
+                                                        <small className="text-warning">
+                                                            <span className="me-1">⏳</span>
+                                                            Complete video to continue
+                                                        </small>
                                                     )}
-                                                </Button>
+                                                    {currentLessonData.type === 'video' && videoCompleted && (
+                                                        <small className="text-success">
+                                                            <span className="me-1">✅</span>
+                                                            Video completed
+                                                        </small>
+                                                    )}
+                                                    <Button
+                                                        variant="primary"
+                                                        onClick={completeLesson}
+                                                        disabled={currentLessonData.type === 'video' && !videoCompleted}
+                                                    >
+                                                        {currentLesson < moduleContent.lessons.length - 1 ? (
+                                                            <>
+                                                                <span className="me-2">➡️</span>
+                                                                Next Lesson
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <span className="me-2">✅</span>
+                                                                Complete Module
+                                                            </>
+                                                        )}
+                                                    </Button>
+                                                </div>
                                             </div>
                                         </div>
                                     </>

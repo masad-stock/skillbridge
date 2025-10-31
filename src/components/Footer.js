@@ -9,7 +9,7 @@ function Footer() {
                     <Col md={6}>
                         <h5 className="mb-3">
                             <span className="me-2">🎓</span>
-                            SkillBridge
+                            SkillBridge254
                         </h5>
                         <p className="mb-2">
                             AI-driven digital skills platform for economic empowerment in Kiharu Constituency.
@@ -36,7 +36,7 @@ function Footer() {
                             </li>
                             <li className="mb-2">
                                 <span className="me-2">✉️</span>
-                                <small>support@skillbridge.co.ke</small>
+                                <small>support@skillbridge254.co.ke</small>
                             </li>
                             <li className="mb-2">
                                 <span className="me-2">🕒</span>
@@ -49,7 +49,7 @@ function Footer() {
                 <Row>
                     <Col md={6}>
                         <small className="text-muted">
-                            © 2025 SkillBridge. All rights reserved.
+                            © 2025 SkillBridge254. All rights reserved.
                         </small>
                     </Col>
                     <Col md={6} className="text-md-end">
