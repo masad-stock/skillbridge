@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+learner-pwa/node_modules/
+learner-pwa/backend/node_modules/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+learner-pwa/.env
+learner-pwa/backend/.env
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Build outputs
+learner-pwa/build/
+learner-pwa/backend/uploads/
+
+# Backup
+_cleanup_backup/
+
+# ML models
+learner-pwa/ml-service/models/*.pkl
+learner-pwa/ml-service/models/*.joblib
