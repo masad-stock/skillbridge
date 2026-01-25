@@ -1,0 +1,75 @@
+{
+  "short_name": "SkillBridge254",
+  "name": "SkillBridge254 - AI-Powered Digital Skills Platform",
+  "description": "AI-driven adaptive digital skills assessment and training platform for economic empowerment in Kiharu Constituency",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0d6efd",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "sw-KE",
+  "categories": ["education", "business", "productivity"],
+  "screenshots": [
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "320x568",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshot-desktop.png", 
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Skills Assessment",
+      "short_name": "Assessment",
+      "description": "Take your personalized digital skills assessment",
+      "url": "/assessment",
+      "icons": [{ "src": "favicon.ico", "sizes": "192x192" }]
+    },
+    {
+      "name": "Learning Path",
+      "short_name": "Learning",
+      "description": "Continue your personalized learning journey",
+      "url": "/learning",
+      "icons": [{ "src": "favicon.ico", "sizes": "192x192" }]
+    },
+    {
+      "name": "Business Tools",
+      "short_name": "Business",
+      "description": "Use integrated business management tools",
+      "url": "/business-tools",
+      "icons": [{ "src": "favicon.ico", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
+}
