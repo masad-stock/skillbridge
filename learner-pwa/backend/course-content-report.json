@@ -1,0 +1,197 @@
+{
+  "timestamp": "2026-01-12T06:29:01.509Z",
+  "summary": {
+    "total": 9,
+    "working": 9,
+    "broken": 0,
+    "enhanced": 9,
+    "successRate": 100
+  },
+  "categories": {
+    "basic_digital": {
+      "total": 3,
+      "working": 3
+    },
+    "financial_management": {
+      "total": 2,
+      "working": 2
+    },
+    "business_automation": {
+      "total": 2,
+      "working": 2
+    },
+    "digital_marketing": {
+      "total": 1,
+      "working": 1
+    },
+    "e_commerce": {
+      "total": 1,
+      "working": 1
+    }
+  },
+  "difficulties": {
+    "Level 1": {
+      "total": 3,
+      "working": 3
+    },
+    "Level 2": {
+      "total": 6,
+      "working": 6
+    }
+  },
+  "modules": [
+    {
+      "moduleId": "bd_001",
+      "title": "Mobile Phone Basics",
+      "category": "basic_digital",
+      "difficulty": 1,
+      "estimatedTime": 45,
+      "video": {
+        "working": true,
+        "title": "How Do I Learn Smartphone Basics? Settings and Controls",
+        "author": "Geeks On Tour",
+        "thumbnail": "https://i.ytimg.com/vi/vRWkE9_q3vs/hqdefault.jpg"
+      },
+      "materials": 5,
+      "enhanced": true,
+      "sections": 1,
+      "exercises": 1
+    },
+    {
+      "moduleId": "bd_002",
+      "title": "Internet Basics & Safety",
+      "category": "basic_digital",
+      "difficulty": 1,
+      "estimatedTime": 140,
+      "video": {
+        "working": true,
+        "title": "11 Internet Safety Tips for Your Online Security",
+        "author": "Kaspersky",
+        "thumbnail": "https://i.ytimg.com/vi/aO858HyFbKI/hqdefault.jpg"
+      },
+      "materials": 5,
+      "enhanced": true,
+      "sections": 1,
+      "exercises": 1
+    },
+    {
+      "moduleId": "fm_001",
+      "title": "Mobile Money & Digital Payments",
+      "category": "financial_management",
+      "difficulty": 1,
+      "estimatedTime": 75,
+      "video": {
+        "working": true,
+        "title": "Digital Wallets Explained: Beginners Guide | Money Instructor",
+        "author": "Money Instructor",
+        "thumbnail": "https://i.ytimg.com/vi/n5g_T287kJw/hqdefault.jpg"
+      },
+      "materials": 5,
+      "enhanced": true,
+      "sections": 1,
+      "exercises": 1
+    },
+    {
+      "moduleId": "bd_003",
+      "title": "Digital Communication & Email",
+      "category": "basic_digital",
+      "difficulty": 2,
+      "estimatedTime": 60,
+      "video": {
+        "working": true,
+        "title": "How to Write a Professional Email [STEP-BY-STEP BUSINESS EMAIL]",
+        "author": "Adriana Girdler",
+        "thumbnail": "https://i.ytimg.com/vi/Hkh_surdw74/hqdefault.jpg"
+      },
+      "materials": 5,
+      "enhanced": true,
+      "sections": 1,
+      "exercises": 1
+    },
+    {
+      "moduleId": "ba_001",
+      "title": "Digital Inventory Management",
+      "category": "business_automation",
+      "difficulty": 2,
+      "estimatedTime": 90,
+      "video": {
+        "working": true,
+        "title": "Build an Inventory Management System in 75 minutes with Low-Code | Step-by-step Tutorial",
+        "author": "The m-Power Platform",
+        "thumbnail": "https://i.ytimg.com/vi/H_PhAt0nNBM/hqdefault.jpg"
+      },
+      "materials": 5,
+      "enhanced": true,
+      "sections": 1,
+      "exercises": 1
+    },
+    {
+      "moduleId": "dm_001",
+      "title": "Social Media Marketing",
+      "category": "digital_marketing",
+      "difficulty": 2,
+      "estimatedTime": 97,
+      "video": {
+        "working": true,
+        "title": "Social Media Marketing Full Course | Social Media Marketing Tutorial For Beginners | Simplilearn",
+        "author": "Simplilearn",
+        "thumbnail": "https://i.ytimg.com/vi/OSoJvlDdPY8/hqdefault.jpg"
+      },
+      "materials": 5,
+      "enhanced": true,
+      "sections": 1,
+      "exercises": 1
+    },
+    {
+      "moduleId": "ba_002",
+      "title": "Customer Relationship Management",
+      "category": "business_automation",
+      "difficulty": 2,
+      "estimatedTime": 120,
+      "video": {
+        "working": true,
+        "title": "What Is CRM? | CRM Course For Beginners | Customer Relationship Management | Simplilearn",
+        "author": "Simplilearn",
+        "thumbnail": "https://i.ytimg.com/vi/Ci_qMjf8JRg/hqdefault.jpg"
+      },
+      "materials": 5,
+      "enhanced": true,
+      "sections": 1,
+      "exercises": 1
+    },
+    {
+      "moduleId": "ec_001",
+      "title": "Online Store Setup",
+      "category": "e_commerce",
+      "difficulty": 2,
+      "estimatedTime": 120,
+      "video": {
+        "working": true,
+        "title": "Shopify Tutorial 2025 | How to Build Your Shopify Store (Step-by-Step)",
+        "author": "Saddam Kassim",
+        "thumbnail": "https://i.ytimg.com/vi/9coOU5ea3nk/hqdefault.jpg"
+      },
+      "materials": 5,
+      "enhanced": true,
+      "sections": 1,
+      "exercises": 1
+    },
+    {
+      "moduleId": "fm_002",
+      "title": "Digital Bookkeeping",
+      "category": "financial_management",
+      "difficulty": 2,
+      "estimatedTime": 120,
+      "video": {
+        "working": true,
+        "title": "The Only BOOKKEEPING Tutorial You Need 2025 | For Beginners",
+        "author": "LYFE Accounting",
+        "thumbnail": "https://i.ytimg.com/vi/24TFLVCceiQ/hqdefault.jpg"
+      },
+      "materials": 5,
+      "enhanced": true,
+      "sections": 1,
+      "exercises": 1
+    }
+  ]
+}

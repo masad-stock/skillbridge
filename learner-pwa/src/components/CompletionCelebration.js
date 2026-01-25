@@ -1,0 +1,226 @@
+import { useState, useEffect } from 'react';
+import { Modal, Button, Badge, Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import confetti from 'canvas-confetti';
+import { useTranslation } from 'react-i18next';
+import './CompletionCelebration.css';
+
+function CompletionCelebration({
+    show,
+    onHide,
+    courseTitle,
+    certificate,
+    score,
+    timeSpent,
+    nextCourse
+}) {
+    const { t } = useTranslation();
+    const [showConfetti, setShowConfetti] = useState(false);
+
+    useEffect(() => {
+        if (show && !showConfetti) {
+            setShowConfetti(true);
+            triggerConfetti();
+        }
+    }, [show, showConfetti]);
+
+    const triggerConfetti = () => {
+        const duration = 3000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+        function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        const interval = setInterval(function () {
+            const timeLeft = animationEnd - Date.now();
+
+            if (timeLeft <= 0) {
+                return clearInterval(interval);
+            }
+
+            const particleCount = 50 * (timeLeft / duration);
+
+            confetti({
+                ...defaults,
+                particleCount,
+                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+            });
+            confetti({
+                ...defaults,
+                particleCount,
+                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+            });
+        }, 250);
+    };
+
+    const formatTime = (minutes) => {
+        if (minutes < 60) {
+            return `${minutes} ${t('learning.estimatedTime')}`;
+        }
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        return `${hours}h ${mins}m`;
+    };
+
+    return (
+        <Modal
+            show={show}
+            onHide={onHide}
+            centered
+            size="lg"
+            className="completion-celebration-modal"
+        >
+            <Modal.Header closeButton className="border-0 pb-0">
+                <div className="w-100 text-center">
+                    <div className="celebration-icon mb-3">
+                        🎉
+                    </div>
+                    <Modal.Title className="celebration-title">
+                        {t('completion.congratulations')}
+                    </Modal.Title>
+                </div>
+            </Modal.Header>
+
+            <Modal.Body className="text-center px-4 pb-4">
+                <h4 className="mb-3">{t('completion.courseCompleted')}</h4>
+                <h5 className="text-primary mb-4">{courseTitle}</h5>
+
+                {/* Stats Cards */}
+                <div className="row g-3 mb-4">
+                    {score !== undefined && (
+                        <div className="col-md-4">
+                            <Card className="stat-card">
+                                <Card.Body>
+                                    <div className="stat-icon">📊</div>
+                                    <div className="stat-value">{score}%</div>
+                                    <div className="stat-label">Score</div>
+                                </Card.Body>
+                            </Card>
+                        </div>
+                    )}
+
+                    {timeSpent && (
+                        <div className="col-md-4">
+                            <Card className="stat-card">
+                                <Card.Body>
+                                    <div className="stat-icon">⏱️</div>
+                                    <div className="stat-value">{formatTime(timeSpent)}</div>
+                                    <div className="stat-label">Time Spent</div>
+                                </Card.Body>
+                            </Card>
+                        </div>
+                    )}
+
+                    {certificate && (
+                        <div className="col-md-4">
+                            <Card className="stat-card certificate-card">
+                                <Card.Body>
+                                    <div className="stat-icon">🏆</div>
+                                    <div className="stat-label">{t('completion.certificateReady')}</div>
+                                </Card.Body>
+                            </Card>
+                        </div>
+                    )}
+                </div>
+
+                {/* Certificate Actions */}
+                {certificate && (
+                    <div className="certificate-actions mb-4">
+                        <Link
+                            to={`/certificates/${certificate._id}`}
+                            className="btn btn-primary btn-lg me-2"
+                        >
+                            📜 {t('completion.viewCertificate')}
+                        </Link>
+                        <Button
+                            variant="outline-primary"
+                            size="lg"
+                            onClick={() => {
+                                const link = document.createElement('a');
+                                link.href = certificate.pdfUrl;
+                                link.download = `certificate-${certificate._id}.pdf`;
+                                link.click();
+                            }}
+                        >
+                            ⬇️ {t('completion.downloadCertificate')}
+                        </Button>
+                    </div>
+                )}
+
+                {/* Next Course Recommendation */}
+                {nextCourse && (
+                    <Card className="next-course-card">
+                        <Card.Body>
+                            <h6 className="mb-3">{t('completion.nextCourse')}</h6>
+                            <div className="d-flex align-items-center justify-content-between">
+                                <div className="text-start">
+                                    <div className="fw-bold">{nextCourse.title}</div>
+                                    <small className="text-muted">{nextCourse.description}</small>
+                                </div>
+                                <Link
+                                    to={`/learning/${nextCourse._id}`}
+                                    className="btn btn-success"
+                                >
+                                    {t('common.continue')} →
+                                </Link>
+                            </div>
+                        </Card.Body>
+                    </Card>
+                )}
+
+                {/* Social Share */}
+                <div className="social-share mt-4">
+                    <p className="text-muted mb-2">{t('completion.shareSuccess')}</p>
+                    <div className="d-flex gap-2 justify-content-center">
+                        <Button
+                            variant="outline-secondary"
+                            size="sm"
+                            onClick={() => {
+                                const text = `I just completed ${courseTitle} on SkillBridge254! 🎉`;
+                                const url = window.location.origin;
+                                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+                            }}
+                        >
+                            🐦 Twitter
+                        </Button>
+                        <Button
+                            variant="outline-secondary"
+                            size="sm"
+                            onClick={() => {
+                                const text = `I just completed ${courseTitle} on SkillBridge254!`;
+                                const url = window.location.origin;
+                                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`, '_blank');
+                            }}
+                        >
+                            📘 Facebook
+                        </Button>
+                        <Button
+                            variant="outline-secondary"
+                            size="sm"
+                            onClick={() => {
+                                const text = `I just completed ${courseTitle} on SkillBridge254!`;
+                                const url = window.location.origin;
+                                window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+                            }}
+                        >
+                            💬 WhatsApp
+                        </Button>
+                    </div>
+                </div>
+            </Modal.Body>
+
+            <Modal.Footer className="border-0 justify-content-center">
+                <Button variant="secondary" onClick={onHide}>
+                    {t('common.close')}
+                </Button>
+                <Link to="/learning" className="btn btn-primary">
+                    {t('completion.continueLearning')}
+                </Link>
+            </Modal.Footer>
+        </Modal>
+    );
+}
+
+export default CompletionCelebration;

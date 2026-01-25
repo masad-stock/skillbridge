@@ -1,0 +1,1110 @@
+{
+  "courses": [
+    {
+      "courseName": "Enhanced bd_001: Mobile Phone Basics",
+      "courseGoal": "Equip learners with foundational smartphone skills (Android/iOS), device care, settings, and basic troubleshooting.",
+      "modules": [
+        {
+          "moduleName": "Getting to Know Your Smartphone",
+          "learningObjectives": [
+            "Identify hardware parts (screen, buttons, ports, SIM, SD).",
+            "Understand Android vs iOS differences.",
+            "Navigate home screen, app drawer, and notifications."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Meet Your Smartphone: Buttons, Ports & Hardware Basics (Android demo)",
+              "url": "https://www.youtube.com/watch?v=u9syvvRtB40"
+            },
+            {
+              "title": "Android vs iPhone: What’s Different for Beginners?",
+              "url": "https://support.google.com/android/answer/6193424?hl=en"
+            },
+            {
+              "title": "First Steps: Home Screen, Notifications & Quick Settings (iPhone guide)",
+              "url": "https://support.apple.com/guide/iphone/welcome/ios"
+            }
+          ]
+        },
+        {
+          "moduleName": "Setup & Personalization",
+          "learningObjectives": [
+            "Insert SIM, configure language/date/time.",
+            "Create/restore accounts (Google/Apple ID).",
+            "Personalize wallpaper, widgets, ringtones."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "SIM, Accounts & First‑Time Setup (Android & iOS)",
+              "url": "https://www.youtube.com/watch?v=vRWkE9_q3vs"
+            },
+            {
+              "title": "Personalize It: Wallpapers, Widgets & Ringtones (Android)",
+              "url": "https://support.google.com/android/answer/9450271?hl=en"
+            },
+            {
+              "title": "Accessibility Essentials: Font Size, Magnification & VoiceOver/TalkBack",
+              "url": "https://support.google.com/accessibility/android/answer/6006564?hl=en"
+            }
+          ]
+        },
+        {
+          "moduleName": "Apps & Storage Basics",
+          "learningObjectives": [
+            "Install/update/uninstall apps safely.",
+            "Manage storage; clear cache; use SD card.",
+            "Understand app permissions & privacy."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Play Store & App Store: Safe Downloading 101",
+              "url": "https://support.google.com/googleplay/answer/113409?hl=en"
+            },
+            {
+              "title": "Winning at Storage: Files, SD Cards & Cloud Backups (Android)",
+              "url": "https://support.google.com/android/answer/7431795?hl=en"
+            },
+            {
+              "title": "App Permissions: Camera, Location & What to Allow",
+              "url": "https://support.google.com/googleplay/answer/6270602?hl=en"
+            }
+          ]
+        },
+        {
+          "moduleName": "Communication Essentials",
+          "learningObjectives": [
+            "Make calls, send SMS/WhatsApp, share media.",
+            "Add contacts, block spam, use caller ID."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Calls & SMS: Contacts, Blocking & Spam Control",
+              "url": "https://support.google.com/phoneapp/answer/3459196?hl=en"
+            },
+            {
+              "title": "WhatsApp for Beginners: Chat, Status & Media Sharing",
+              "url": "https://faq.whatsapp.com/"
+            },
+            {
+              "title": "Camera Basics: Sharper Photos with Simple Settings (Samsung demo)",
+              "url": "https://www.youtube.com/watch?v=Jiyo-0yAq44"
+            }
+          ]
+        },
+        {
+          "moduleName": "Maintenance & Troubleshooting",
+          "learningObjectives": [
+            "Improve battery life & device performance.",
+            "Reset settings, safe mode, backup/restore."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Battery Life Boost: Brightness, Networks & Power Modes",
+              "url": "https://support.google.com/android/answer/7664692?hl=en"
+            },
+            {
+              "title": "Fix It Fast: Freezing Apps, Safe Mode & Resets",
+              "url": "https://support.google.com/android/answer/7665064?hl=en"
+            },
+            {
+              "title": "Backup & Restore: Keep Your Data Safe (Android)",
+              "url": "https://support.google.com/android/answer/2819582?hl=en"
+            }
+          ]
+        }
+      ],
+      "assessmentPlan": {
+        "moduleQuizzes": "3–5 questions per module",
+        "practicalTasks": [
+          "Identify your device model and OS version.",
+          "Change wallpaper and set up a lock screen.",
+          "Install and uninstall an app safely.",
+          "Create a contact and block a spam number."
+        ],
+        "finalProject": "Prepare a short device health report: storage usage, battery optimizations applied, and two screenshots showing settings changes."
+      },
+      "resources": {
+        "cheatSheets": [
+          { "title": "Smartphone Basics: Quick Reference", "url": "/assets/resources/cheatsheets/smartphone-basics.pdf" }
+        ],
+        "templates": [],
+        "linkLibrary": [
+          { "title": "Android Help Center", "url": "https://support.google.com/android/" },
+          { "title": "Apple iPhone User Guide", "url": "https://support.apple.com/guide/iphone/welcome/ios" },
+          { "title": "WhatsApp Help Center", "url": "https://faq.whatsapp.com/" }
+        ]
+      },
+      "certification": {
+        "badge": true,
+        "passCriteria": { "quizPassRate": 0.7, "projectSubmission": true }
+      }
+    },
+    {
+      "courseName": "Enhanced bd_002: Internet Basics & Safety",
+      "courseGoal": "Help learners get online, browse efficiently, and stay safe from scams/phishing.",
+      "modules": [
+        {
+          "moduleName": "Getting Online",
+          "learningObjectives": [
+            "Connect via mobile data/Wi‑Fi.",
+            "Understand bundles, hotspots & costs."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Wi‑Fi vs Mobile Data: What’s Best & When? (Kaspersky overview of safe connections)",
+              "url": "https://www.youtube.com/watch?v=aO858HyFbKI"
+            },
+            {
+              "title": "Buying Data & Checking Usage (Safaricom Kenya)",
+              "url": "https://www.safaricom.co.ke/personal/get-more/data"
+            },
+            {
+              "title": "Mobile Hotspot: Share Internet Safely (Android guide)",
+              "url": "https://support.google.com/android/answer/9059108?hl=en"
+            }
+          ]
+        },
+        {
+          "moduleName": "Browsers & Search",
+          "learningObjectives": [
+            "Use Chrome/Safari: tabs, downloads.",
+            "Search operators & fact‑checking."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Browser Basics: Tabs, History & Downloads (GCFGlobal)",
+              "url": "https://edu.gcfglobal.org/en/browsers/"
+            },
+            {
+              "title": "Search Like a Pro: Google Advanced Search",
+              "url": "https://support.google.com/websearch/answer/2466433?hl=en"
+            },
+            {
+              "title": "Save for Later: Bookmarks & Reading Lists",
+              "url": "https://support.google.com/chrome/answer/188842?hl=en"
+            }
+          ]
+        },
+        {
+          "moduleName": "Online Safety Essentials",
+          "learningObjectives": [
+            "Recognize phishing & scams.",
+            "Strong passwords & 2FA."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Spot the Scam: 11 Internet Safety Tips",
+              "url": "https://www.youtube.com/watch?v=aO858HyFbKI"
+            },
+            {
+              "title": "Passwords & 2FA: Google Safety Center",
+              "url": "https://safety.google/authentication/"
+            },
+            {
+              "title": "Secure Browsing: HTTPS & Site Safety",
+              "url": "https://transparencyreport.google.com/safe-browsing/search"
+            }
+          ]
+        },
+        {
+          "moduleName": "Privacy & Digital Footprint",
+          "learningObjectives": [
+            "Manage app/site permissions.",
+            "Safe posting & tracking awareness."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "App & Site Permissions (Android)",
+              "url": "https://support.google.com/android/answer/9431959?hl=en"
+            },
+            {
+              "title": "Your Digital Footprint: Twinkl safety explainer for kids/parents",
+              "url": "https://www.youtube.com/watch?v=JTl211YlFzc"
+            },
+            {
+              "title": "Parental Controls: Family Link",
+              "url": "https://families.google/familylink/"
+            }
+          ]
+        },
+        {
+          "moduleName": "Downloads, Updates & Backups",
+          "learningObjectives": [
+            "Safe downloads; malware basics.",
+            "Keep devices updated; back up data."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Safe Downloads & Avoiding Malware (GCFGlobal)",
+              "url": "https://edu.gcfglobal.org/en/internetsafety/avoiding-malware/1/"
+            },
+            {
+              "title": "Stay Updated: Android & App Updates",
+              "url": "https://support.google.com/googleplay/answer/113412?hl=en"
+            },
+            {
+              "title": "Backups that Work: Google Drive",
+              "url": "https://support.google.com/drive/answer/2424384?hl=en"
+            }
+          ]
+        }
+      ],
+      "assessmentPlan": {
+        "moduleQuizzes": "3–5 questions per module",
+        "practicalTasks": [
+          "Connect to a secure Wi‑Fi network and verify IP/HTTPS on a website.",
+          "Set up a strong password and enable 2FA on one account.",
+          "Create browser bookmarks and clear history/cache."
+        ],
+        "finalProject": "Create a one‑page online safety plan (phishing red flags, password strategy, backup routine) and demonstrate restoring a file from cloud backup."
+      },
+      "resources": {
+        "cheatSheets": [
+          { "title": "Internet Safety Quick Guide", "url": "/assets/resources/cheatsheets/internet-safety.pdf" }
+        ],
+        "templates": [],
+        "linkLibrary": [
+          { "title": "Google Safety Center", "url": "https://safety.google/" },
+          { "title": "Transparency Report: Safe Browsing", "url": "https://transparencyreport.google.com/safe-browsing/search" },
+          { "title": "Family Link", "url": "https://families.google/familylink/" }
+        ]
+      },
+      "certification": {
+        "badge": true,
+        "passCriteria": { "quizPassRate": 0.7, "projectSubmission": true }
+      }
+    },
+    {
+      "courseName": "Enhanced bd_003: Digital Communication & Email",
+      "courseGoal": "Professional email etiquette, setup, attachments, and inbox management.",
+      "modules": [
+        {
+          "moduleName": "Email Setup",
+          "learningObjectives": [
+            "Create Gmail/Outlook.",
+            "Signature & recovery options."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Create Your Email: Gmail Step‑by‑Step",
+              "url": "https://support.google.com/mail/answer/56256?hl=en"
+            },
+            {
+              "title": "Professional Signatures in Gmail",
+              "url": "https://support.google.com/mail/answer/8395?hl=en"
+            },
+            {
+              "title": "Recovery & Security: Backup Phone/Email",
+              "url": "https://myaccount.google.com/security"
+            }
+          ]
+        },
+        {
+          "moduleName": "Writing Professional Emails",
+          "learningObjectives": [
+            "Subject lines, tone & structure.",
+            "CC/BCC & file attachments."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Write It Right: 5 Steps to a Perfect Email",
+              "url": "https://www.youtube.com/watch?v=VE9wAMP3jWo"
+            },
+            {
+              "title": "CC vs BCC: Best Practices (Gmail Help)",
+              "url": "https://support.google.com/mail/answer/6586?hl=en"
+            },
+            {
+              "title": "Sending Files: Attachments & Drive Links",
+              "url": "https://support.google.com/mail/answer/6584?hl=en"
+            }
+          ]
+        },
+        {
+          "moduleName": "Inbox Organization",
+          "learningObjectives": [
+            "Labels, filters & rules.",
+            "Search, archive vs delete."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Inbox Zero: Labels, Filters & Rules",
+              "url": "https://support.google.com/mail/answer/6579?hl=en"
+            },
+            {
+              "title": "Search Tricks: Find Any Email Fast",
+              "url": "https://support.google.com/mail/answer/7007933?hl=en"
+            },
+            {
+              "title": "Archive vs Delete in Gmail",
+              "url": "https://support.google.com/mail/answer/6576?hl=en"
+            }
+          ]
+        },
+        {
+          "moduleName": "Calendars & Scheduling",
+          "learningObjectives": [
+            "Calendar invites & RSVPs.",
+            "Time zones & reminders."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Schedule It: Google Calendar Invites",
+              "url": "https://support.google.com/calendar/answer/72143?hl=en"
+            },
+            {
+              "title": "Meeting Etiquette: Confirmations & Follow‑Ups",
+              "url": "https://workspace.google.com/learning-center/products/calendar/tips/"
+            },
+            {
+              "title": "Availability & Time Zones",
+              "url": "https://support.google.com/calendar/answer/6091191?hl=en"
+            }
+          ]
+        },
+        {
+          "moduleName": "Safety & Compliance",
+          "learningObjectives": [
+            "Avoid spam & phishing.",
+            "Handle personal data safely."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Email Safety: Scam Signs & Reporting",
+              "url": "https://support.google.com/mail/answer/8253?hl=en"
+            },
+            {
+              "title": "Two‑Step Verification for Email Accounts",
+              "url": "https://myaccount.google.com/signinoptions/two-step-verification"
+            },
+            {
+              "title": "Out of Office & Templates (Gmail)",
+              "url": "https://support.google.com/mail/answer/25922?hl=en"
+            }
+          ]
+        }
+      ],
+      "assessmentPlan": {
+        "moduleQuizzes": "3–5 questions per module",
+        "practicalTasks": [
+          "Create a professional signature and enable recovery options.",
+          "Send an email with CC and BCC, attaching a file and using a clear subject.",
+          "Create two labels and a filter to auto‑label incoming emails."
+        ],
+        "finalProject": "Draft and send a professional email sequence (initial + follow‑up) and demonstrate inbox organization with labels and filters."
+      },
+      "resources": {
+        "cheatSheets": [
+          { "title": "Email Etiquette & Productivity", "url": "/assets/resources/cheatsheets/email-etiquette.pdf" }
+        ],
+        "templates": [
+          { "title": "Meeting Agenda Template (Docs)", "url": "/assets/resources/templates/meeting-agenda.docx" }
+        ],
+        "linkLibrary": [
+          { "title": "Gmail Help Center", "url": "https://support.google.com/mail/" },
+          { "title": "Google Calendar Help", "url": "https://support.google.com/calendar/" }
+        ]
+      },
+      "certification": {
+        "badge": true,
+        "passCriteria": { "quizPassRate": 0.7, "projectSubmission": true }
+      }
+    },
+    {
+      "courseName": "Enhanced ba_001: Digital Inventory Management",
+      "courseGoal": "Build practical inventory workflows with spreadsheets, Power BI/AppSheet/Odoo, and simple POS.",
+      "modules": [
+        {
+          "moduleName": "Inventory Fundamentals",
+          "learningObjectives": [
+            "SKUs, units, categories.",
+            "Stock in/out and valuation basics."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Inventory 101: SKUs, Categories & Units (Spreadsheet walk‑through)",
+              "url": "https://www.youtube.com/watch?v=sMCvHbGt4cE"
+            },
+            {
+              "title": "Valuation Basics: FIFO vs Average Cost (Power BI example)",
+              "url": "https://www.youtube.com/watch?v=DKctjgzQddI"
+            }
+          ]
+        },
+        {
+          "moduleName": "Spreadsheet Inventory (Excel/Google Sheets)",
+          "learningObjectives": [
+            "Data validation & clean inputs.",
+            "Dashboards & alerts."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Build a Sheets Inventory Tracker from Scratch",
+              "url": "https://www.youtube.com/watch?v=sMCvHbGt4cE"
+            },
+            {
+              "title": "Dashboard & Reports: Low‑Stock Alerts",
+              "url": "https://www.youtube.com/watch?v=DKctjgzQddI"
+            }
+          ]
+        },
+        {
+          "moduleName": "No‑Code/Low‑Code Apps",
+          "learningObjectives": [
+            "AppSheet or Glide setup.",
+            "Forms, calculations, notifications."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Create an Inventory App with AppSheet",
+              "url": "https://www.youtube.com/watch?v=NhUDJC-otOg"
+            },
+            {
+              "title": "Low‑Code Inventory in 75 Minutes (m‑Power)",
+              "url": "https://www.youtube.com/watch?v=H_PhAt0nNBM"
+            }
+          ]
+        },
+        {
+          "moduleName": "Open‑Source ERP (Odoo)",
+          "learningObjectives": [
+            "Odoo inventory essentials.",
+            "Locations, transfers, reordering."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Odoo Inventory: Step‑by‑Step 2026",
+              "url": "https://www.youtube.com/watch?v=XMWJed5T76k"
+            },
+            {
+              "title": "Odoo Inventory: Hands‑On Demo",
+              "url": "https://www.odoo.com/slides/inventory-22"
+            }
+          ]
+        },
+        {
+          "moduleName": "POS & Barcoding",
+          "learningObjectives": [
+            "POS setup with stock updates.",
+            "Barcode labels & scanning."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Retail POS Basics (Shopify POS overview)",
+              "url": "https://help.shopify.com/en/manual/sell-in-person/shopify-pos"
+            },
+            {
+              "title": "Barcodes: Create, Print & Scan",
+              "url": "https://support.google.com/merchants/answer/6324461?hl=en"
+            }
+          ]
+        }
+      ],
+      "assessmentPlan": {
+        "moduleQuizzes": "3–5 questions per module",
+        "practicalTasks": [
+          "Create a SKU list with categories and units.",
+          "Build a stock in/out log with data validation.",
+          "Set up a low‑stock alert dashboard in Sheets."
+        ],
+        "finalProject": "Deliver a working inventory tracker (spreadsheet or AppSheet) with at least 20 SKUs, stock transactions, and an alert/report view."
+      },
+      "resources": {
+        "cheatSheets": [
+          { "title": "Inventory Concepts Cheat Sheet", "url": "/assets/resources/cheatsheets/inventory-concepts.pdf" }
+        ],
+        "templates": [
+          { "title": "Inventory Tracker (Google Sheets)", "url": "/assets/resources/templates/inventory-tracker.xlsx" }
+        ],
+        "linkLibrary": [
+          { "title": "Odoo Inventory Docs", "url": "https://www.odoo.com/slides/inventory-22" },
+          { "title": "AppSheet Docs", "url": "https://support.google.com/appsheet/" }
+        ]
+      },
+      "certification": {
+        "badge": true,
+        "passCriteria": { "quizPassRate": 0.7, "projectSubmission": true }
+      }
+    },
+    {
+      "courseName": "Enhanced ba_002: Customer Relationship Management (CRM)",
+      "courseGoal": "Understand CRM strategy; capture leads; manage pipelines; automate communication.",
+      "modules": [
+        {
+          "moduleName": "CRM Strategy & Data",
+          "learningObjectives": [
+            "Define CRM goals and segments.",
+            "Design customer profile fields."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "CRM 101: What is CRM & Why it Matters (Salesforce)",
+              "url": "https://www.youtube.com/watch?v=SlhESAKF1Tk"
+            },
+            {
+              "title": "Components of CRM (Great Learning)",
+              "url": "https://www.youtube.com/watch?v=6KLUm-Ych74"
+            }
+          ]
+        },
+        {
+          "moduleName": "Choosing & Setting Up a CRM",
+          "learningObjectives": [
+            "Compare Zoho, HubSpot, Bitrix.",
+            "Initial pipeline and fields."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Pick Your CRM: Beginner’s Guide (Simplilearn)",
+              "url": "https://www.youtube.com/watch?v=Ci_qMjf8JRg"
+            },
+            {
+              "title": "CRM Basics & Setup (TutorialsPoint overview)",
+              "url": "https://www.youtube.com/watch?v=zkRWE-mOxG8"
+            }
+          ]
+        },
+        {
+          "moduleName": "Sales Pipeline & Activities",
+          "learningObjectives": [
+            "Lead capture to deal close.",
+            "Tasks, reminders, forecasting."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Pipeline Power: From Lead to Loyal (HubSpot Academy)",
+              "url": "https://academy.hubspot.com/lessons/sales-pipeline"
+            },
+            {
+              "title": "Sales CRM Basics (Zoho CRM Guided Tour)",
+              "url": "https://www.zoho.com/crm/guidedtour/"
+            }
+          ]
+        },
+        {
+          "moduleName": "Automation & Communication",
+          "learningObjectives": [
+            "Email sequences & triggers.",
+            "WhatsApp integration & chatbots."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Automations that Save Time (HubSpot Workflows intro)",
+              "url": "https://knowledge.hubspot.com/workflows"
+            },
+            {
+              "title": "WhatsApp for Business: Getting Started (Meta)",
+              "url": "https://www.facebook.com/business/whatsapp/business-platform"
+            }
+          ]
+        },
+        {
+          "moduleName": "Service & Retention",
+          "learningObjectives": [
+            "Tickets & SLAs.",
+            "Feedback (NPS) and retention."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Customer Service with CRM (Freshdesk Academy)",
+              "url": "https://freshdesk.com/academy"
+            },
+            {
+              "title": "NPS & Feedback Loops (Qualtrics XM Basics)",
+              "url": "https://www.qualtrics.com/experience-management/customer/net-promoter-score/"
+            }
+          ]
+        }
+      ],
+      "assessmentPlan": {
+        "moduleQuizzes": "3–5 questions per module",
+        "practicalTasks": [
+          "Define CRM fields and create a basic pipeline in your chosen tool.",
+          "Import 20 sample leads and log two activities per lead.",
+          "Configure an automated email sequence."
+        ],
+        "finalProject": "Build a mini CRM pipeline (3 stages), import leads, automate a follow‑up, and produce a pipeline report screenshot."
+      },
+      "resources": {
+        "cheatSheets": [
+          { "title": "CRM Field & Pipeline Basics", "url": "/assets/resources/cheatsheets/crm-basics.pdf" }
+        ],
+        "templates": [
+          { "title": "Lead Import CSV Template", "url": "/assets/resources/templates/lead-import.csv" }
+        ],
+        "linkLibrary": [
+          { "title": "HubSpot Knowledge Base", "url": "https://knowledge.hubspot.com/" },
+          { "title": "Zoho CRM Help", "url": "https://help.zoho.com/portal/en/kb/zoho-crm" }
+        ]
+      },
+      "certification": {
+        "badge": true,
+        "passCriteria": { "quizPassRate": 0.7, "projectSubmission": true }
+      }
+    },
+    {
+      "courseName": "Enhanced ec_001: Online Store Setup",
+      "courseGoal": "Launch a working storefront (Shopify/WooCommerce), with products, payments, shipping, and policies.",
+      "modules": [
+        {
+          "moduleName": "E‑Commerce Foundations",
+          "learningObjectives": [
+            "Choose a niche & analyze competitors.",
+            "Know basic compliance & policies."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Find Your Niche & Validate Demand",
+              "url": "https://www.shopify.com/blog/how-to-find-a-niche-market"
+            },
+            {
+              "title": "Policies & Compliance: Shopify Templates",
+              "url": "https://www.shopify.com/tools/policy-generator"
+            }
+          ]
+        },
+        {
+          "moduleName": "Platform Setup (Shopify/Woo)",
+          "learningObjectives": [
+            "Themes, pages, navigation.",
+            "Branding & trust."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Shopify Setup in 12 Minutes",
+              "url": "https://www.youtube.com/watch?v=NjogxU1oRaE"
+            },
+            {
+              "title": "WooCommerce Quick Start",
+              "url": "https://woocommerce.com/document/woocommerce-101-video-series/"
+            }
+          ]
+        },
+        {
+          "moduleName": "Products, Pricing & Media",
+          "learningObjectives": [
+            "Great product pages & variants.",
+            "Images & basic SEO."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Perfect Product Pages (Shopify Learn)",
+              "url": "https://help.shopify.com/en/manual/products/product-media"
+            },
+            {
+              "title": "Search‑Ready: On‑Page SEO Basics",
+              "url": "https://help.shopify.com/en/manual/promoting-marketing/seo"
+            }
+          ]
+        },
+        {
+          "moduleName": "Payments, Shipping & Taxes",
+          "learningObjectives": [
+            "Cards, Mobile Money, PayPal.",
+            "Shipping zones & tax basics."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Payments: Setup & Providers",
+              "url": "https://help.shopify.com/en/manual/payments"
+            },
+            {
+              "title": "Shipping: Rates & Zones",
+              "url": "https://help.shopify.com/en/manual/shipping"
+            }
+          ]
+        },
+        {
+          "moduleName": "Launch & Optimization",
+          "learningObjectives": [
+            "Pre‑launch checklist.",
+            "Analytics, speed & conversion."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Go Live: Store Launch Checklist",
+              "url": "https://help.shopify.com/en/manual/intro-to-shopify/initial-setup/before-you-launch"
+            },
+            {
+              "title": "Measure & Improve: Analytics",
+              "url": "https://help.shopify.com/en/manual/reports-and-analytics"
+            }
+          ]
+        }
+      ],
+      "assessmentPlan": {
+        "moduleQuizzes": "3–5 questions per module",
+        "practicalTasks": [
+          "Create a Shopify dev store or Woo test site.",
+          "Add 3 products with images, variants and prices.",
+          "Configure a payment provider and a shipping zone."
+        ],
+        "finalProject": "Launch a password‑protected test storefront with policies, at least 5 products, configured payments and shipping; share preview link and screenshots."
+      },
+      "resources": {
+        "cheatSheets": [
+          { "title": "Store Launch Checklist", "url": "/assets/resources/cheatsheets/store-launch-checklist.pdf" }
+        ],
+        "templates": [
+          { "title": "Product CSV Import Template", "url": "/assets/resources/templates/product-import.csv" }
+        ],
+        "linkLibrary": [
+          { "title": "Shopify Help Center", "url": "https://help.shopify.com/" },
+          { "title": "WooCommerce Docs", "url": "https://docs.woocommerce.com/" }
+        ]
+      },
+      "certification": {
+        "badge": true,
+        "passCriteria": { "quizPassRate": 0.7, "projectSubmission": true }
+      }
+    },
+    {
+      "courseName": "Enhanced dm_001: Social Media Marketing",
+      "courseGoal": "Build and scale a social presence, content strategy, paid ads, and analytics.",
+      "modules": [
+        {
+          "moduleName": "Strategy & Audience",
+          "learningObjectives": [
+            "Set goals, build personas & choose platforms.",
+            "Define content pillars & voice."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Social Media Strategy for Beginners",
+              "url": "https://www.youtube.com/watch?v=ZYWv5max694"
+            },
+            {
+              "title": "Meta (Facebook/Instagram) Business Help Center",
+              "url": "https://www.facebook.com/business/help"
+            }
+          ]
+        },
+        {
+          "moduleName": "Content Creation & Scheduling",
+          "learningObjectives": [
+            "Short‑form video & graphics.",
+            "Editorial calendar & tools."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Complete SMM Course (Simplilearn)",
+              "url": "https://www.youtube.com/watch?v=OSoJvlDdPY8"
+            },
+            {
+              "title": "Canva Design School (Social Graphics)",
+              "url": "https://www.canva.com/designschool/"
+            }
+          ]
+        },
+        {
+          "moduleName": "Community & Growth",
+          "learningObjectives": [
+            "Engagement, hashtags, UGC.",
+            "Influencer collaborations."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Instagram for Business: Best Practices",
+              "url": "https://business.instagram.com/getting-started"
+            },
+            {
+              "title": "Creator Collaborations & Branded Content",
+              "url": "https://www.facebook.com/business/creatorstudio"
+            }
+          ]
+        },
+        {
+          "moduleName": "Paid Ads Basics",
+          "learningObjectives": [
+            "Meta Ads setup, objectives, creatives.",
+            "Budgets & bidding."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Meta Ads Manager: Get Started",
+              "url": "https://www.facebook.com/business/tools/ads-manager"
+            },
+            {
+              "title": "Google Ads Skillshop (Cross‑channel basics)",
+              "url": "https://skillshop.exceedlms.com/student/catalog/browse"
+            }
+          ]
+        },
+        {
+          "moduleName": "Analytics & Optimization",
+          "learningObjectives": [
+            "Define KPIs, test & report.",
+            "Iterate on content & ads."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Meta Business Suite Insights",
+              "url": "https://www.facebook.com/business/tools/meta-business-suite/insights"
+            },
+            {
+              "title": "YouTube Analytics for Creators",
+              "url": "https://support.google.com/youtube/answer/9314473?hl=en"
+            }
+          ]
+        }
+      ],
+      "assessmentPlan": {
+        "moduleQuizzes": "3–5 questions per module",
+        "practicalTasks": [
+          "Define 2 personas and 3 content pillars.",
+          "Create a 2‑week content calendar with copy and assets.",
+          "Run a small test promotion budget on a post."
+        ],
+        "finalProject": "Publish a 2‑week campaign plan, schedule 6+ posts, run one paid campaign with screenshots of results and insights."
+      },
+      "resources": {
+        "cheatSheets": [
+          { "title": "Social Media Content Checklist", "url": "/assets/resources/cheatsheets/smm-content-checklist.pdf" }
+        ],
+        "templates": [
+          { "title": "Content Calendar (Sheets)", "url": "/assets/resources/templates/content-calendar.xlsx" }
+        ],
+        "linkLibrary": [
+          { "title": "Meta Business Help Center", "url": "https://www.facebook.com/business/help" },
+          { "title": "YouTube Help", "url": "https://support.google.com/youtube/" }
+        ]
+      },
+      "certification": {
+        "badge": true,
+        "passCriteria": { "quizPassRate": 0.7, "projectSubmission": true }
+      }
+    },
+    {
+      "courseName": "Enhanced fm_001: Mobile Money & Digital Payments",
+      "courseGoal": "Use and integrate mobile wallets (M‑Pesa/Airtel), understand payment gateways, and security.",
+      "modules": [
+        {
+          "moduleName": "Mobile Wallet Basics",
+          "learningObjectives": [
+            "Setup M‑Pesa/Airtel; fees & limits.",
+            "Core wallet features."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "M‑Pesa: Product Overview & How‑to",
+              "url": "https://www.safaricom.co.ke/personal/m-pesa"
+            },
+            {
+              "title": "Digital Wallets Explained (Beginner video)",
+              "url": "https://www.youtube.com/watch?v=n5g_T287kJw"
+            }
+          ]
+        },
+        {
+          "moduleName": "Digital Payments in Practice",
+          "learningObjectives": [
+            "QR/USSD payments.",
+            "Online checkout flow & reconciliation."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "How Digital Payment Systems Work (Beginner video)",
+              "url": "https://www.youtube.com/watch?v=229QbEiFKj8"
+            },
+            {
+              "title": "M‑Pesa for Business: Till/Paybill",
+              "url": "https://www.safaricom.co.ke/business/m-pesa"
+            }
+          ]
+        },
+        {
+          "moduleName": "Security & Fraud Prevention",
+          "learningObjectives": [
+            "PIN hygiene, phishing, SIM‑swap.",
+            "Disputes & chargebacks."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Stay Safe Online (Kaspersky Tips)",
+              "url": "https://www.youtube.com/watch?v=aO858HyFbKI"
+            },
+            {
+              "title": "Safaricom: Security & Fraud Awareness",
+              "url": "https://www.safaricom.co.ke/personal/m-pesa/m-pesa-security"
+            }
+          ]
+        },
+        {
+          "moduleName": "Business Integrations",
+          "learningObjectives": [
+            "Accept mobile money in store & online.",
+            "Payment links & POS."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Shopify Payments & Mobile Wallets",
+              "url": "https://help.shopify.com/en/manual/payments/shopify-payments"
+            },
+            {
+              "title": "Google Wallet: Tap & Pay (How‑to)",
+              "url": "https://www.youtube.com/watch?v=xkV4QGd3dkk"
+            }
+          ]
+        },
+        {
+          "moduleName": "Developer & API Overview (Optional)",
+          "learningObjectives": [
+            "Keys/tokens & webhooks.",
+            "Sandbox vs live."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "MTN MoMo API (Flow & Tokens) – Demo",
+              "url": "https://www.youtube.com/watch?v=Sx8ldg_3PCs"
+            },
+            {
+              "title": "Safaricom M‑Pesa Daraja API (Docs)",
+              "url": "https://developer.safaricom.co.ke/daraja/apis/post/safaricom-sandbox"
+            }
+          ]
+        }
+      ],
+      "assessmentPlan": {
+        "moduleQuizzes": "3–5 questions per module",
+        "practicalTasks": [
+          "Set up a mobile wallet and review fees/limits.",
+          "Complete a QR or USSD payment (demo/test).",
+          "Generate a payment link and document the flow."
+        ],
+        "finalProject": "Document an end‑to‑end payment flow (wallet setup, payment, receipt) and outline a reconciliation process for daily sales."
+      },
+      "resources": {
+        "cheatSheets": [
+          { "title": "Mobile Money Safety Guide", "url": "/assets/resources/cheatsheets/mobile-money-safety.pdf" }
+        ],
+        "templates": [
+          { "title": "Daily Reconciliation Sheet (Sheets)", "url": "/assets/resources/templates/daily-reconciliation.xlsx" }
+        ],
+        "linkLibrary": [
+          { "title": "Safaricom M‑Pesa", "url": "https://www.safaricom.co.ke/personal/m-pesa" },
+          { "title": "Airtel Money", "url": "https://www.airtel.africa/" }
+        ]
+      },
+      "certification": {
+        "badge": true,
+        "passCriteria": { "quizPassRate": 0.7, "projectSubmission": true }
+      }
+    },
+    {
+      "courseName": "Enhanced fm_002: Digital Bookkeeping",
+      "courseGoal": "Maintain accurate records with spreadsheets or software (QuickBooks/Xero), generate financial statements, and comply.",
+      "modules": [
+        {
+          "moduleName": "Bookkeeping Foundations",
+          "learningObjectives": [
+            "Chart of accounts; single vs double entry.",
+            "Cash vs accrual."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "BOOKKEEPING BASICS: 7 Steps to Get You Started",
+              "url": "https://www.youtube.com/watch?v=a3GqDaIw8pA"
+            },
+            {
+              "title": "The Only Bookkeeping Tutorial You Need (Beginner Course)",
+              "url": "https://www.youtube.com/watch?v=24TFLVCceiQ"
+            }
+          ]
+        },
+        {
+          "moduleName": "Spreadsheet Bookkeeping",
+          "learningObjectives": [
+            "Build income/expense tracker.",
+            "Monthly P&L with formulas."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Google Sheets Bookkeeping (Step‑by‑Step)",
+              "url": "https://www.youtube.com/watch?v=BUikgcvmEo0"
+            },
+            {
+              "title": "Easy Bookkeeping Template Walk‑Through",
+              "url": "https://www.youtube.com/watch?v=dGod3vV2Ulc"
+            }
+          ]
+        },
+        {
+          "moduleName": "Cloud Accounting Tools",
+          "learningObjectives": [
+            "QuickBooks/Xero setup.",
+            "Bank feeds & rules."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Xero Tutorial 2026 (Beginner)",
+              "url": "https://www.youtube.com/watch?v=55sNWGhQq4E"
+            },
+            {
+              "title": "How To Do Bookkeeping with QuickBooks Online",
+              "url": "https://www.youtube.com/watch?v=5MLjvpUsuwM"
+            }
+          ]
+        },
+        {
+          "moduleName": "Reconciliations & Reporting",
+          "learningObjectives": [
+            "Bank reconciliation.",
+            "Core reports (P&L, Balance Sheet, Cash Flow)."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Bank Reconciliation (Explained)",
+              "url": "https://www.youtube.com/watch?v=a3GqDaIw8pA"
+            },
+            {
+              "title": "QuickBooks/Xero – Reports Overview",
+              "url": "https://quickbooks.intuit.com/learn-support/en-us/help-article/reports/learn-reports-quickbooks-online/L0VQbB1S8_US_en_US"
+            }
+          ]
+        },
+        {
+          "moduleName": "Controls & Close",
+          "learningObjectives": [
+            "Month‑end close checklist.",
+            "Petty cash & audit trail."
+          ],
+          "suggestedVideos": [
+            {
+              "title": "Month‑End Close: A Simple 10‑Step Checklist",
+              "url": "https://www.freshbooks.com/en-gb/hub/accounting/month-end-close"
+            },
+            {
+              "title": "Petty Cash & Approvals (Best Practices)",
+              "url": "https://www.sage.com/en-us/blog/petty-cash-fund/"
+            }
+          ]
+        }
+      ],
+      "assessmentPlan": {
+        "moduleQuizzes": "3–5 questions per module",
+        "practicalTasks": [
+          "Build an income/expense tracker with categories.",
+          "Import a month of transactions and categorize.",
+          "Perform a bank reconciliation on sample data."
+        ],
+        "finalProject": "Produce a monthly P&L and Balance Sheet from sample data and document the reconciliation steps taken."
+      },
+      "resources": {
+        "cheatSheets": [
+          { "title": "Bookkeeping Formula & Accounts", "url": "/assets/resources/cheatsheets/bookkeeping-formulas.pdf" }
+        ],
+        "templates": [
+          { "title": "Bookkeeping Ledger (Sheets)", "url": "/assets/resources/templates/bookkeeping-ledger.xlsx" }
+        ],
+        "linkLibrary": [
+          { "title": "QuickBooks Learn & Support", "url": "https://quickbooks.intuit.com/learn-support/" },
+          { "title": "Xero Central", "url": "https://central.xero.com/" }
+        ]
+      },
+      "certification": {
+        "badge": true,
+        "passCriteria": { "quizPassRate": 0.7, "projectSubmission": true }
+      }
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Weekly Progress</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .skill-badge {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #e3f2fd;
+            color: #1976d2;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        .module-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+        }
+
+        .button:hover {
+            background: #5568d3;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-center;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📈 Your Weekly Progress</h1>
+            <p>Keep up the great work!</p>
+        </div>
+
+        <div class="content">
+            <h2>Hello {{firstName}}! 👋</h2>
+
+            <p>Here's a summary of your learning activity this week:</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">{{modulesCompleted}}</div>
+                    <div class="stat-label">Modules Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{assessmentsTaken}}</div>
+                    <div class="stat-label">Assessments Taken</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{hoursSpent}}</div>
+                    <div class="stat-label">Hours Spent Learning</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{certificatesEarned}}</div>
+                    <div class="stat-label">Certificates Earned</div>
+                </div>
+            </div>
+
+            {{#if currentStreak}}
+            <div
+                style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: #fff; padding: 20px; border-radius: 10px; text-align: center; margin: 20px 0;">
+                <h3 style="margin: 0;">🔥 {{currentStreak}} Day Streak!</h3>
+                <p style="margin: 10px 0 0 0;">You're on fire! Keep the momentum going.</p>
+            </div>
+            {{/if}}
+
+            {{#if topSkills}}
+            <h3>🌟 Your Top Skills This Week</h3>
+            <div>
+                {{#each topSkills}}
+                <span class="skill-badge">{{this}}</span>
+                {{/each}}
+            </div>
+            {{/if}}
+
+            {{#if upcomingModules}}
+            <h3>📚 Recommended Next Steps</h3>
+            <p>Based on your progress, here are some modules you might enjoy:</p>
+            {{#each upcomingModules}}
+            <div class="module-item">
+                <strong>{{this.title}}</strong>
+                <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">{{this.description}}</p>
+            </div>
+            {{/each}}
+            {{/if}}
+
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{dashboardUrl}}" class="button">📊 View Full Dashboard</a>
+            </div>
+
+            <h3>💡 Learning Tip of the Week</h3>
+            <p style="background: #fff3cd; padding: 15px; border-radius: 5px; border-left: 4px solid #ffc107;">
+                <strong>Practice makes perfect!</strong> Try to apply what you've learned this week to a real project or
+                business challenge. Hands-on experience is the best way to solidify your new skills.
+            </p>
+
+            <p>Keep up the excellent work! Every hour you invest in learning is an investment in your future. 🚀</p>
+
+            <p>Best regards,<br>
+                <strong>The SkillBridge Team</strong>
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>SkillBridge - Empowering Digital Skills for Economic Growth</p>
+            <p>© {{year}} SkillBridge. All rights reserved.</p>
+            <p style="font-size: 12px; color: #999;">
+                You're receiving this weekly summary because you're an active SkillBridge learner.
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Complete</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .score-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .score-value {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            margin: 10px 0;
+        }
+
+        .recommendation {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+        }
+
+        .button:hover {
+            background: #5568d3;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-center;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Assessment Complete!</h1>
+            <p>Your personalized learning path is ready</p>
+        </div>
+
+        <div class="content">
+            <h2>Great job, {{firstName}}! 🎯</h2>
+
+            <p>You've completed the <strong>{{assessmentTitle}}</strong>. Here are your results:</p>
+
+            <div class="score-box">
+                <div class="score-value">{{score}}%</div>
+                <div class="level-badge">{{level}} Level</div>
+                <p style="margin-top: 15px;">Your current skill level</p>
+            </div>
+
+            <h3>Personalized Recommendations</h3>
+            <p>Based on your assessment, we recommend the following learning paths:</p>
+
+            {{#each recommendations}}
+            <div class="recommendation">
+                <strong>{{this.title}}</strong>
+                <p>{{this.description}}</p>
+            </div>
+            {{/each}}
+
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{learningUrl}}" class="button">📚 Start Learning</a>
+                <a href="{{dashboardUrl}}" class="button">📈 View Dashboard</a>
+            </div>
+
+            <h3>Your Learning Journey</h3>
+            <p>We've created a personalized learning path tailored to your current skills and goals. Each module is
+                designed to build on what you already know and help you reach the next level.</p>
+
+            <h3>Tips for Success</h3>
+            <ul>
+                <li>✅ Set aside dedicated time for learning each day</li>
+                <li>✅ Practice what you learn with real projects</li>
+                <li>✅ Track your progress regularly</li>
+                <li>✅ Don't hesitate to revisit modules if needed</li>
+                <li>✅ Join our community to connect with other learners</li>
+            </ul>
+
+            <p>Remember, everyone learns at their own pace. The important thing is to keep moving forward! 🚀</p>
+
+            <p>Best regards,<br>
+                <strong>The SkillBridge Team</strong>
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>SkillBridge - Empowering Digital Skills for Economic Growth</p>
+            <p>© {{year}} SkillBridge. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

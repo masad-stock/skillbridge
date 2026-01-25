@@ -1,0 +1,442 @@
+openapi: 3.0.3
+info:
+  title: Learner Platform API
+  version: 1.1.0
+  description: API specification for core authentication and user endpoints. Extend incrementally to other domains.
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /payments:
+    post:
+      summary: Create a payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentRequest'
+      responses:
+        '201':
+          description: Payment created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      success:
+                        type: boolean
+                      payment:
+                        $ref: '#/components/schemas/Payment'
+                      providerResponse:
+                        type: object
+                        additionalProperties: true
+  /payments/my-payments:
+    get:
+      summary: Get current user's payments
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [pending, completed, failed, refunded, cancelled]
+      responses:
+        '200':
+          description: Paginated payments
+  /payments/{transactionId}:
+    get:
+      summary: Get a payment by transactionId
+      parameters:
+        - in: path
+          name: transactionId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Payment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Payment'
+        '404':
+          description: Not found
+  /auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 6
+                profile:
+                  $ref: '#/components/schemas/UserProfile'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: User exists or validation error
+  /auth/login:
+    post:
+      summary: Authenticate user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Auth success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Invalid credentials
+  /auth/me:
+    get:
+      summary: Get current user
+      responses:
+        '200':
+          description: Current user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+  /auth/forgot-password:
+    post:
+      summary: Request password reset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Response indicating email was processed
+  /auth/reset-password/{token}:
+    post:
+      summary: Reset password with token
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [password, confirmPassword]
+              properties:
+                password:
+                  type: string
+                  minLength: 6
+                confirmPassword:
+                  type: string
+      responses:
+        '200':
+          description: Password reset successful
+  /auth/change-password:
+    post:
+      summary: Change password (authenticated)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [currentPassword, newPassword, confirmPassword]
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+                  minLength: 6
+                confirmPassword:
+                  type: string
+      responses:
+        '200':
+          description: Password changed
+  /users:
+    get:
+      summary: List users (admin only)
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Paginated users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUsers'
+        '403':
+          description: Forbidden
+  /users/{id}:
+    get:
+      summary: Get a user by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: A user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/User'
+        '404':
+          description: Not found
+    put:
+      summary: Update a user (self or admin)
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                profile:
+                  $ref: '#/components/schemas/UserProfile'
+                role:
+                  type: string
+                  enum: [user, admin, business]
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/User'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserProfile:
+      type: object
+      description: Flexible profile object
+      additionalProperties: true
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum: [user, admin, business]
+        profile:
+          $ref: '#/components/schemas/UserProfile'
+        skillsProfile:
+          type: object
+          additionalProperties: true
+    PaginatedUsers:
+      type: object
+      properties:
+        success:
+          type: boolean
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        count:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    CreatePaymentRequest:
+      type: object
+      required: [provider, amount, item]
+      properties:
+        provider:
+          type: string
+          enum: [stripe, paypal, mpesa, manual, free]
+        amount:
+          type: number
+          minimum: 0.01
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          default: USD
+        item:
+          type: object
+          required: [type]
+          properties:
+            type:
+              type: string
+              enum: [module, certificate, subscription, donation]
+            id:
+              type: string
+            name:
+              type: string
+            description:
+              type: string
+        metadata:
+          type: object
+          additionalProperties: true
+        idempotencyKey:
+          type: string
+          description: Prevents duplicate charges when re-sending the same request
+    Payment:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        idempotencyKey:
+          type: string
+        provider:
+          type: string
+        amount:
+          type: number
+        currency:
+          type: string
+        status:
+          type: string
+          enum: [pending, completed, failed, refunded, cancelled]
+        providerTransactionId:
+          type: string
+        item:
+          type: object
+          properties:
+            type:
+              type: string
+            id:
+              type: string
+            name:
+              type: string
+            description:
+              type: string
+        metadata:
+          type: object
+          additionalProperties: true
+        receipt:
+          type: object
+          properties:
+            url:
+              type: string
+            number:
+              type: string
+        completedAt:
+          type: string
+          format: date-time
+        failedAt:
+          type: string
+          format: date-time
+        failureReason:
+          type: string

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to SkillBridge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+        }
+
+        .button:hover {
+            background: #5568d3;
+        }
+
+        .features {
+            margin: 20px 0;
+        }
+
+        .feature {
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-center;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Welcome to SkillBridge!</h1>
+            <p>Your journey to digital skills mastery begins now</p>
+        </div>
+
+        <div class="content">
+            <h2>Hello {{firstName}}! 👋</h2>
+
+            <p>We're thrilled to have you join the SkillBridge community! You've taken the first step towards
+                transforming your digital skills and unlocking new economic opportunities.</p>
+
+            <h3>What's Next?</h3>
+
+            <div class="features">
+                <div class="feature">
+                    <strong>📊 Take Your Skills Assessment</strong>
+                    <p>Discover your current skill level and get personalized learning recommendations.</p>
+                    <a href="{{assessmentUrl}}" class="button">Start Assessment</a>
+                </div>
+
+                <div class="feature">
+                    <strong>📚 Explore Learning Paths</strong>
+                    <p>Browse our curated modules designed for Kenyan entrepreneurs and professionals.</p>
+                    <a href="{{learningUrl}}" class="button">Browse Courses</a>
+                </div>
+
+                <div class="feature">
+                    <strong>💼 Access Business Tools</strong>
+                    <p>Use our free tools to manage inventory, track sales, and grow your business.</p>
+                    <a href="{{dashboardUrl}}" class="button">Go to Dashboard</a>
+                </div>
+            </div>
+
+            <h3>Why SkillBridge?</h3>
+            <ul>
+                <li>✅ Personalized learning paths based on your skills</li>
+                <li>✅ Practical business tools for entrepreneurs</li>
+                <li>✅ Earn certificates to showcase your achievements</li>
+                <li>✅ Learn at your own pace, online or offline</li>
+                <li>✅ 100% free for all Kenyans</li>
+            </ul>
+
+            <p><strong>Need help?</strong> Reply to this email or visit our help center. We're here to support your
+                learning journey!</p>
+
+            <p>Let's get started! 🚀</p>
+
+            <p>Best regards,<br>
+                <strong>The SkillBridge Team</strong>
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>SkillBridge - Empowering Digital Skills for Economic Growth</p>
+            <p>© {{year}} SkillBridge. All rights reserved.</p>
+            <p style="font-size: 12px; color: #999;">
+                You received this email because you registered at SkillBridge.<br>
+                {{email}}
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,188 @@
+/* Consent Modal Styles */
+
+.consent-modal .modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.consent-header {
+    background: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.consent-header .modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.lang-toggle {
+    font-size: 0.875rem;
+}
+
+.consent-body {
+    padding: 1.5rem;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.consent-intro {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #4a5568;
+    margin-bottom: 1rem;
+}
+
+.data-protection-notice {
+    background-color: #ebf8ff;
+    border-color: #90cdf4;
+    color: #2b6cb0;
+    font-size: 0.9rem;
+}
+
+.consent-sections {
+    margin: 1.5rem 0;
+}
+
+.consent-section {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background-color: #f7fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.consent-section:hover {
+    border-color: #cbd5e0;
+    background-color: #edf2f7;
+}
+
+.consent-section .form-check {
+    margin: 0;
+}
+
+.consent-section .form-check-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.25rem;
+}
+
+.consent-section .form-check-input:checked {
+    background-color: #2c5282;
+    border-color: #2c5282;
+}
+
+.consent-label {
+    margin-left: 0.5rem;
+}
+
+.consent-label strong {
+    display: block;
+    font-size: 1rem;
+    color: #2d3748;
+    margin-bottom: 0.25rem;
+}
+
+.required-badge {
+    color: #e53e3e;
+    margin-left: 0.25rem;
+}
+
+.consent-description {
+    font-size: 0.875rem;
+    color: #718096;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.rights-section {
+    background-color: #f0fff4;
+    border: 1px solid #9ae6b4;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.rights-section h6 {
+    color: #276749;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.rights-section ul {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+.rights-section li {
+    color: #2f855a;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.rights-section li:last-child {
+    margin-bottom: 0;
+}
+
+.consent-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    background-color: #f7fafc;
+    border-radius: 0 0 12px 12px;
+}
+
+.consent-footer .btn-primary {
+    background-color: #2c5282;
+    border-color: #2c5282;
+    padding: 0.5rem 1.5rem;
+}
+
+.consent-footer .btn-primary:hover {
+    background-color: #1a365d;
+    border-color: #1a365d;
+}
+
+.consent-footer .btn-outline-secondary {
+    color: #718096;
+    border-color: #cbd5e0;
+}
+
+.consent-footer .btn-outline-secondary:hover {
+    background-color: #edf2f7;
+    color: #4a5568;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .consent-header {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+
+    .consent-header .modal-title {
+        font-size: 1.25rem;
+    }
+
+    .consent-body {
+        padding: 1rem;
+    }
+
+    .consent-section {
+        padding: 0.75rem;
+    }
+
+    .consent-label strong {
+        font-size: 0.9rem;
+    }
+
+    .consent-description {
+        font-size: 0.8rem;
+    }
+}

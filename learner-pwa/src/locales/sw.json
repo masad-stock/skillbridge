@@ -1,0 +1,224 @@
+{
+  "nav": {
+    "home": "Nyumbani",
+    "dashboard": "Dashibodi",
+    "learning": "Njia ya Kujifunza",
+    "assessment": "Tathmini ya Ujuzi",
+    "business": "Zana za Biashara",
+    "certificates": "Vyeti",
+    "profile": "Wasifu",
+    "logout": "Toka",
+    "login": "Ingia",
+    "register": "Jisajili"
+  },
+  "common": {
+    "loading": "Inapakia...",
+    "error": "Hitilafu",
+    "success": "Mafanikio",
+    "save": "Hifadhi",
+    "cancel": "Ghairi",
+    "delete": "Futa",
+    "edit": "Hariri",
+    "view": "Tazama",
+    "download": "Pakua",
+    "upload": "Pakia",
+    "search": "Tafuta",
+    "filter": "Chuja",
+    "close": "Funga",
+    "continue": "Endelea",
+    "back": "Rudi",
+    "next": "Ifuatayo",
+    "previous": "Iliyotangulia",
+    "submit": "Wasilisha",
+    "confirm": "Thibitisha",
+    "yes": "Ndiyo",
+    "no": "Hapana"
+  },
+  "home": {
+    "hero": {
+      "title": "Badilisha Mustakabali Wako kwa Ujuzi wa Kidijitali",
+      "subtitle": "Jukwaa la kwanza la kujifunza ujuzi wa kidijitali linaloendeshwa na AI katika Jimbo la Kiharu. Jifunze, jenga biashara yako, na ongeza mapato yako kwa mafunzo ya kibinafsi.",
+      "getStarted": "Anza Sasa",
+      "learnMore": "Jifunze Kuhusu Tathmini",
+      "continueLearning": "Endelea Kujifunza"
+    },
+    "features": {
+      "title": "Kwa Nini Uchague SkillBridge254?",
+      "subtitle": "Imejengwa maalum kwa mahitaji ya vijana wa Jimbo la Kiharu",
+      "aiAssessment": {
+        "title": "Tathmini Inayoendeshwa na AI",
+        "description": "Jukwaa letu linatumia akili bandia kutathmini ujuzi wako na kukuongoza kwa njia za kujifunza za kibinafsi."
+      },
+      "offline": {
+        "title": "Jifunze Popote",
+        "description": "Soma hata bila muunganisho wa mtandao. Maudhui yako yanabaki kwenye kifaa chako kwa kujifunza nje ya mtandao."
+      },
+      "businessTools": {
+        "title": "Zana za Biashara",
+        "description": "Pata zana za kisasa za kusimamia biashara yako - uhasibu, wateja, na malipo."
+      },
+      "personalized": {
+        "title": "Mafunzo ya Kibinafsi",
+        "description": "Kila mtu anapata mafunzo yanayolingana na kiwango chake cha sasa cha ujuzi na kasi ya kujifunza."
+      }
+    },
+    "cta": {
+      "title": "Uko Tayari Kubadilisha Mustakabali Wako?",
+      "subtitle": "Jiunge na maelfu ya vijana wa Kiharu wanajenga maisha bora kupitia ujuzi wa kidijitali. Anza safari yako leo - ni bure kabisa!",
+      "createAccount": "Fungua Akaunti Bure",
+      "goToDashboard": "Nenda kwa Dashibodi"
+    }
+  },
+  "dashboard": {
+    "welcome": "Karibu tena",
+    "progress": "Maendeleo Yako",
+    "recentActivity": "Shughuli za Hivi Karibuni",
+    "recommendations": "Inapendekezwa Kwako",
+    "stats": {
+      "coursesCompleted": "Kozi Zilizokamilika",
+      "hoursLearned": "Masaa Yalijifunzwa",
+      "certificatesEarned": "Vyeti Vilivyopatikana",
+      "currentStreak": "Mfululizo wa Siku"
+    }
+  },
+  "learning": {
+    "title": "Njia Yako ya Kujifunza",
+    "subtitle": "Moduli za mafunzo za kibinafsi zilizoundwa kwa kiwango chako cha ujuzi",
+    "startModule": "Anza",
+    "continueModule": "Endelea",
+    "retakeModule": "Rudia",
+    "completed": "Imekamilika",
+    "inProgress": "Inaendelea",
+    "notStarted": "Haijaanza",
+    "estimatedTime": "dakika",
+    "difficulty": {
+      "easy": "Rahisi",
+      "medium": "Ya Kati",
+      "hard": "Ngumu",
+      "expert": "Mtaalamu"
+    }
+  },
+  "assessment": {
+    "title": "Tathmini ya Ujuzi",
+    "subtitle": "Gundua kiwango chako cha sasa cha ujuzi na upate mapendekezo ya kibinafsi",
+    "start": "Anza Tathmini",
+    "continue": "Endelea na Tathmini",
+    "retake": "Rudia Tathmini",
+    "timeEstimate": "Inachukua dakika 5-10",
+    "questions": "Maswali",
+    "progress": "Maendeleo"
+  },
+  "certificates": {
+    "title": "Vyeti Vyangu",
+    "subtitle": "Tazama na upakue vyeti vyako vilivyopatikana",
+    "download": "Pakua Cheti",
+    "verify": "Thibitisha Cheti",
+    "share": "Shiriki",
+    "noCertificates": "Hakuna vyeti bado",
+    "earnCertificates": "Kamilisha kozi ili upate vyeti"
+  },
+  "completion": {
+    "congratulations": "Hongera!",
+    "courseCompleted": "Umekamilisha kozi!",
+    "certificateReady": "Cheti chako kiko tayari",
+    "viewCertificate": "Tazama Cheti",
+    "downloadCertificate": "Pakua Cheti",
+    "shareSuccess": "Shiriki Mafanikio Yako",
+    "continueLearning": "Endelea Kujifunza",
+    "nextCourse": "Kozi Inayopendekezwa Ifuatayo"
+  },
+  "profile": {
+    "title": "Wasifu Wangu",
+    "personalInfo": "Taarifa Binafsi",
+    "accountSettings": "Mipangilio ya Akaunti",
+    "preferences": "Mapendeleo",
+    "changePassword": "Badilisha Nenosiri",
+    "updateProfile": "Sasisha Wasifu"
+  },
+  "settings": {
+    "theme": "Mandhari",
+    "language": "Lugha",
+    "lightMode": "Hali ya Mwanga",
+    "darkMode": "Hali ya Giza",
+    "english": "Kiingereza",
+    "swahili": "Kiswahili"
+  },
+  "errors": {
+    "generic": "Kuna hitilafu. Tafadhali jaribu tena.",
+    "network": "Hitilafu ya mtandao. Tafadhali angalia muunganisho wako.",
+    "notFound": "Ukurasa haujapatikana",
+    "unauthorized": "Unahitaji kuingia ili kufikia ukurasa huu",
+    "serverError": "Hitilafu ya seva. Tafadhali jaribu tena baadaye."
+  },
+  "chatbot": {
+    "title": "Msaidizi wa Kujifunza",
+    "online": "Mtandaoni",
+    "placeholder": "Andika swali lako...",
+    "powered": "Inaendeshwa na Gemini AI",
+    "welcome": "Habari! Mimi ni msaidizi wako wa kujifunza. Naweza kukusaidia vipi leo?",
+    "error": "Samahani, nimepata tatizo. Tafadhali jaribu tena."
+  },
+  "kiharu": {
+    "constituency": "Jimbo la Kiharu",
+    "welcome": "Karibu Kiharu - Jifunze Ujuzi wa Kidijitali",
+    "description": "Jukwaa maalum kwa vijana wa Jimbo la Kiharu kujifunza ujuzi wa kidijitali na kuanzisha biashara.",
+    "population": "Idadi ya watu: 45,000",
+    "youth": "Vijana (18-35): 17,100",
+    "challenges": {
+      "employment": "Upungufu wa ajira rasmi",
+      "skills": "Upungufu wa ujuzi wa kidijitali",
+      "connectivity": "Muunganisho duni wa mtandao",
+      "capital": "Upungufu wa mtaji wa kuanzisha biashara"
+    },
+    "opportunities": {
+      "agriculture": "Kilimo (kahawa, chai, maziwa)",
+      "retail": "Uuzaji wa rejareja",
+      "transport": "Usafiri wa boda boda",
+      "digital": "Huduma za kidijitali"
+    },
+    "success_stories": "Hadithi za Mafanikio",
+    "community": "Jamii ya Kiharu",
+    "local_businesses": "Biashara za Mitaa",
+    "network_partners": "Washirika wa Mtandao"
+  },
+  "business_tools": {
+    "inventory": {
+      "title": "Usimamizi wa Hesabu",
+      "kiharu_adapted": "Imebadilishwa kwa biashara za Kiharu (rejareja na kilimo)",
+      "features": {
+        "stock_tracking": "Kufuatilia hisa",
+        "low_stock_alerts": "Tahadhari za hisa chache",
+        "supplier_management": "Usimamizi wa wasambazaji",
+        "sales_reports": "Ripoti za mauzo"
+      }
+    },
+    "crm": {
+      "title": "Uhusiano na Wateja",
+      "kiharu_adapted": "Imebadilishwa kwa wateja wa Kiharu",
+      "features": {
+        "customer_database": "Hifadhidata ya wateja",
+        "follow_up": "Kufuatilia",
+        "loyalty_programs": "Programu za uaminifu",
+        "feedback_collection": "Ukusanyaji wa maoni"
+      }
+    },
+    "payments": {
+      "title": "Malipo ya Kidijitali",
+      "kiharu_adapted": "M-Pesa na njia zingine za malipo za Kiharu",
+      "features": {
+        "mpesa_integration": "Ujumuishaji wa M-Pesa",
+        "payment_tracking": "Kufuatilia malipo",
+        "invoice_generation": "Uzalishaji wa ankara",
+        "financial_reports": "Ripoti za fedha"
+      }
+    }
+  },
+  "courses": {
+    "kiharu_specific": "Kozi Maalum za Kiharu",
+    "agricultural_focus": "Zinazolenga kilimo",
+    "business_focus": "Zinazolenga biashara",
+    "digital_skills": "Ujuzi wa Kidijitali",
+    "recommended_for_you": "Inapendekezwa Kwako",
+    "based_on_location": "Kulingana na eneo lako"
+  }
+}

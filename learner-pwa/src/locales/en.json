@@ -1,0 +1,161 @@
+{
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "learning": "Learning Path",
+    "assessment": "Skills Assessment",
+    "business": "Business Tools",
+    "certificates": "Certificates",
+    "profile": "Profile",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "download": "Download",
+    "upload": "Upload",
+    "search": "Search",
+    "filter": "Filter",
+    "close": "Close",
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "home": {
+    "hero": {
+      "title": "Transform Your Future with Digital Skills",
+      "subtitle": "The first AI-powered digital skills learning platform in Kiharu Constituency. Learn, build your business, and increase your income with personalized training.",
+      "getStarted": "Get Started",
+      "learnMore": "Learn About Assessment",
+      "continuelearning": "Continue Learning"
+    },
+    "features": {
+      "title": "Why Choose SkillBridge254?",
+      "subtitle": "Built specifically for the needs of youth in Kiharu Constituency",
+      "aiAssessment": {
+        "title": "AI-Powered Assessment",
+        "description": "Our platform uses artificial intelligence to evaluate your skills and guide you with personalized learning paths."
+      },
+      "offline": {
+        "title": "Learn Anywhere",
+        "description": "Study even without internet connection. Your content stays on your device for offline learning."
+      },
+      "businessTools": {
+        "title": "Business Tools",
+        "description": "Get modern tools to manage your business - accounting, customers, and payments."
+      },
+      "personalized": {
+        "title": "Personalized Training",
+        "description": "Everyone gets training that fits their current skill level and learning pace."
+      }
+    },
+    "cta": {
+      "title": "Ready to Transform Your Future?",
+      "subtitle": "Join thousands of youth in Kiharu who are building better lives through digital skills. Start your journey today - it's completely free!",
+      "createAccount": "Create Free Account",
+      "goToDashboard": "Go to Dashboard"
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome back",
+    "progress": "Your Progress",
+    "recentActivity": "Recent Activity",
+    "recommendations": "Recommended for You",
+    "stats": {
+      "coursesCompleted": "Courses Completed",
+      "hoursLearned": "Hours Learned",
+      "certificatesEarned": "Certificates Earned",
+      "currentStreak": "Day Streak"
+    }
+  },
+  "learning": {
+    "title": "Your Learning Path",
+    "subtitle": "Personalized training modules designed for your skill level",
+    "startModule": "Start",
+    "continueModule": "Continue",
+    "retakeModule": "Retake",
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "notStarted": "Not Started",
+    "estimatedTime": "minutes",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard",
+      "expert": "Expert"
+    }
+  },
+  "assessment": {
+    "title": "Skills Assessment",
+    "subtitle": "Discover your current skill level and get personalized recommendations",
+    "start": "Start Assessment",
+    "continue": "Continue Assessment",
+    "retake": "Retake Assessment",
+    "timeEstimate": "Takes 5-10 minutes",
+    "questions": "Questions",
+    "progress": "Progress"
+  },
+  "certificates": {
+    "title": "My Certificates",
+    "subtitle": "View and download your earned certificates",
+    "download": "Download Certificate",
+    "verify": "Verify Certificate",
+    "share": "Share",
+    "noCertificates": "No certificates yet",
+    "earnCertificates": "Complete courses to earn certificates"
+  },
+  "completion": {
+    "congratulations": "Congratulations!",
+    "courseCompleted": "You've completed the course!",
+    "certificateReady": "Your certificate is ready",
+    "viewCertificate": "View Certificate",
+    "downloadCertificate": "Download Certificate",
+    "shareSuccess": "Share Your Success",
+    "continueLearning": "Continue Learning",
+    "nextCourse": "Next Recommended Course"
+  },
+  "profile": {
+    "title": "My Profile",
+    "personalInfo": "Personal Information",
+    "accountSettings": "Account Settings",
+    "preferences": "Preferences",
+    "changePassword": "Change Password",
+    "updateProfile": "Update Profile"
+  },
+  "settings": {
+    "theme": "Theme",
+    "language": "Language",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode",
+    "english": "English",
+    "swahili": "Swahili"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Network error. Please check your connection.",
+    "notFound": "Page not found",
+    "unauthorized": "You need to login to access this page",
+    "serverError": "Server error. Please try again later."
+  },
+  "chatbot": {
+    "title": "Learning Assistant",
+    "online": "Online",
+    "placeholder": "Type your question...",
+    "powered": "Powered by Gemini AI",
+    "welcome": "Hello! I'm your learning assistant. How can I help you today?",
+    "error": "Sorry, I encountered an error. Please try again."
+  }
+}

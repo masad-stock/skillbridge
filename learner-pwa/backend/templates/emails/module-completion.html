@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module Completed!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .achievement {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4facfe;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #4facfe;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+        }
+
+        .button:hover {
+            background: #3d8fd1;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-center;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Module Completed!</h1>
+            <p>You're making excellent progress</p>
+        </div>
+
+        <div class="content">
+            <h2>Well done, {{firstName}}! 👏</h2>
+
+            <div class="achievement">
+                <h3 style="margin-top: 0;">✅ {{moduleTitle}}</h3>
+                <p><strong>Category:</strong> {{category}}</p>
+                <p>You've successfully completed this module and demonstrated your mastery of the material!</p>
+            </div>
+
+            <h3>Your Performance</h3>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value">{{score}}%</div>
+                    <div class="stat-label">Final Score</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">{{timeSpent}}</div>
+                    <div class="stat-label">Hours Spent</div>
+                </div>
+            </div>
+
+            <h3>What's Next?</h3>
+            <p>Your certificate is being generated and will be available shortly. You'll receive another email once it's
+                ready to download.</p>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{certificateUrl}}" class="button">🏆 View My Certificates</a>
+                <a href="{{nextModulesUrl}}" class="button">📚 Continue Learning</a>
+            </div>
+
+            <h3>Keep the Momentum Going! 🚀</h3>
+            <p>You're on a roll! Here are some suggestions for your next steps:</p>
+            <ul>
+                <li>✅ Explore related modules to deepen your knowledge</li>
+                <li>✅ Apply what you've learned to a real project</li>
+                <li>✅ Share your progress with your network</li>
+                <li>✅ Help others by sharing your insights</li>
+            </ul>
+
+            <p>Remember, every module you complete brings you closer to your goals. Keep up the fantastic work!</p>
+
+            <p>Best regards,<br>
+                <strong>The SkillBridge Team</strong>
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>SkillBridge - Empowering Digital Skills for Economic Growth</p>
+            <p>© {{year}} SkillBridge. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,805 @@
+import { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Button, ProgressBar, Badge, Modal, Alert } from 'react-bootstrap';
+import { useUser } from '../context/UserContext';
+import { useOffline } from '../context/OfflineContext';
+import { SKILL_CATEGORIES } from '../services/aiAssessment';
+import YouTubePlayer from '../components/YouTubePlayer';
+import ContentRenderer from '../components/ContentRenderer';
+import AIImage from '../components/common/AIImage';
+import { getModuleContent } from '../data/courseContent';
+import contentOrchestrator from '../services/contentOrchestrator';
+import contentErrorLogger from '../services/contentErrorLogger';
+import contentErrorRecovery from '../services/contentErrorRecovery';
+
+function LearningPath() {
+    const { learningPath, progress, dispatch } = useUser();
+    const isOnline = useOffline();
+    const [selectedModule, setSelectedModule] = useState(null);
+    const [showModule, setShowModule] = useState(false);
+    const [currentLesson, setCurrentLesson] = useState(0);
+    const [moduleProgress, setModuleProgress] = useState(0);
+    const [lessonProgress, setLessonProgress] = useState({});
+    const [videoCompleted, setVideoCompleted] = useState(false);
+    const [videoError, setVideoError] = useState(null);
+
+    // New content delivery states
+    const [contentLoading, setContentLoading] = useState(false);
+    const [contentError, setContentError] = useState(null);
+    const [orchestrationProgress, setOrchestrationProgress] = useState(0);
+    const [loadedContent, setLoadedContent] = useState(null);
+    const [contentRecoveryAttempts, setContentRecoveryAttempts] = useState(0);
+
+    // Initialize content error logger with user context
+    useEffect(() => {
+        if (learningPath?.userId) {
+            contentErrorLogger.setUserId(learningPath.userId);
+        }
+    }, [learningPath?.userId]);
+
+    // Enhanced content loading with orchestration
+    const loadLessonContent = async (module, lessonIndex) => {
+        setContentLoading(true);
+        setContentError(null);
+        setOrchestrationProgress(0);
+
+        try {
+            const moduleContent = getModuleContent(module.id);
+            const lesson = moduleContent?.lessons?.[lessonIndex];
+
+            if (!lesson) {
+                throw new Error('Lesson content not found');
+            }
+
+            // Prepare lesson data for orchestrator
+            const lessonData = {
+                moduleId: module.id,
+                lessonId: lesson.id || `lesson-${lessonIndex}`,
+                title: lesson.title,
+                youtubeUrl: lesson.youtubeUrl,
+                textContent: lesson.textContent,
+                images: lesson.images || [],
+                questions: lesson.questions || []
+            };
+
+            // Use content orchestrator for unified loading
+            const result = await contentOrchestrator.loadLessonContent(lessonData, {
+                onProgress: (progressData) => {
+                    setOrchestrationProgress(progressData.overallProgress);
+                },
+                networkCondition: navigator.connection?.effectiveType || 'unknown'
+            });
+
+            if (result.success) {
+                setLoadedContent(result.content);
+                setContentRecoveryAttempts(0);
+            } else {
+                throw new Error('Content orchestration failed');
+            }
+
+        } catch (error) {
+            console.error('Content loading failed:', error);
+            setContentError(error);
+
+            // Attempt error recovery
+            await attemptContentRecovery(error, module, lessonIndex);
+        } finally {
+            setContentLoading(false);
+        }
+    };
+
+    // Enhanced error recovery
+    const attemptContentRecovery = async (error, module, lessonIndex) => {
+        if (contentRecoveryAttempts >= 3) {
+            setContentError({
+                ...error,
+                message: 'Maximum recovery attempts reached. Please try refreshing the page.'
+            });
+            return;
+        }
+
+        setContentRecoveryAttempts(prev => prev + 1);
+
+        try {
+            const recoveryResult = await contentErrorRecovery.recoverFromError({
+                type: 'orchestration',
+                moduleId: module.id,
+                lessonId: `lesson-${lessonIndex}`,
+                errorCode: 'CONTENT_LOAD_FAILED',
+                message: error.message,
+                retryCount: contentRecoveryAttempts
+            }, {
+                retryFunction: () => loadLessonContent(module, lessonIndex),
+                orchestrationRetryFunction: (strategy) => {
+                    // Implement different loading strategies
+                    return loadLessonContent(module, lessonIndex);
+                }
+            });
+
+            if (recoveryResult.success) {
+                setContentError(null);
+                if (recoveryResult.content) {
+                    setLoadedContent(recoveryResult.content);
+                }
+            } else {
+                setContentError({
+                    ...error,
+                    recoveryMessage: recoveryResult.message,
+                    troubleshooting: recoveryResult.troubleshooting
+                });
+            }
+        } catch (recoveryError) {
+            console.error('Content recovery failed:', recoveryError);
+            setContentError({
+                ...error,
+                recoveryError: recoveryError.message
+            });
+        }
+    };
+
+    // Handle video errors
+    const handleVideoError = (error) => {
+        console.log('Video error:', error);
+        setVideoError(error);
+    };
+
+    // Render fallback content when video fails
+    const renderFallbackContent = (lessonData) => {
+        if (!lessonData.textContent) return null;
+        return (
+            <div style={{ whiteSpace: 'pre-wrap', fontSize: '0.95rem' }}>
+                {lessonData.textContent}
+            </div>
+        );
+    };
+
+    const getCategoryName = (category) => {
+        const names = {
+            [SKILL_CATEGORIES.BASIC_DIGITAL]: 'Basic Digital Skills',
+            [SKILL_CATEGORIES.BUSINESS_AUTOMATION]: 'Business Automation',
+            [SKILL_CATEGORIES.E_COMMERCE]: 'E-Commerce',
+            [SKILL_CATEGORIES.DIGITAL_MARKETING]: 'Digital Marketing',
+            [SKILL_CATEGORIES.FINANCIAL_MANAGEMENT]: 'Financial Management',
+            [SKILL_CATEGORIES.COMMUNICATION]: 'Communication'
+        };
+        return names[category] || category;
+    };
+
+    const getCategoryIcon = (category) => {
+        const icons = {
+            [SKILL_CATEGORIES.BASIC_DIGITAL]: 'ðŸ“±',
+            [SKILL_CATEGORIES.BUSINESS_AUTOMATION]: 'âš™ï¸',
+            [SKILL_CATEGORIES.E_COMMERCE]: 'ðŸ›’',
+            [SKILL_CATEGORIES.DIGITAL_MARKETING]: 'ðŸ“¢',
+            [SKILL_CATEGORIES.FINANCIAL_MANAGEMENT]: 'ðŸ’°',
+            [SKILL_CATEGORIES.COMMUNICATION]: 'ðŸ’¬'
+        };
+        return icons[category] || 'ðŸ“š';
+    };
+
+    const getDifficultyColor = (difficulty) => {
+        switch (difficulty) {
+            case 1: return 'success';
+            case 2: return 'warning';
+            case 3: return 'info';
+            case 4: return 'danger';
+            default: return 'secondary';
+        }
+    };
+
+    const getDifficultyText = (difficulty) => {
+        switch (difficulty) {
+            case 1: return 'Easy';
+            case 2: return 'Medium';
+            case 3: return 'Hard';
+            case 4: return 'Expert';
+            default: return 'Unknown';
+        }
+    };
+
+
+    const startModule = (module) => {
+        setSelectedModule(module);
+        setCurrentLesson(0);
+        setModuleProgress(0);
+        setLessonProgress({});
+        setVideoCompleted(false);
+        setVideoError(null);
+        setContentError(null);
+        setLoadedContent(null);
+        setContentRecoveryAttempts(0);
+        setShowModule(true);
+
+        // Load the first lesson content
+        loadLessonContent(module, 0);
+    };
+
+    // Enhanced lesson navigation
+    const goToLesson = (lessonIndex) => {
+        setCurrentLesson(lessonIndex);
+        setVideoCompleted(false);
+        setVideoError(null);
+        setContentError(null);
+        setLoadedContent(null);
+
+        // Load the selected lesson content
+        if (selectedModule) {
+            loadLessonContent(selectedModule, lessonIndex);
+        }
+    };
+
+    const handleVideoProgress = (progressData) => {
+        const lessonKey = `${selectedModule.id}_${currentLesson}`;
+        setLessonProgress(prev => ({
+            ...prev,
+            [lessonKey]: progressData
+        }));
+    };
+
+    const handleVideoComplete = (completionData) => {
+        setVideoCompleted(true);
+        const lessonKey = `${selectedModule.id}_${currentLesson}`;
+        setLessonProgress(prev => ({
+            ...prev,
+            [lessonKey]: { ...completionData, completed: true }
+        }));
+    };
+
+    const completeLesson = () => {
+        const moduleContent = getModuleContent(selectedModule.id);
+        const currentLessonData = moduleContent.lessons[currentLesson];
+
+        // For video lessons, ensure video is completed before proceeding
+        if (currentLessonData.type === 'video' && !videoCompleted) {
+            alert('Please complete watching the video before proceeding to the next lesson.');
+            return;
+        }
+
+        const nextLesson = currentLesson + 1;
+        const newProgress = (nextLesson / moduleContent.lessons.length) * 100;
+
+        setModuleProgress(newProgress);
+        setVideoCompleted(false); // Reset for next lesson
+        setVideoError(null); // Reset video error for next lesson
+
+        if (nextLesson < moduleContent.lessons.length) {
+            setCurrentLesson(nextLesson);
+        } else {
+            // Module completed - calculate overall score based on video watch progress
+            const lessonScores = Object.values(lessonProgress).map(p => p.progress || 0);
+            const averageScore = lessonScores.length > 0
+                ? lessonScores.reduce((a, b) => a + b, 0) / lessonScores.length
+                : 100;
+
+            dispatch({
+                type: 'UPDATE_PROGRESS',
+                moduleId: selectedModule.id,
+                progress: {
+                    completed: true,
+                    completedAt: new Date().toISOString(),
+                    score: Math.round(averageScore),
+                    lessonProgress: lessonProgress,
+                    totalWatchTime: Object.values(lessonProgress).reduce((total, p) => total + (p.watchTime || 0), 0)
+                }
+            });
+            setShowModule(false);
+            setSelectedModule(null);
+        }
+    };
+
+    if (!learningPath || learningPath.length === 0) {
+        return (
+            <Container className="py-5">
+                <Row className="justify-content-center">
+                    <Col lg={8} className="text-center">
+                        <Card className="border-0 shadow-sm">
+                            <Card.Body className="p-5">
+                                <div className="fs-1 mb-4">ðŸ“Š</div>
+                                <h3 className="fw-bold mb-3">No Learning Path Available</h3>
+                                <p className="text-muted mb-4">
+                                    To get your personalized learning path, you need to complete the skills assessment first.
+                                </p>
+                                <Button href="/assessment" variant="primary" size="lg">
+                                    <span className="me-2">ðŸ“Š</span>
+                                    Take Assessment
+                                </Button>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
+            </Container>
+        );
+    }
+
+    return (
+        <Container className="py-5">
+            <Row>
+                <Col>
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 className="fw-bold mb-2">
+                                <span className="me-2">ðŸŽ¯</span>
+                                Your Learning Path
+                            </h2>
+                            <p className="text-muted">
+                                Personalized training modules designed for your skill level
+                            </p>
+                        </div>
+                        {!isOnline && (
+                            <Alert variant="warning" className="mb-0">
+                                <small>ðŸ“± Cached content available</small>
+                            </Alert>
+                        )}
+                    </div>
+                </Col>
+            </Row>
+
+            <Row>
+                {learningPath.map((module) => {
+                    const moduleProgress = progress[module.id];
+                    const isCompleted = moduleProgress?.completed || false;
+                    const progressPercent = moduleProgress?.score || 0;
+
+                    return (
+                        <Col lg={4} md={6} key={module.id} className="mb-4">
+                            <Card className={`h-100 border-0 shadow-sm ${isCompleted ? 'border-success' : ''}`}>
+                                {/* Module Image */}
+                                <div style={{ height: '200px', overflow: 'hidden' }}>
+                                    <AIImage
+                                        prompt={`${module.title} ${getCategoryName(module.category)} digital skills learning`}
+                                        category={module.category}
+                                        alt={`${module.title} course image`}
+                                        className="w-100 h-100"
+                                        contentId={`module-${module.id}`}
+                                        contentType="module"
+                                        style={{ objectFit: 'cover' }}
+                                    />
+                                </div>
+
+                                <Card.Header className="bg-light border-0 py-3">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className="d-flex align-items-center">
+                                            <span className="fs-4 me-2">
+                                                {getCategoryIcon(module.category)}
+                                            </span>
+                                            <div>
+                                                <h6 className="mb-0 fw-bold">{module.title}</h6>
+                                                <small className="text-muted">
+                                                    {getCategoryName(module.category)}
+                                                </small>
+                                            </div>
+                                        </div>
+                                        {isCompleted && (
+                                            <span className="text-success fs-4">âœ…</span>
+                                        )}
+                                    </div>
+                                </Card.Header>
+
+                                <Card.Body className="p-4">
+                                    <p className="text-muted mb-3">{module.description}</p>
+
+                                    <div className="mb-3">
+                                        <div className="d-flex justify-content-between align-items-center mb-2">
+                                            <small className="text-muted">Progress</small>
+                                            <small className="text-muted">{progressPercent}%</small>
+                                        </div>
+                                        <ProgressBar
+                                            now={progressPercent}
+                                            variant={isCompleted ? 'success' : 'primary'}
+                                            style={{ height: '6px' }}
+                                        />
+                                    </div>
+
+                                    <div className="d-flex justify-content-between align-items-center mb-3">
+                                        <Badge bg={getDifficultyColor(module.difficulty)}>
+                                            {getDifficultyText(module.difficulty)}
+                                        </Badge>
+                                        <small className="text-muted">
+                                            <span className="me-1">â±ï¸</span>
+                                            {module.estimatedTime} minutes
+                                        </small>
+                                    </div>
+
+                                    <div className="mb-3">
+                                        {module.recommended && (
+                                            <Badge bg="warning" className="me-2">
+                                                <span className="me-1">â­</span>
+                                                Recommended
+                                            </Badge>
+                                        )}
+                                        {module.youtubeUrl && (
+                                            <Badge bg="danger">
+                                                <span className="me-1">â–¶ï¸</span>
+                                                YouTube Course
+                                            </Badge>
+                                        )}
+                                    </div>
+                                    {module.instructor && (
+                                        <p className="small text-muted mb-2">
+                                            <strong>Instructor:</strong> {module.instructor}
+                                        </p>
+                                    )}
+                                </Card.Body>
+
+                                <Card.Footer className="bg-transparent border-0 p-4 pt-0">
+                                    <Button
+                                        variant={isCompleted ? 'outline-success' : 'primary'}
+                                        className="w-100"
+                                        onClick={() => startModule(module)}
+                                    >
+                                        {isCompleted ? (
+                                            <>
+                                                <span className="me-2">ðŸ”„</span>
+                                                Retake
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span className="me-2">â–¶ï¸</span>
+                                                Start
+                                            </>
+                                        )}
+                                    </Button>
+                                </Card.Footer>
+                            </Card>
+                        </Col>
+                    );
+                })}
+            </Row>
+
+            {/* Module Learning Modal */}
+            <Modal
+                show={showModule}
+                onHide={() => setShowModule(false)}
+                size="lg"
+                centered
+            >
+                {selectedModule && (
+                    <>
+                        <Modal.Header closeButton className="bg-primary text-white">
+                            <Modal.Title>
+                                <span className="me-2">{getCategoryIcon(selectedModule.category)}</span>
+                                {selectedModule.title}
+                            </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body className="p-4">
+                            {(() => {
+                                const moduleContent = getModuleContent(selectedModule.id);
+                                const currentLessonData = moduleContent.lessons[currentLesson];
+
+                                // Debug logging
+                                console.log('Debug - selectedModule.id:', selectedModule.id);
+                                console.log('Debug - moduleContent:', moduleContent);
+                                console.log('Debug - currentLessonData:', currentLessonData);
+                                console.log('Debug - currentLessonData.youtubeUrl:', currentLessonData.youtubeUrl);
+
+                                return (
+                                    <>
+                                        <div className="mb-4">
+                                            <div className="d-flex justify-content-between align-items-center mb-2">
+                                                <h5 className="mb-0">{currentLessonData.title}</h5>
+                                                <Badge bg="info">
+                                                    Lesson {currentLesson + 1} / {moduleContent.lessons.length}
+                                                </Badge>
+                                            </div>
+                                            <ProgressBar
+                                                now={moduleProgress}
+                                                className="mb-3"
+                                                style={{ height: '8px' }}
+                                            />
+                                        </div>
+
+                                        <div className="lesson-content">
+                                            {/* Content Loading State */}
+                                            {contentLoading && (
+                                                <div className="text-center py-5">
+                                                    <div className="mb-3">
+                                                        <div className="spinner-border text-primary" role="status">
+                                                            <span className="visually-hidden">Loading content...</span>
+                                                        </div>
+                                                    </div>
+                                                    <p className="text-muted mb-2">Loading lesson content...</p>
+                                                    <ProgressBar
+                                                        now={orchestrationProgress}
+                                                        variant="primary"
+                                                        style={{ height: '6px' }}
+                                                        className="mb-2"
+                                                    />
+                                                    <small className="text-muted">{orchestrationProgress}% complete</small>
+                                                </div>
+                                            )}
+
+                                            {/* Content Error State */}
+                                            {contentError && !contentLoading && (
+                                                <Alert variant="danger" className="mb-4">
+                                                    <Alert.Heading className="h6">
+                                                        <span className="me-2">âš ï¸</span>
+                                                        Content Loading Error
+                                                    </Alert.Heading>
+                                                    <p className="mb-2">{contentError.message}</p>
+
+                                                    {contentError.recoveryMessage && (
+                                                        <div className="mt-2 p-2 bg-light rounded">
+                                                            <small><strong>Recovery Status:</strong> {contentError.recoveryMessage}</small>
+                                                        </div>
+                                                    )}
+
+                                                    {contentError.troubleshooting && (
+                                                        <div className="mt-3">
+                                                            <small className="fw-bold">Troubleshooting Steps:</small>
+                                                            <ul className="small mt-1 mb-0">
+                                                                {contentError.troubleshooting.map((step, index) => (
+                                                                    <li key={index}>{step}</li>
+                                                                ))}
+                                                            </ul>
+                                                        </div>
+                                                    )}
+
+                                                    <div className="mt-3">
+                                                        <Button
+                                                            variant="outline-danger"
+                                                            size="sm"
+                                                            onClick={() => loadLessonContent(selectedModule, currentLesson)}
+                                                            disabled={contentLoading}
+                                                        >
+                                                            <span className="me-1">ðŸ”„</span>
+                                                            Retry Loading
+                                                        </Button>
+                                                    </div>
+                                                </Alert>
+                                            )}
+
+                                            {/* Successfully Loaded Content */}
+                                            {loadedContent && !contentLoading && !contentError && (
+                                                <div className="mb-4">
+                                                    {/* Video Content */}
+                                                    {loadedContent.content.video && (
+                                                        <div className="mb-4">
+                                                            <YouTubePlayer
+                                                                videoUrl={loadedContent.content.video.url}
+                                                                title={loadedContent.content.video.title || currentLessonData.title}
+                                                                instructor={selectedModule.instructor}
+                                                                duration={currentLessonData.duration}
+                                                                onProgress={handleVideoProgress}
+                                                                onComplete={handleVideoComplete}
+                                                                onError={handleVideoError}
+                                                                autoplay={false}
+                                                                debugMode={false}
+                                                                enableAdaptiveQuality={true}
+                                                                enableOfflineSupport={true}
+                                                                enableNetworkDetection={true}
+                                                                fallbackContent={loadedContent.content.text ? (
+                                                                    <ContentRenderer
+                                                                        content={loadedContent.content.text.content}
+                                                                        moduleId={selectedModule.id}
+                                                                        lessonId={loadedContent.lessonId}
+                                                                        enableAccessibility={true}
+                                                                        enableResponsive={true}
+                                                                    />
+                                                                ) : null}
+                                                            />
+                                                        </div>
+                                                    )}
+
+                                                    {/* Text Content */}
+                                                    {loadedContent.content.text && (
+                                                        <div className="mb-4">
+                                                            <ContentRenderer
+                                                                content={loadedContent.content.text.content}
+                                                                moduleId={selectedModule.id}
+                                                                lessonId={loadedContent.lessonId}
+                                                                onError={(error) => {
+                                                                    console.error('Content rendering error:', error);
+                                                                    setContentError({
+                                                                        message: 'Failed to render lesson content',
+                                                                        details: error.message
+                                                                    });
+                                                                }}
+                                                                onLoadComplete={(result) => {
+                                                                    console.log('Content rendered successfully:', result);
+                                                                }}
+                                                                enableAccessibility={true}
+                                                                enableResponsive={true}
+                                                                debugMode={false}
+                                                            />
+                                                        </div>
+                                                    )}
+
+                                                    {/* Interactive Content */}
+                                                    {loadedContent.content.interactive && (
+                                                        <div className="mb-4">
+                                                            <Card className="border-0 shadow-sm">
+                                                                <Card.Header className="bg-info bg-opacity-10 border-0">
+                                                                    <div className="d-flex align-items-center">
+                                                                        <span className="fs-4 me-2">ðŸŽ¯</span>
+                                                                        <h6 className="mb-0">Interactive Exercise</h6>
+                                                                    </div>
+                                                                </Card.Header>
+                                                                <Card.Body>
+                                                                    {loadedContent.content.interactive.questions.map((question, index) => (
+                                                                        <div key={index} className="mb-4">
+                                                                            <h6 className="fw-bold mb-3">
+                                                                                Question {index + 1}: {question.question}
+                                                                            </h6>
+                                                                            <div className="row">
+                                                                                {question.options.map((option, optionIndex) => (
+                                                                                    <div key={optionIndex} className="col-md-6 mb-2">
+                                                                                        <Button
+                                                                                            variant="outline-primary"
+                                                                                            className="w-100 text-start"
+                                                                                            size="sm"
+                                                                                        >
+                                                                                            {String.fromCharCode(65 + optionIndex)}. {option}
+                                                                                        </Button>
+                                                                                    </div>
+                                                                                ))}
+                                                                            </div>
+                                                                        </div>
+                                                                    ))}
+                                                                </Card.Body>
+                                                            </Card>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Content Warnings */}
+                                                    {loadedContent.warnings && loadedContent.warnings.length > 0 && (
+                                                        <Alert variant="warning" className="mb-4">
+                                                            <Alert.Heading className="h6">Content Warnings</Alert.Heading>
+                                                            <ul className="mb-0 small">
+                                                                {loadedContent.warnings.map((warning, index) => (
+                                                                    <li key={index}>{warning}</li>
+                                                                ))}
+                                                            </ul>
+                                                        </Alert>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            {/* Fallback for Legacy Content */}
+                                            {!loadedContent && !contentLoading && !contentError && currentLessonData && (
+                                                <div className="mb-4">
+                                                    {currentLessonData.type === 'video' && (
+                                                        <div className="mb-4">
+                                                            <div className="mb-3">
+                                                                <p className="text-muted">{currentLessonData.content}</p>
+                                                            </div>
+
+                                                            {(currentLessonData.youtubeUrl || selectedModule.youtubeUrl) ? (
+                                                                <>
+                                                                    <YouTubePlayer
+                                                                        videoUrl={currentLessonData.youtubeUrl || selectedModule.youtubeUrl}
+                                                                        title={currentLessonData.title}
+                                                                        instructor={selectedModule.instructor}
+                                                                        duration={currentLessonData.duration}
+                                                                        onProgress={handleVideoProgress}
+                                                                        onComplete={handleVideoComplete}
+                                                                        onError={handleVideoError}
+                                                                        autoplay={false}
+                                                                        debugMode={false}
+                                                                        enableAdaptiveQuality={true}
+                                                                        enableOfflineSupport={true}
+                                                                        enableNetworkDetection={true}
+                                                                        fallbackContent={renderFallbackContent(currentLessonData)}
+                                                                    />
+                                                                    {currentLessonData.textContent && !videoError && (
+                                                                        <div className="mt-4">
+                                                                            <ContentRenderer
+                                                                                content={currentLessonData.textContent}
+                                                                                moduleId={selectedModule.id}
+                                                                                lessonId={`lesson-${currentLesson}`}
+                                                                                enableAccessibility={true}
+                                                                                enableResponsive={true}
+                                                                            />
+                                                                        </div>
+                                                                    )}
+                                                                </>
+                                                            ) : (
+                                                                <Alert variant="warning">
+                                                                    <Alert.Heading className="h6">
+                                                                        <span className="me-2">âš ï¸</span>
+                                                                        Video Not Available
+                                                                    </Alert.Heading>
+                                                                    <p className="mb-2">
+                                                                        The video content for this lesson is not currently available.
+                                                                        You can still learn from the text content below.
+                                                                    </p>
+                                                                    {currentLessonData.textContent && (
+                                                                        <div className="mt-3">
+                                                                            <ContentRenderer
+                                                                                content={currentLessonData.textContent}
+                                                                                moduleId={selectedModule.id}
+                                                                                lessonId={`lesson-${currentLesson}`}
+                                                                                enableAccessibility={true}
+                                                                                enableResponsive={true}
+                                                                            />
+                                                                        </div>
+                                                                    )}
+                                                                </Alert>
+                                                            )}
+                                                        </div>
+                                                    )}
+
+                                                    {currentLessonData.type === 'interactive' && (
+                                                        <div className="bg-info bg-opacity-10 p-4 rounded">
+                                                            <div className="fs-1 mb-3 text-center">ðŸŽ®</div>
+                                                            <h6>Interactive Exercise</h6>
+                                                            <p className="text-muted">{currentLessonData.content}</p>
+                                                            <div className="text-center mt-3">
+                                                                <Button variant="info" size="sm">
+                                                                    Start Exercise
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {currentLessonData.type === 'reading' && (
+                                                        <div className="bg-light p-4 rounded">
+                                                            <div className="fs-1 mb-3 text-center">ðŸ“–</div>
+                                                            <h6>Read and Learn</h6>
+                                                            <p>{currentLessonData.content}</p>
+                                                        </div>
+                                                    )}
+
+                                                    {currentLessonData.type === 'practice' && (
+                                                        <div className="bg-success bg-opacity-10 p-4 rounded">
+                                                            <div className="fs-1 mb-3 text-center">âœ‹</div>
+                                                            <h6>Hands-on Practice</h6>
+                                                            <p className="text-muted">{currentLessonData.content}</p>
+                                                            <div className="text-center mt-3">
+                                                                <Button variant="success" size="sm">
+                                                                    Start Practice
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <small className="text-muted">
+                                                <span className="me-1">â±ï¸</span>
+                                                Duration: {currentLessonData.duration} minutes
+                                            </small>
+                                            <div className="d-flex align-items-center gap-2">
+                                                {currentLessonData.type === 'video' && !videoCompleted && (
+                                                    <small className="text-warning">
+                                                        <span className="me-1">â³</span>
+                                                        Complete video to continue
+                                                    </small>
+                                                )}
+                                                {currentLessonData.type === 'video' && videoCompleted && (
+                                                    <small className="text-success">
+                                                        <span className="me-1">âœ…</span>
+                                                        Video completed
+                                                    </small>
+                                                )}
+                                                <Button
+                                                    variant="primary"
+                                                    onClick={completeLesson}
+                                                    disabled={currentLessonData.type === 'video' && !videoCompleted}
+                                                >
+                                                    {currentLesson < moduleContent.lessons.length - 1 ? (
+                                                        <>
+                                                            <span className="me-2">âž¡ï¸</span>
+                                                            Next Lesson
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <span className="me-2">âœ…</span>
+                                                            Complete Module
+                                                        </>
+                                                    )}
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </>
+                                );
+                            })()}
+                        </Modal.Body>
+                    </>
+                )}
+            </Modal>
+        </Container>
+    );
+}
+
+export default LearningPath;

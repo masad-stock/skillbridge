@@ -1,0 +1,398 @@
+/* Simplified Layout Styles */
+/* Designed for users with limited digital experience */
+/* Minimum touch target: 48px (WCAG 2.1 AAA) */
+
+/* Global simplified mode styles */
+body.simplified-mode {
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+body.simplified-mode.font-large {
+    font-size: 20px;
+}
+
+body.simplified-mode.font-xlarge {
+    font-size: 24px;
+}
+
+body.high-contrast {
+    --bg-primary: #000000;
+    --bg-secondary: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #ffff00;
+    --accent-color: #00ff00;
+    --border-color: #ffffff;
+}
+
+/* Simplified Layout Container */
+.simplified-layout {
+    min-height: 100vh;
+    padding-bottom: 100px; /* Space for bottom nav */
+    background-color: var(--bg-primary, #f8f9fa);
+}
+
+.simplified-layout.high-contrast {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.simplified-container {
+    padding: 1rem;
+    max-width: 600px;
+}
+
+/* Simplified Navigation */
+.simplified-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    background-color: #ffffff;
+    border-top: 2px solid #e2e8f0;
+    padding: 0.5rem;
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.high-contrast .simplified-nav {
+    background-color: #000000;
+    border-top-color: #ffffff;
+}
+
+.simplified-nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    min-height: 60px;
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+    color: #4a5568;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.simplified-nav-btn:hover,
+.simplified-nav-btn:focus {
+    background-color: #edf2f7;
+    transform: scale(1.05);
+}
+
+.simplified-nav-btn.active {
+    background-color: #2c5282;
+    color: #ffffff;
+}
+
+.high-contrast .simplified-nav-btn {
+    color: #ffffff;
+}
+
+.high-contrast .simplified-nav-btn:hover,
+.high-contrast .simplified-nav-btn:focus {
+    background-color: #333333;
+}
+
+.high-contrast .simplified-nav-btn.active {
+    background-color: #ffff00;
+    color: #000000;
+}
+
+.nav-icon {
+    font-size: 1.75rem;
+    margin-bottom: 0.25rem;
+}
+
+.nav-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Simplified Button */
+.simplified-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 56px;
+    min-width: 56px;
+    padding: 1rem 1.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.simplified-btn-large {
+    min-height: 64px;
+    padding: 1.25rem 2rem;
+    font-size: 1.25rem;
+}
+
+.simplified-btn-xlarge {
+    min-height: 72px;
+    padding: 1.5rem 2.5rem;
+    font-size: 1.5rem;
+}
+
+.simplified-btn:focus {
+    outline: 3px solid #2c5282;
+    outline-offset: 2px;
+}
+
+.high-contrast .simplified-btn:focus {
+    outline-color: #ffff00;
+}
+
+.btn-icon {
+    font-size: 1.5rem;
+}
+
+/* Visual Progress */
+.visual-progress {
+    padding: 1.5rem 0;
+}
+
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+}
+
+.progress-steps::before {
+    content: '';
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    right: 24px;
+    height: 4px;
+    background-color: #e2e8f0;
+    z-index: 0;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.step-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    background-color: #e2e8f0;
+    color: #718096;
+    border: 3px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.progress-step.completed .step-circle {
+    background-color: #48bb78;
+    border-color: #48bb78;
+    color: #ffffff;
+}
+
+.progress-step.current .step-circle {
+    background-color: #2c5282;
+    border-color: #2c5282;
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
+.step-label {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #718096;
+    text-align: center;
+    max-width: 80px;
+}
+
+.progress-text {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+/* Simplified Card */
+.simplified-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background-color: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 80px;
+}
+
+.simplified-card:hover,
+.simplified-card:focus {
+    border-color: #2c5282;
+    box-shadow: 0 4px 12px rgba(44, 82, 130, 0.15);
+    transform: translateY(-2px);
+}
+
+.simplified-card:focus {
+    outline: 3px solid #2c5282;
+    outline-offset: 2px;
+}
+
+.high-contrast .simplified-card {
+    background-color: #1a1a1a;
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+.high-contrast .simplified-card:hover,
+.high-contrast .simplified-card:focus {
+    border-color: #ffff00;
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+    color: #2d3748;
+}
+
+.high-contrast .card-title {
+    color: #ffffff;
+}
+
+.card-description {
+    font-size: 0.9rem;
+    color: #718096;
+    margin: 0;
+}
+
+.high-contrast .card-description {
+    color: #cccccc;
+}
+
+.card-action {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #2c5282;
+    font-weight: 600;
+}
+
+.action-arrow {
+    font-size: 1.5rem;
+}
+
+.high-contrast .card-action {
+    color: #ffff00;
+}
+
+/* Simplified Error */
+.simplified-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    background-color: #fff5f5;
+    border: 2px solid #fc8181;
+    border-radius: 16px;
+    margin: 1rem 0;
+}
+
+.high-contrast .simplified-error {
+    background-color: #1a0000;
+    border-color: #ff0000;
+}
+
+.error-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.error-message {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #c53030;
+    margin-bottom: 1.5rem;
+}
+
+.high-contrast .error-message {
+    color: #ff6666;
+}
+
+/* Accessibility Focus Styles */
+.simplified-layout *:focus-visible {
+    outline: 3px solid #2c5282;
+    outline-offset: 2px;
+}
+
+.high-contrast *:focus-visible {
+    outline-color: #ffff00;
+}
+
+/* Touch-friendly spacing */
+.simplified-layout button,
+.simplified-layout a,
+.simplified-layout input,
+.simplified-layout select,
+.simplified-layout textarea {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .simplified-nav {
+        padding: 0.25rem;
+    }
+
+    .simplified-nav-btn {
+        min-width: 50px;
+        min-height: 50px;
+    }
+
+    .nav-icon {
+        font-size: 1.5rem;
+    }
+
+    .nav-label {
+        font-size: 0.65rem;
+    }
+
+    .simplified-card {
+        padding: 1rem;
+    }
+
+    .card-icon {
+        font-size: 2rem;
+    }
+}

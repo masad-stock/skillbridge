@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  ml-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: skillbridge-ml-service
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=development
+      - ML_SERVICE_PORT=8000
+      - MONGODB_URI=mongodb://host.docker.internal:27017/adaptive-learning
+    volumes:
+      - ./models:/app/models
+      - ./logs:/app/logs
+      - ./mlruns:/app/mlruns
+    restart: unless-stopped
+    networks:
+      - skillbridge-network
+
+networks:
+  skillbridge-network:
+    driver: bridge

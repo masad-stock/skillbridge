@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #4facfe;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background: #3d8fd1;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✉️ Verify Your Email</h1>
+        </div>
+
+        <div class="content">
+            <h2>Hello {{firstName}}!</h2>
+
+            <p>Thank you for registering with SkillBridge. To complete your registration and access all features, please
+                verify your email address.</p>
+
+            <div style="text-align: center;">
+                <a href="{{verifyUrl}}" class="button">Verify My Email</a>
+            </div>
+
+            <p>Or copy and paste this link into your browser:</p>
+            <p
+                style="word-break: break-all; background: #f8f9fa; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px;">
+                {{verifyUrl}}
+            </p>
+
+            <p><strong>Why verify?</strong></p>
+            <ul>
+                <li>✅ Secure your account</li>
+                <li>✅ Receive important updates</li>
+                <li>✅ Access all platform features</li>
+                <li>✅ Get your certificates via email</li>
+            </ul>
+
+            <p>If you didn't create an account with SkillBridge, you can safely ignore this email.</p>
+
+            <p>Best regards,<br>
+                <strong>The SkillBridge Team</strong>
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>SkillBridge - Empowering Digital Skills for Economic Growth</p>
+            <p>© {{year}} SkillBridge. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,356 @@
+/* ==========================================================================
+   Premium Utility Classes
+   ========================================================================== */
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: white;
+}
+
+.shadow-premium {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* ==========================================================================
+   Layout Utilities
+   ========================================================================== */
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+/* Spacing Helpers */
+.section-padding {
+  padding: 4rem 0;
+}
+
+/* Animation Utilities */
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===
+=======================================================================
+   Success Story Cards
+   ========================================================================== */
+
+.success-story-card {
+    transition: all 0.3s ease;
+    border-radius: 16px !important;
+    overflow: hidden;
+}
+
+.success-story-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+.success-story-card .testimonial-text {
+    font-style: italic;
+    line-height: 1.7;
+    color: #4a5568;
+    min-height: 80px;
+}
+
+.success-story-card .card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.success-story-card .text-center:last-child {
+    margin-top: auto;
+}
+
+/* Center the portrait image */
+.success-story-card .success-story-image-container {
+    margin: 0 auto;
+}
+
+/* Hover lift effect for feature cards */
+.hover-lift {
+    transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Responsive adjustments for success stories */
+@media (max-width: 768px) {
+    .success-story-card .testimonial-text {
+        min-height: auto;
+        font-size: 0.95rem;
+    }
+}
+
+/* ==========================================================================
+   Hero Section & CTA Styling
+   ========================================================================== */
+
+.hero-section {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,106.7C1248,96,1344,96,1392,96L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+    background-size: cover;
+    opacity: 0.3;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.cta-section {
+    background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+    position: relative;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+}
+
+.cta-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* ==========================================================================
+   Visual Separation & Spacing Improvements
+   ========================================================================== */
+
+/* Add spacing after hero section */
+.hero-section {
+    margin-bottom: 3rem !important;
+}
+
+/* Add spacing around CTA section */
+.cta-section {
+    margin-top: 3rem !important;
+    margin-bottom: 3rem !important;
+}
+
+/* Ensure proper spacing between sections */
+.main {
+    min-height: calc(100vh - 200px);
+}
+
+/* Footer styling improvements for better visual separation */
+footer {
+    margin-top: auto;
+    border-top: 3px solid var(--primary);
+}
+
+[data-theme="dark"] footer {
+    background-color: var(--bg-secondary) !important;
+    border-top-color: var(--primary);
+}
+
+/* Ensure footer is always visible and distinct */
+footer.bg-dark {
+    background-color: #212529 !important;
+}
+
+[data-theme="dark"] footer.bg-dark {
+    background-color: var(--bg-card) !important;
+}
+
+/* Fixed Header Padding */
+body {
+  padding-top: 70px; /* Height of fixed navbar */
+}
+
+/* Ensure main content doesn't overlap with fixed header */
+.main {
+  min-height: calc(100vh - 200px);
+  padding-top: 0;
+}
+
+
+/* Dashboard Layout with Sidebar */
+.dashboard-container {
+  display: flex;
+  min-height: calc(100vh - 70px); /* Account for header */
+}
+
+.dashboard-content {
+  flex: 1;
+  margin-left: 250px; /* Width of expanded sidebar */
+  transition: margin-left 0.3s ease;
+  min-height: 100%;
+}
+
+/* When sidebar is collapsed */
+.dashboard-sidebar.collapsed ~ .dashboard-content {
+  margin-left: 70px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .dashboard-content {
+    margin-left: 0;
+  }
+
+  .dashboard-sidebar.collapsed ~ .dashboard-content {
+    margin-left: 0;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .dashboard-content {
+    margin-left: 200px;
+  }
+
+  .dashboard-sidebar.collapsed ~ .dashboard-content {
+    margin-left: 70px;
+  }
+}
+
+
+/* Manrope Font Application for Dashboard */
+.dashboard-container,
+.dashboard-sidebar,
+.dashboard-content,
+.dashboard-container h1,
+.dashboard-container h2,
+.dashboard-container h3,
+.dashboard-container h4,
+.dashboard-container h5,
+.dashboard-container h6,
+.dashboard-container p,
+.dashboard-container span,
+.dashboard-container div,
+.dashboard-container button,
+.dashboard-container .btn,
+.dashboard-container .card,
+.dashboard-container .nav-item {
+  font-family: var(--font-family-base);
+}
+
+/* Font weights for dashboard elements */
+.dashboard-container h1,
+.dashboard-container h2,
+.dashboard-container h3,
+.dashboard-container h4,
+.dashboard-container h5,
+.dashboard-container h6 {
+  font-weight: 600; /* Semibold - clean, not over-bold */
+  line-height: 1.3;
+}
+
+.dashboard-sidebar .nav-item {
+  font-weight: 500; /* Medium */
+}
+
+.dashboard-sidebar .nav-item.active {
+  font-weight: 600; /* Semibold */
+}
+
+.dashboard-container button,
+.dashboard-container .btn {
+  font-weight: 500; /* Medium */
+}
+
+.dashboard-container p,
+.dashboard-container span,
+.dashboard-container div {
+  font-weight: 500; /* Increased from 400 for better readability */
+  line-height: 1.6;
+}
+
+.dashboard-container strong,
+.dashboard-container b,
+.dashboard-container .fw-bold {
+  font-weight: 700; /* Bold */
+}
+
+/* Improved text readability */
+.dashboard-container .text-muted {
+  font-weight: 400; /* Keep muted text lighter */
+  line-height: 1.6;
+}
+
+.dashboard-container small {
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Dashboard Header Responsive Improvements */
+.dashboard-container h2 {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Ensure proper spacing on mobile */
+@media (max-width: 767px) {
+  .dashboard-container .gap-3 {
+    gap: 1rem !important;
+  }
+  
+  .dashboard-container h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  .dashboard-container .text-muted {
+    font-size: 0.9rem !important;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 768px) and (max-width: 991px) {
+  .dashboard-container h2 {
+    font-size: 1.75rem !important;
+  }
+}

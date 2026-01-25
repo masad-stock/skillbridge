@@ -1,0 +1,94 @@
+/* Authenticated Layout - CSS Grid Structure */
+.authenticated-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    min-height: 100vh;
+    position: relative;
+    --sidebar-width: 250px;
+    --sidebar-collapsed-width: 70px;
+    --header-height: auto;
+    /* Z-index hierarchy */
+    --z-sidebar-overlay: 997;
+    --z-sidebar: 998;
+    --z-sidebar-toggle: 999;
+    --z-skip-links: 1000;
+}
+
+/* Skip links for accessibility */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-color);
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 0 0 4px 0;
+    z-index: var(--z-skip-links, 1000);
+    font-weight: 600;
+    transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+    top: 0;
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+/* When sidebar is collapsed */
+.authenticated-layout.sidebar-collapsed {
+    grid-template-columns: var(--sidebar-collapsed-width) 1fr;
+}
+
+/* Main content area - contains header, page content, and footer */
+.main-content-area {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    contain: layout style;
+}
+
+/* Page content grows to fill available space */
+.page-content {
+    flex: 1 0 auto;
+    padding: 0;
+    contain: layout style;
+}
+
+/* Footer stays at bottom */
+.main-content-area > footer {
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
+/* Tablet: Adjust grid for collapsed sidebar */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .authenticated-layout {
+        grid-template-columns: 200px 1fr;
+    }
+    
+    .authenticated-layout.sidebar-collapsed {
+        grid-template-columns: 70px 1fr;
+    }
+}
+
+/* Mobile: Stack layout, sidebar becomes overlay */
+@media (max-width: 768px) {
+    .authenticated-layout {
+        grid-template-columns: 1fr;
+        display: block;
+    }
+    
+    .main-content-area {
+        width: 100%;
+    }
+}
+
+/* Ensure no horizontal scroll */
+.authenticated-layout,
+.main-content-area,
+.page-content {
+    max-width: 100%;
+}

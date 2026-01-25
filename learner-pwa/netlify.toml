@@ -1,13 +1,11 @@
 # Netlify configuration for SkillBridge PWA
 
 [build]
-  base = "learner-pwa"
-  publish = "learner-pwa/build"
-  command = "npm install --legacy-peer-deps && npm run build"
+  publish = "build"
+  command = "npm run build"
 
 [build.environment]
   NODE_VERSION = "18"
-  NPM_FLAGS = "--legacy-peer-deps"
 
 # Headers for security and performance
 [[headers]]
