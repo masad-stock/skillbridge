@@ -1,7 +1,8 @@
 # Netlify configuration for SkillBridge PWA
 
 [build]
-  publish = "build"
+  base = "learner-pwa"
+  publish = "learner-pwa/build"
   command = "npm run build"
 
 [build.environment]

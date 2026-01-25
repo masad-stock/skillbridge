@@ -1,0 +1,6 @@
+{
+  "buildCommand": "cd learner-pwa && npm install && npm run build",
+  "outputDirectory": "learner-pwa/build",
+  "framework": "create-react-app",
+  "installCommand": "cd learner-pwa && npm install"
+}
