@@ -5,273 +5,236 @@
 
 const express = require('express');
 const router = express.Router();
-const { auth, adminAuth } = require('../middleware/auth');
-const { requirePermission } = require('../middleware/consentVerification');
-const EconomicSurvey = require('../models/EconomicSurvey');
+const { protect, authorize } = require('../middleware/auth');
+const economicSurveyService = require('../services/economicSurveyService');
 const logger = require('../utils/logger');
 
 /**
- * @route   POST /api/v1/economic-surveys
- * @desc    Submit economic survey
- * @access  Private (requires economicSurveys consent)
+ * @route   POST /api/economic-survey
+ * @desc    Submit or update economic survey
+ * @access  Private
  */
-router.post('/', auth, requirePermission('economicSurveys'), async (req, res) => {
+router.post('/', protect, async (req, res) => {
     try {
-        const { surveyType, employment, income, business, digitalSkillsApplication, skillsGained, platformImpact, challenges } = req.body;
+        const userId = req.user._id;
+        const surveyData = req.body;
 
-        // Check if survey already exists for this type
-        const existing = await EconomicSurvey.findOne({
-            userId: req.user.id,
-            surveyType
-        });
-
-        if (existing) {
-            return res.status(400).json({
-                success: false,
-                error: 'Survey already submitted for this period'
-            });
-        }
-
-        const survey = new EconomicSurvey({
-            userId: req.user.id,
-            surveyType,
-            employment,
-            income,
-            business,
-            digitalSkillsApplication,
-            skillsGained,
-            platformImpact,
-            challenges
-        });
-
-        await survey.save();
-
-        logger.info('Economic survey submitted', {
-            userId: req.user.id,
-            surveyType
-        });
+        const survey = await economicSurveyService.submitSurvey(userId, surveyData);
 
         res.status(201).json({
             success: true,
-            message: 'Survey submitted successfully',
-            surveyId: survey._id
+            data: survey
         });
     } catch (error) {
-        logger.error('Error submitting survey:', error);
+        logger.error('Error submitting economic survey:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to submit survey'
+            message: 'Error submitting survey',
+            error: error.message
         });
     }
 });
 
 /**
- * @route   GET /api/v1/economic-surveys/my-surveys
- * @desc    Get current user's surveys
+ * @route   GET /api/economic-survey/my-surveys
+ * @desc    Get all surveys for current user with comparison
  * @access  Private
  */
-router.get('/my-surveys', auth, async (req, res) => {
+router.get('/my-surveys', protect, async (req, res) => {
     try {
-        const surveys = await EconomicSurvey.find({ userId: req.user.id })
-            .sort({ createdAt: -1 });
+        const userId = req.user._id;
+        const result = await economicSurveyService.getUserSurveys(userId);
 
         res.json({
             success: true,
-            count: surveys.length,
-            surveys
+            data: result
         });
     } catch (error) {
-        logger.error('Error getting surveys:', error);
+        logger.error('Error getting user surveys:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to get surveys'
+            message: 'Error retrieving surveys',
+            error: error.message
         });
     }
 });
 
 /**
- * @route   GET /api/v1/economic-surveys/pending
- * @desc    Check if user has pending surveys
+ * @route   GET /api/economic-survey/pending
+ * @desc    Get pending surveys for current user
  * @access  Private
  */
-router.get('/pending', auth, async (req, res) => {
+router.get('/pending', protect, async (req, res) => {
     try {
-        const completedTypes = await EconomicSurvey.find({ userId: req.user.id })
-            .distinct('surveyType');
-
-        const allTypes = ['baseline', 'followup_3m', 'followup_6m', 'followup_12m'];
-        const pendingTypes = allTypes.filter(t => !completedTypes.includes(t));
-
-        // Check if baseline is pending
-        const needsBaseline = !completedTypes.includes('baseline');
-
-        // Check follow-up eligibility based on account age
-        const User = require('../models/User');
-        const user = await User.findById(req.user.id);
-        const accountAgeMonths = Math.floor(
-            (Date.now() - new Date(user.createdAt)) / (30 * 24 * 60 * 60 * 1000)
-        );
-
-        const eligibleFollowups = [];
-        if (accountAgeMonths >= 3 && !completedTypes.includes('followup_3m')) {
-            eligibleFollowups.push('followup_3m');
-        }
-        if (accountAgeMonths >= 6 && !completedTypes.includes('followup_6m')) {
-            eligibleFollowups.push('followup_6m');
-        }
-        if (accountAgeMonths >= 12 && !completedTypes.includes('followup_12m')) {
-            eligibleFollowups.push('followup_12m');
-        }
+        const userId = req.user._id;
+        const pending = await economicSurveyService.getPendingSurveys(userId);
 
         res.json({
             success: true,
-            needsBaseline,
-            eligibleFollowups,
-            completedTypes,
-            accountAgeMonths
+            data: pending
         });
     } catch (error) {
-        logger.error('Error checking pending surveys:', error);
+        logger.error('Error getting pending surveys:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to check pending surveys'
+            message: 'Error retrieving pending surveys',
+            error: error.message
         });
     }
 });
 
 /**
- * @route   GET /api/v1/economic-surveys/my-improvement
- * @desc    Get user's economic improvement from baseline
+ * @route   GET /api/economic-survey/:surveyType
+ * @desc    Get specific survey type for current user
  * @access  Private
  */
-router.get('/my-improvement', auth, async (req, res) => {
+router.get('/:surveyType', protect, async (req, res) => {
     try {
-        const latestSurvey = await EconomicSurvey.findOne({
-            userId: req.user.id,
-            surveyType: { $ne: 'baseline' }
-        }).sort({ createdAt: -1 });
+        const userId = req.user._id;
+        const { surveyType } = req.params;
 
-        if (!latestSurvey) {
-            return res.json({
-                success: true,
-                hasImprovement: false,
-                message: 'No follow-up survey completed yet'
+        const survey = await economicSurveyService.getSurveyByType(userId, surveyType);
+
+        if (!survey) {
+            return res.status(404).json({
+                success: false,
+                message: 'Survey not found'
             });
         }
 
-        const improvement = await latestSurvey.calculateImprovement();
-
         res.json({
             success: true,
-            hasImprovement: !!improvement,
-            improvement,
-            surveyType: latestSurvey.surveyType,
-            completedAt: latestSurvey.completedAt
+            data: survey
         });
     } catch (error) {
-        logger.error('Error calculating improvement:', error);
+        logger.error('Error getting survey by type:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to calculate improvement'
+            message: 'Error retrieving survey',
+            error: error.message
         });
     }
 });
 
 /**
- * @route   GET /api/v1/economic-surveys/aggregate-impact
- * @desc    Get aggregate economic impact (admin)
- * @access  Admin
+ * @route   GET /api/economic-survey/admin/aggregate-impact
+ * @desc    Get aggregate economic impact statistics
+ * @access  Private (Admin only)
  */
-router.get('/aggregate-impact', adminAuth, async (req, res) => {
+router.get('/admin/aggregate-impact', protect, authorize('admin', 'researcher'), async (req, res) => {
     try {
-        const impact = await EconomicSurvey.getAggregateImpact();
-        const completionRates = {};
+        const filters = {
+            surveyType: req.query.surveyType,
+            startDate: req.query.startDate,
+            endDate: req.query.endDate
+        };
 
-        for (const type of ['baseline', 'followup_3m', 'followup_6m']) {
-            completionRates[type] = await EconomicSurvey.getCompletionRate(type);
-        }
+        const impact = await economicSurveyService.getAggregateImpact(filters);
 
         res.json({
             success: true,
-            impact,
-            completionRates
+            data: impact
         });
     } catch (error) {
         logger.error('Error getting aggregate impact:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to get aggregate impact'
+            message: 'Error retrieving aggregate impact',
+            error: error.message
         });
     }
 });
 
 /**
- * @route   GET /api/v1/economic-surveys/all
- * @desc    Get all surveys (admin)
- * @access  Admin
+ * @route   GET /api/economic-survey/admin/income-distribution
+ * @desc    Get income distribution analysis
+ * @access  Private (Admin only)
  */
-router.get('/all', adminAuth, async (req, res) => {
+router.get('/admin/income-distribution', protect, authorize('admin', 'researcher'), async (req, res) => {
     try {
-        const { surveyType, page = 1, limit = 50 } = req.query;
-
-        const query = surveyType ? { surveyType } : {};
-
-        const surveys = await EconomicSurvey.find(query)
-            .populate('userId', 'name email')
-            .sort({ createdAt: -1 })
-            .skip((page - 1) * limit)
-            .limit(parseInt(limit));
-
-        const total = await EconomicSurvey.countDocuments(query);
+        const { surveyType } = req.query;
+        const distribution = await economicSurveyService.getIncomeDistribution(surveyType);
 
         res.json({
             success: true,
-            count: surveys.length,
-            total,
-            page: parseInt(page),
-            totalPages: Math.ceil(total / limit),
-            surveys
+            data: distribution
         });
     } catch (error) {
-        logger.error('Error getting all surveys:', error);
+        logger.error('Error getting income distribution:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to get surveys'
+            message: 'Error retrieving income distribution',
+            error: error.message
         });
     }
 });
 
 /**
- * @route   GET /api/v1/economic-surveys/export
- * @desc    Export survey data (admin)
- * @access  Admin
+ * @route   GET /api/economic-survey/admin/cohort-comparison
+ * @desc    Get cohort comparison (baseline vs follow-up)
+ * @access  Private (Admin only)
  */
-router.get('/export', adminAuth, async (req, res) => {
+router.get('/admin/cohort-comparison', protect, authorize('admin', 'researcher'), async (req, res) => {
     try {
-        const { format = 'json', anonymize = 'true' } = req.query;
-        const dataExportService = require('../services/research/DataExportService');
-
-        const data = await dataExportService.exportEconomicSurveys({
-            anonymize: anonymize === 'true'
-        });
-
-        if (format === 'csv') {
-            const csv = dataExportService.toCSV(data);
-            res.setHeader('Content-Type', 'text/csv');
-            res.setHeader('Content-Disposition', 'attachment; filename="economic-surveys.csv"');
-            return res.send(csv);
-        }
+        const comparison = await economicSurveyService.getCohortComparison();
 
         res.json({
             success: true,
-            count: data.length,
-            data
+            data: comparison
         });
     } catch (error) {
-        logger.error('Error exporting surveys:', error);
+        logger.error('Error getting cohort comparison:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to export surveys'
+            message: 'Error retrieving cohort comparison',
+            error: error.message
+        });
+    }
+});
+
+/**
+ * @route   GET /api/economic-survey/admin/completion-rates
+ * @desc    Get survey completion rates
+ * @access  Private (Admin only)
+ */
+router.get('/admin/completion-rates', protect, authorize('admin', 'researcher'), async (req, res) => {
+    try {
+        const rates = await economicSurveyService.getCompletionRates();
+
+        res.json({
+            success: true,
+            data: rates
+        });
+    } catch (error) {
+        logger.error('Error getting completion rates:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error retrieving completion rates',
+            error: error.message
+        });
+    }
+});
+
+/**
+ * @route   GET /api/economic-survey/admin/user/:userId
+ * @desc    Get surveys for specific user (admin)
+ * @access  Private (Admin only)
+ */
+router.get('/admin/user/:userId', protect, authorize('admin', 'researcher'), async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const result = await economicSurveyService.getUserSurveys(userId);
+
+        res.json({
+            success: true,
+            data: result
+        });
+    } catch (error) {
+        logger.error('Error getting user surveys (admin):', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error retrieving user surveys',
+            error: error.message
         });
     }
 });

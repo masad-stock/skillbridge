@@ -54,6 +54,8 @@ const ModuleManagement = lazy(() => import('./pages/admin/EnhancedModuleManageme
 const Analytics = lazy(() => import('./pages/admin/Analytics'));
 const Settings = lazy(() => import('./pages/admin/Settings'));
 const ContentDeliveryDashboard = lazy(() => import('./components/admin/ContentDeliveryDashboard'));
+const EconomicSurvey = lazy(() => import('./pages/EconomicSurvey'));
+const CompetencyDashboard = lazy(() => import('./pages/CompetencyDashboard'));
 
 function App() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -149,6 +151,8 @@ function App() {
                             <Route path="/change-password" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
                             <Route path="/search" element={<ProtectedRoute><SearchResults /></ProtectedRoute>} />
                             <Route path="/payments" element={<ProtectedRoute><PaymentHistory /></ProtectedRoute>} />
+                            <Route path="/economic-survey" element={<ProtectedRoute><EconomicSurvey /></ProtectedRoute>} />
+                            <Route path="/competency" element={<ProtectedRoute><CompetencyDashboard /></ProtectedRoute>} />
 
                             {/* Admin Routes - Protected */}
                             <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
