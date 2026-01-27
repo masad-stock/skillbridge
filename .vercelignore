@@ -1,0 +1,14 @@
+node_modules
+learner-pwa/node_modules
+learner-pwa/backend/node_modules
+learner-pwa/build
+build
+.env
+.env.local
+learner-pwa/.env
+learner-pwa/backend/.env
+venv
+__pycache__
+*.log
+.DS_Store
+_cleanup_backup
