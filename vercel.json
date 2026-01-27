@@ -1,5 +1,12 @@
 {
   "buildCommand": "cd learner-pwa && npm install --legacy-peer-deps && npm run build",
   "outputDirectory": "learner-pwa/build",
-  "installCommand": "cd learner-pwa && npm install --legacy-peer-deps"
+  "installCommand": "cd learner-pwa && npm install --legacy-peer-deps",
+  "framework": "create-react-app",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }

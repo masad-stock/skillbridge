@@ -4,7 +4,11 @@ import { useTranslation } from 'react-i18next';
 import './DashboardSidebar.css';
 
 function DashboardSidebar() {
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(() => {
+        // Persist collapsed state in localStorage
+        const saved = localStorage.getItem('sidebarCollapsed');
+        return saved ? JSON.parse(saved) : false;
+    });
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const navigate = useNavigate();
     const location = useLocation();
@@ -80,12 +84,18 @@ function DashboardSidebar() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Auto-collapse on mobile
+    // Auto-collapse on mobile and sync with layout
     useEffect(() => {
         if (isMobile) {
             setIsCollapsed(true);
         }
-    }, [isMobile]);
+
+        // Sync collapsed state with layout on mount
+        const layout = document.querySelector('.authenticated-layout');
+        if (layout && isCollapsed) {
+            layout.classList.add('sidebar-collapsed');
+        }
+    }, [isMobile, isCollapsed]);
 
     // Preserve scroll position
     useEffect(() => {
@@ -113,7 +123,19 @@ function DashboardSidebar() {
     };
 
     const toggleSidebar = () => {
-        setIsCollapsed(!isCollapsed);
+        const newState = !isCollapsed;
+        setIsCollapsed(newState);
+        // Persist state
+        localStorage.setItem('sidebarCollapsed', JSON.stringify(newState));
+        // Update parent layout class
+        const layout = document.querySelector('.authenticated-layout');
+        if (layout) {
+            if (newState) {
+                layout.classList.add('sidebar-collapsed');
+            } else {
+                layout.classList.remove('sidebar-collapsed');
+            }
+        }
     };
 
     const isActive = (path) => {
