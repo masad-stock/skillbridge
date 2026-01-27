@@ -12,6 +12,7 @@ function FinancialReports() {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [showExportModal, setShowExportModal] = useState(false);
+    const [useLocalData, setUseLocalData] = useState(false);
 
     useEffect(() => {
         generateReport();
@@ -21,6 +22,7 @@ function FinancialReports() {
         try {
             setLoading(true);
             setError(null);
+            setUseLocalData(false);
 
             const params = {
                 type: reportType,
@@ -30,12 +32,123 @@ function FinancialReports() {
             };
 
             const response = await businessApi.getFinancialReports(params);
-            setReportData(response.data);
+            setReportData(response);
         } catch (err) {
-            setError('Failed to generate financial report');
-            console.error('Financial report error:', err);
+            console.error('Financial report API error:', err);
+            // Fallback to localStorage data
+            generateLocalReport();
         } finally {
             setLoading(false);
+        }
+    };
+
+    const generateLocalReport = () => {
+        try {
+            const savedSales = localStorage.getItem('businessSales');
+            const savedExpenses = localStorage.getItem('businessExpenses');
+            const savedInventory = localStorage.getItem('businessInventory');
+
+            const sales = savedSales ? JSON.parse(savedSales) : [];
+            const expenses = savedExpenses ? JSON.parse(savedExpenses) : [];
+            const inventory = savedInventory ? JSON.parse(savedInventory) : [];
+
+            // Calculate date range
+            const now = new Date();
+            let filterStartDate, filterEndDate;
+
+            if (startDate && endDate) {
+                filterStartDate = new Date(startDate);
+                filterEndDate = new Date(endDate);
+            } else {
+                filterStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                filterEndDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            }
+
+            // Filter data by date
+            const filteredSales = sales.filter(s => {
+                const saleDate = new Date(s.saleDate);
+                return saleDate >= filterStartDate && saleDate <= filterEndDate;
+            });
+
+            const filteredExpenses = expenses.filter(e => {
+                const expDate = new Date(e.expenseDate);
+                return expDate >= filterStartDate && expDate <= filterEndDate;
+            });
+
+            const totalRevenue = filteredSales.reduce((sum, sale) => sum + (sale.total || 0), 0);
+            const totalCostOfGoods = filteredSales.reduce((sum, sale) => {
+                return sum + (sale.items || []).reduce((itemSum, item) => {
+                    const invItem = inventory.find(inv => inv.id?.toString() === item.itemId?.toString());
+                    return itemSum + ((item.quantity || 0) * (invItem?.costPrice || 0));
+                }, 0);
+            }, 0);
+            const grossProfit = totalRevenue - totalCostOfGoods;
+            const totalExpenses = filteredExpenses.reduce((sum, exp) => sum + (exp.amount || 0), 0);
+            const netProfit = grossProfit - totalExpenses;
+
+            // Categorize expenses
+            const expenseCategories = filteredExpenses.reduce((acc, exp) => {
+                acc[exp.category || 'Other'] = (acc[exp.category || 'Other'] || 0) + (exp.amount || 0);
+                return acc;
+            }, {});
+
+            // Tax calculations (Kenya KRA)
+            const vatRate = 16;
+            const taxableAmount = totalRevenue / (1 + vatRate / 100);
+            const vatCollected = totalRevenue - taxableAmount;
+
+            const inventoryValue = inventory.reduce((sum, item) =>
+                sum + ((item.quantity || 0) * (item.costPrice || 0)), 0);
+
+            setReportData({
+                data: {
+                    reportType: reportType === 'profit_loss' ? 'Profit & Loss Statement' :
+                        reportType === 'balance_sheet' ? 'Balance Sheet' :
+                            reportType === 'cash_flow' ? 'Cash Flow Statement' : 'Tax Summary',
+                    period: {
+                        startDate: filterStartDate.toISOString().split('T')[0],
+                        endDate: filterEndDate.toISOString().split('T')[0]
+                    },
+                    income: {
+                        totalRevenue,
+                        costOfGoodsSold: totalCostOfGoods,
+                        grossProfit
+                    },
+                    expenses: {
+                        totalExpenses,
+                        byCategory: expenseCategories
+                    },
+                    profit: {
+                        netProfit,
+                        profitMargin: totalRevenue > 0 ? (netProfit / totalRevenue * 100) : 0
+                    },
+                    tax: {
+                        vatCollected,
+                        taxableAmount
+                    },
+                    assets: {
+                        currentAssets: {
+                            inventory: inventoryValue,
+                            accountsReceivable: 0
+                        },
+                        totalCurrentAssets: inventoryValue
+                    },
+                    liabilities: {
+                        currentLiabilities: {
+                            accountsPayable: 0
+                        },
+                        totalCurrentLiabilities: 0
+                    },
+                    equity: {
+                        retainedEarnings: netProfit
+                    },
+                    totalLiabilitiesAndEquity: netProfit
+                }
+            });
+            setUseLocalData(true);
+        } catch (err) {
+            setError('Failed to generate financial report from local data');
+            console.error('Local report error:', err);
         }
     };
 
@@ -73,7 +186,7 @@ function FinancialReports() {
         );
     }
 
-    if (error) {
+    if (error && !reportData) {
         return (
             <Alert variant="danger">
                 <Alert.Heading>Report Generation Error</Alert.Heading>
@@ -101,6 +214,12 @@ function FinancialReports() {
                     </Button>
                 </div>
             </div>
+
+            {useLocalData && (
+                <Alert variant="info" className="mb-4">
+                    <small>📱 Using offline data for reports. Connect to server for complete financial data.</small>
+                </Alert>
+            )}
 
             {/* Report Controls */}
             <Card className="border-0 shadow-sm mb-4">
@@ -170,7 +289,7 @@ function FinancialReports() {
             </Card>
 
             {/* Report Content */}
-            {reportData && (
+            {reportData && reportData.data && (
                 <div>
                     {reportType === 'profit_loss' && renderProfitLossReport()}
                     {reportType === 'balance_sheet' && renderBalanceSheetReport()}

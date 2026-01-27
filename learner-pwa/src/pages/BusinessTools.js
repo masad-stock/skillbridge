@@ -1744,13 +1744,38 @@ function BusinessTools() {
                                 </Col>
                                 <Col md={6}>
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Price (KSh) *</Form.Label>
+                                        <Form.Label>Cost Price (KSh)</Form.Label>
                                         <Form.Control
                                             type="number"
-                                            value={newItem.price}
-                                            onChange={(e) => setNewItem({ ...newItem, price: parseFloat(e.target.value) || 0 })}
+                                            value={newItem.costPrice}
+                                            onChange={(e) => setNewItem({ ...newItem, costPrice: parseFloat(e.target.value) || 0 })}
                                             min="0"
                                             step="0.01"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Selling Price (KSh) *</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            value={newItem.sellingPrice}
+                                            onChange={(e) => setNewItem({ ...newItem, sellingPrice: parseFloat(e.target.value) || 0 })}
+                                            min="0"
+                                            step="0.01"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Reorder Level</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            value={newItem.reorderLevel}
+                                            onChange={(e) => setNewItem({ ...newItem, reorderLevel: parseInt(e.target.value) || 5 })}
+                                            min="0"
                                         />
                                     </Form.Group>
                                 </Col>
@@ -1807,6 +1832,264 @@ function BusinessTools() {
                     >
                         <span className="me-2">💾</span>
                         Save
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* New Sale Modal */}
+            <Modal show={showSaleModal} onHide={() => setShowSaleModal(false)} size="lg" centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        <span className="me-2">💰</span>
+                        Record New Sale
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Customer</Form.Label>
+                            <Form.Select
+                                value={newSale.customer}
+                                onChange={(e) => setNewSale({ ...newSale, customer: e.target.value })}
+                            >
+                                <option value="">Walk-in Customer</option>
+                                {customers.map(customer => (
+                                    <option key={customer.id} value={customer.id}>
+                                        {customer.name} - {customer.phone}
+                                    </option>
+                                ))}
+                            </Form.Select>
+                        </Form.Group>
+
+                        <div className="mb-3">
+                            <div className="d-flex justify-content-between align-items-center mb-2">
+                                <Form.Label className="mb-0">Sale Items *</Form.Label>
+                                <Button
+                                    variant="outline-primary"
+                                    size="sm"
+                                    onClick={() => setSaleItems([...saleItems, { itemId: '', quantity: 1, price: 0 }])}
+                                >
+                                    ➕ Add Item
+                                </Button>
+                            </div>
+                            {saleItems.map((item, index) => (
+                                <Row key={index} className="mb-2 align-items-end">
+                                    <Col md={5}>
+                                        <Form.Select
+                                            value={item.itemId}
+                                            onChange={(e) => {
+                                                const updatedItems = [...saleItems];
+                                                const selectedItem = inventory.find(inv => inv.id === parseInt(e.target.value));
+                                                updatedItems[index] = {
+                                                    ...updatedItems[index],
+                                                    itemId: e.target.value,
+                                                    price: selectedItem?.sellingPrice || 0
+                                                };
+                                                setSaleItems(updatedItems);
+                                            }}
+                                        >
+                                            <option value="">Select Product</option>
+                                            {inventory.filter(inv => inv.quantity > 0).map(inv => (
+                                                <option key={inv.id} value={inv.id}>
+                                                    {inv.name} (Stock: {inv.quantity}) - KSh {inv.sellingPrice}
+                                                </option>
+                                            ))}
+                                        </Form.Select>
+                                    </Col>
+                                    <Col md={3}>
+                                        <Form.Control
+                                            type="number"
+                                            placeholder="Qty"
+                                            value={item.quantity}
+                                            onChange={(e) => {
+                                                const updatedItems = [...saleItems];
+                                                updatedItems[index].quantity = parseInt(e.target.value) || 1;
+                                                setSaleItems(updatedItems);
+                                            }}
+                                            min="1"
+                                        />
+                                    </Col>
+                                    <Col md={3}>
+                                        <Form.Control
+                                            type="number"
+                                            placeholder="Price"
+                                            value={item.price}
+                                            onChange={(e) => {
+                                                const updatedItems = [...saleItems];
+                                                updatedItems[index].price = parseFloat(e.target.value) || 0;
+                                                setSaleItems(updatedItems);
+                                            }}
+                                            min="0"
+                                        />
+                                    </Col>
+                                    <Col md={1}>
+                                        {saleItems.length > 1 && (
+                                            <Button
+                                                variant="outline-danger"
+                                                size="sm"
+                                                onClick={() => setSaleItems(saleItems.filter((_, i) => i !== index))}
+                                            >
+                                                🗑️
+                                            </Button>
+                                        )}
+                                    </Col>
+                                </Row>
+                            ))}
+                        </div>
+
+                        <Row>
+                            <Col md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Payment Method</Form.Label>
+                                    <Form.Select
+                                        value={newSale.paymentMethod}
+                                        onChange={(e) => setNewSale({ ...newSale, paymentMethod: e.target.value })}
+                                    >
+                                        <option value="cash">Cash</option>
+                                        <option value="mpesa">M-Pesa</option>
+                                        <option value="card">Card</option>
+                                        <option value="credit">Credit</option>
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                            <Col md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Discount (KSh)</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        value={newSale.discount}
+                                        onChange={(e) => setNewSale({ ...newSale, discount: parseFloat(e.target.value) || 0 })}
+                                        min="0"
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+                        {/* Sale Summary */}
+                        <Card className="bg-light">
+                            <Card.Body>
+                                <div className="d-flex justify-content-between mb-2">
+                                    <span>Subtotal:</span>
+                                    <strong>KSh {saleItems.reduce((sum, item) => sum + (item.quantity * item.price), 0).toLocaleString()}</strong>
+                                </div>
+                                <div className="d-flex justify-content-between mb-2">
+                                    <span>Discount:</span>
+                                    <span className="text-danger">- KSh {(newSale.discount || 0).toLocaleString()}</span>
+                                </div>
+                                <hr />
+                                <div className="d-flex justify-content-between">
+                                    <strong>Total:</strong>
+                                    <strong className="text-success fs-5">
+                                        KSh {(saleItems.reduce((sum, item) => sum + (item.quantity * item.price), 0) - (newSale.discount || 0)).toLocaleString()}
+                                    </strong>
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowSaleModal(false)}>
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="primary"
+                        onClick={addSale}
+                        disabled={!saleItems.some(item => item.itemId && item.quantity > 0)}
+                    >
+                        <span className="me-2">💾</span>
+                        Record Sale
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Add Expense Modal */}
+            <Modal show={showExpenseModal} onHide={() => setShowExpenseModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        <span className="me-2">💸</span>
+                        Add Expense
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Category *</Form.Label>
+                            <Form.Select
+                                value={newExpense.category}
+                                onChange={(e) => setNewExpense({ ...newExpense, category: e.target.value })}
+                            >
+                                <option value="">Select Category</option>
+                                <option value="Rent">Rent</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Salaries">Salaries</option>
+                                <option value="Supplies">Supplies</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Maintenance">Maintenance</option>
+                                <option value="Insurance">Insurance</option>
+                                <option value="Taxes">Taxes</option>
+                                <option value="Other">Other</option>
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Description *</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={newExpense.description}
+                                onChange={(e) => setNewExpense({ ...newExpense, description: e.target.value })}
+                                placeholder="e.g., Monthly electricity bill"
+                            />
+                        </Form.Group>
+                        <Row>
+                            <Col md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Amount (KSh) *</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        value={newExpense.amount}
+                                        onChange={(e) => setNewExpense({ ...newExpense, amount: parseFloat(e.target.value) || 0 })}
+                                        min="0"
+                                        step="0.01"
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Payment Method</Form.Label>
+                                    <Form.Select
+                                        value={newExpense.paymentMethod}
+                                        onChange={(e) => setNewExpense({ ...newExpense, paymentMethod: e.target.value })}
+                                    >
+                                        <option value="cash">Cash</option>
+                                        <option value="mpesa">M-Pesa</option>
+                                        <option value="card">Card</option>
+                                        <option value="bank">Bank Transfer</option>
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Vendor/Supplier</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={newExpense.vendor}
+                                onChange={(e) => setNewExpense({ ...newExpense, vendor: e.target.value })}
+                                placeholder="e.g., Kenya Power"
+                            />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowExpenseModal(false)}>
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="danger"
+                        onClick={addExpense}
+                        disabled={!newExpense.category || !newExpense.description || newExpense.amount <= 0}
+                    >
+                        <span className="me-2">💾</span>
+                        Add Expense
                     </Button>
                 </Modal.Footer>
             </Modal>

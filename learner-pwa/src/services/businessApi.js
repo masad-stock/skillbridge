@@ -184,6 +184,31 @@ class BusinessApiService {
         const response = await this.client.post('/business/activity', activity);
         return response.data;
     }
+
+    // ============ FINANCIAL REPORTS ============
+    async getFinancialReports(params = {}) {
+        const queryString = new URLSearchParams(params).toString();
+        const response = await this.client.get(`/business/reports/financial?${queryString}`);
+        return response.data;
+    }
+
+    // ============ BUSINESS INTELLIGENCE ============
+    async getBusinessIntelligence(period = 30) {
+        const response = await this.client.get(`/business/analytics?period=${period}&type=overview`);
+        return response.data;
+    }
+
+    // ============ COMPLIANCE ============
+    async getCompliance() {
+        const response = await this.client.get('/business/compliance');
+        return response.data;
+    }
+
+    // ============ INVENTORY FORECASTING ============
+    async getInventoryForecast(period = 30) {
+        const response = await this.client.get(`/business/analytics?period=${period}&type=forecasting`);
+        return response.data;
+    }
 }
 
 // Create and export singleton instance
