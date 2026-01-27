@@ -26,12 +26,13 @@ This platform addresses the challenge of digital skills education in Kenya and s
 
 ### Installation
 
-#### Option 1: Automated Setup (Windows)
+#### Quick Setup (Windows)
 ```bash
-setup.bat
+start.bat
+# Select option 1 for setup
 ```
 
-#### Option 2: Manual Setup
+#### Manual Setup
 ```bash
 # 1. Clone the repository
 git clone https://github.com/masad-stock/skillbridge.git
@@ -58,15 +59,21 @@ cd ../..
 
 ### Running the Application
 
-#### Full Stack (Recommended)
+#### Quick Start (Recommended)
 ```bash
-cd learner-pwa
 # Windows
-start-fullstack.bat
+start.bat
 
 # Linux/Mac
-./start-fullstack.sh
+./start.sh
 ```
+
+This will show you an interactive menu with options to:
+- Setup the project (first time)
+- Start full stack (frontend + backend)
+- Start backend or frontend separately
+- Run tests
+- Build for production
 
 #### Manual Start
 ```bash
