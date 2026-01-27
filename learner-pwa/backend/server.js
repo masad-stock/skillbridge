@@ -177,7 +177,15 @@ io.on('connection', (socket) => {
 app.set('io', io);
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI)
+const MONGODB_URI = process.env.MONGODB_URI;
+if (!MONGODB_URI) {
+    logger.error('MONGODB_URI environment variable is not set!');
+    logger.error('Please set MONGODB_URI in your environment variables.');
+    process.exit(1);
+}
+
+logger.info('Connecting to MongoDB...');
+mongoose.connect(MONGODB_URI)
     .then(() => {
         logger.info('MongoDB connected successfully');
 
@@ -188,12 +196,13 @@ mongoose.connect(process.env.MONGODB_URI)
 
         // Start server
         const PORT = process.env.PORT || 5001;
-        httpServer.listen(PORT, () => {
+        httpServer.listen(PORT, '0.0.0.0', () => {
             logger.info(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
         });
     })
     .catch(err => {
-        logger.error('MongoDB connection error:', err);
+        logger.error('MongoDB connection error:', err.message);
+        logger.error('Please check your MONGODB_URI and ensure MongoDB Atlas IP whitelist includes 0.0.0.0/0');
         process.exit(1);
     });
 
