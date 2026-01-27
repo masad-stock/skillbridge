@@ -21,6 +21,13 @@ function DashboardSidebar() {
             translationKey: 'nav.dashboard'
         },
         {
+            path: '/competency',
+            icon: '🎯',
+            label: t('nav.competency', 'My Skills'),
+            translationKey: 'nav.competency',
+            badge: 'NEW'
+        },
+        {
             path: '/learning',
             icon: '📚',
             label: t('nav.learning', 'Learning Path'),
@@ -37,6 +44,13 @@ function DashboardSidebar() {
             icon: '💼',
             label: t('nav.business', 'Business Tools'),
             translationKey: 'nav.business'
+        },
+        {
+            path: '/economic-survey?type=baseline',
+            icon: '💰',
+            label: t('nav.survey', 'Economic Survey'),
+            translationKey: 'nav.survey',
+            badge: 'NEW'
         },
         {
             path: '/certificates',
@@ -134,7 +148,12 @@ function DashboardSidebar() {
                             title={item.label}
                         >
                             <span className="nav-icon">{item.icon}</span>
-                            {!isCollapsed && <span className="nav-label">{item.label}</span>}
+                            {!isCollapsed && (
+                                <>
+                                    <span className="nav-label">{item.label}</span>
+                                    {item.badge && <span className="nav-badge">{item.badge}</span>}
+                                </>
+                            )}
                         </button>
                     ))}
                 </nav>
