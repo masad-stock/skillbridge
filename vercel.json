@@ -1,6 +1,5 @@
 {
-  "buildCommand": "cd learner-pwa && DISABLE_ESLINT_PLUGIN=true CI=false npm install --legacy-peer-deps && DISABLE_ESLINT_PLUGIN=true CI=false npm run build",
+  "buildCommand": "cd learner-pwa && npm install --legacy-peer-deps && npm run build",
   "outputDirectory": "learner-pwa/build",
-  "framework": null,
   "installCommand": "cd learner-pwa && npm install --legacy-peer-deps"
 }

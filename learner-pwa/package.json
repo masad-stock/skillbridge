@@ -44,7 +44,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "node build-production.js",
+    "build:react": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serve": "npx serve -s build -l 3000",
