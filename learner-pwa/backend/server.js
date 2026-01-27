@@ -1,4 +1,17 @@
 require('dotenv').config();
+
+// Global error handlers for uncaught exceptions
+process.on('uncaughtException', (err) => {
+    console.error('UNCAUGHT EXCEPTION:', err.message);
+    console.error(err.stack);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('UNHANDLED REJECTION at:', promise);
+    console.error('Reason:', reason);
+});
+
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
