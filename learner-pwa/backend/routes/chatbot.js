@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const rateLimit = require('express-rate-limit');
 const { protect, optionalAuth } = require('../middleware/auth');
-const geminiService = require('../services/geminiService');
+const groqService = require('../services/groqService');
 const Module = require('../models/Module');
 const User = require('../models/User');
 
@@ -56,7 +56,7 @@ router.post('/message-public', publicChatLimiter, async (req, res) => {
 
         // Stream response
         try {
-            for await (const chunk of geminiService.generateChatStream(
+            for await (const chunk of groqService.generateChatStream(
                 message,
                 userContext,
                 courseContext
@@ -69,7 +69,7 @@ router.post('/message-public', publicChatLimiter, async (req, res) => {
             console.error('Streaming error:', streamError);
             let errorMessage = 'Failed to generate response';
 
-            if (streamError.message === 'Gemini API not configured') {
+            if (streamError.message === 'Groq API not configured') {
                 errorMessage = 'AI service is not configured. Please contact support.';
             } else if (streamError.message.includes('API_KEY')) {
                 errorMessage = 'AI service configuration error. Please try again later.';
@@ -125,7 +125,7 @@ router.post('/message', authenticatedChatLimiter, protect, async (req, res) => {
 
         // Stream response
         try {
-            for await (const chunk of geminiService.generateChatStream(
+            for await (const chunk of groqService.generateChatStream(
                 message,
                 userContext,
                 enrichedCourseContext
@@ -138,7 +138,7 @@ router.post('/message', authenticatedChatLimiter, protect, async (req, res) => {
             console.error('Streaming error:', streamError);
             let errorMessage = 'Failed to generate response';
 
-            if (streamError.message === 'Gemini API not configured') {
+            if (streamError.message === 'Groq API not configured') {
                 errorMessage = 'AI service is not configured. Please contact support.';
             } else if (streamError.message.includes('API_KEY')) {
                 errorMessage = 'AI service configuration error. Please try again later.';
@@ -187,7 +187,7 @@ router.post('/message-sync', protect, async (req, res) => {
             }
         }
 
-        const response = await geminiService.generateChatResponse(
+        const response = await groqService.generateChatResponse(
             message,
             userContext,
             enrichedCourseContext
@@ -220,7 +220,7 @@ router.post('/celebration', protect, async (req, res) => {
             userName: user?.profile?.firstName || 'Learner'
         };
 
-        const message = await geminiService.generateCelebrationMessage(
+        const message = await groqService.generateCelebrationMessage(
             eventType,
             enrichedContext
         );
@@ -238,10 +238,10 @@ router.post('/celebration', protect, async (req, res) => {
  * @access  Public
  */
 router.get('/health', (req, res) => {
-    const isConfigured = !!process.env.GEMINI_API_KEY;
+    const isConfigured = !!process.env.GROQ_API_KEY;
     res.json({
         status: isConfigured ? 'healthy' : 'not_configured',
-        model: process.env.GEMINI_MODEL || 'gemini-1.5-flash',
+        model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
         configured: isConfigured
     });
 });

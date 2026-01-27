@@ -154,7 +154,7 @@
     "title": "Learning Assistant",
     "online": "Online",
     "placeholder": "Type your question...",
-    "powered": "Powered by Gemini AI",
+    "powered": "Powered by Groq AI",
     "welcome": "Hello! I'm your learning assistant. How can I help you today?",
     "error": "Sorry, I encountered an error. Please try again."
   }

@@ -67,7 +67,7 @@ function ChatWidget() {
         setIsTyping(true);
 
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('authToken');
 
             // Use different endpoint based on authentication state
             const endpoint = isAuthenticated
@@ -312,7 +312,7 @@ function ChatWidget() {
                 {/* Footer */}
                 <div className="chat-footer">
                     <small className="text-muted">
-                        {t('chatbot.powered', 'Powered by Gemini AI')}
+                        {t('chatbot.powered', 'Powered by Groq AI')}
                     </small>
                 </div>
             </div>
