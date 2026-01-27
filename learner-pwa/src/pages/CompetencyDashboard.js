@@ -267,20 +267,20 @@ const CompetencyDashboard = () => {
                         <div className="history-section">
                             <h3>📈 Progress Over Time</h3>
                             <div className="history-chart">
-                                {history.reverse().map((eval, index) => (
-                                    <div key={eval._id} className="history-point">
-                                        <div className="history-date">{formatDate(eval.evaluationDate)}</div>
+                                {history.reverse().map((evaluation, index) => (
+                                    <div key={evaluation._id} className="history-point">
+                                        <div className="history-date">{formatDate(evaluation.evaluationDate)}</div>
                                         <div className="history-bar-container">
                                             <div
                                                 className="history-bar"
-                                                style={{ height: `${eval.overallScore}%` }}
+                                                style={{ height: `${evaluation.overallScore}%` }}
                                             >
-                                                <span className="history-score">{eval.overallScore}</span>
+                                                <span className="history-score">{evaluation.overallScore}</span>
                                             </div>
                                         </div>
                                         <div className="history-level">
-                                            <span className={`level-badge-sm ${getLevelBadgeClass(eval.overallLevel)}`}>
-                                                {eval.overallLevel.charAt(0).toUpperCase()}
+                                            <span className={`level-badge-sm ${getLevelBadgeClass(evaluation.overallLevel)}`}>
+                                                {evaluation.overallLevel.charAt(0).toUpperCase()}
                                             </span>
                                         </div>
                                     </div>
