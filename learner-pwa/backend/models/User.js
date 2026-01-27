@@ -17,8 +17,8 @@ const userSchema = new mongoose.Schema({
         select: false
     },
     profile: {
-        firstName: { type: String, required: true, trim: true },
-        lastName: { type: String, required: true, trim: true },
+        firstName: { type: String, required: false, trim: true, default: '' },
+        lastName: { type: String, required: false, trim: true, default: '' },
         phoneNumber: { type: String, trim: true },
         profilePhoto: { type: String }, // URL to profile photo
         dateOfBirth: Date,

@@ -38,8 +38,8 @@ api.interceptors.request.use(
             config.headers['X-CSRF-Token'] = getCSRFToken();
         }
 
-        // Sanitize request data
-        if (config.data && typeof config.data === 'object') {
+        // Sanitize request data (but not FormData)
+        if (config.data && typeof config.data === 'object' && !(config.data instanceof FormData)) {
             config.data = sanitizeObject(config.data);
         }
 
@@ -165,7 +165,8 @@ export const authAPI = {
         return api.post('/users/profile/photo', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
-            }
+            },
+            transformRequest: [(data) => data] // Prevent axios from transforming FormData
         });
     },
     deleteProfilePhoto: () => api.delete('/users/profile/photo')

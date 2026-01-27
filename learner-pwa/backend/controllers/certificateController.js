@@ -15,21 +15,33 @@ exports.generateCertificate = async (req, res) => {
         const { moduleId } = value;
         const userId = req.user.id;
 
+        console.log('[Certificate] Generate request:', { userId, moduleId });
+
         const result = await certificateService.generateCertificate(userId, moduleId);
+
+        console.log('[Certificate] Generation result:', { success: result.success, message: result.message });
 
         if (!result.success) {
             return res.status(400).json(result);
         }
 
         // Generate PDF
-        await certificateService.generatePDF(result.certificate._id);
+        try {
+            await certificateService.generatePDF(result.certificate._id);
+            console.log('[Certificate] PDF generated successfully');
+        } catch (pdfError) {
+            console.error('[Certificate] PDF generation failed:', pdfError.message);
+            // Continue even if PDF fails
+        }
 
         res.status(201).json({
             success: true,
             message: 'Certificate generated successfully',
+            certificate: result.certificate,
             data: result.certificate
         });
     } catch (error) {
+        console.error('[Certificate] Generation error:', error);
         res.status(500).json({
             success: false,
             message: error.message

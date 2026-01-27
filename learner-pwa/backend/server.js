@@ -118,8 +118,14 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// Static files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Static files - serve uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+    setHeaders: (res, filePath) => {
+        // Set proper CORS headers for images
+        res.set('Access-Control-Allow-Origin', '*');
+        res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+    }
+}));
 
 // Health check
 app.get('/health', (req, res) => {

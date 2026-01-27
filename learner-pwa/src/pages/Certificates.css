@@ -4,36 +4,104 @@
 
 .certificate-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 2px solid #f0f0f0;
+  background-color: #ffffff !important;
+  border: 2px solid #e0e0e0 !important;
+  color: #000000 !important;
 }
 
 .certificate-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+  border-color: #333333 !important;
+}
+
+.certificate-card .card-body {
+  background-color: #ffffff !important;
+}
+
+.certificate-card h5 {
+  color: #000000 !important;
+  font-weight: 600;
+}
+
+.certificate-card p,
+.certificate-card small {
+  color: #333333 !important;
+}
+
+.certificate-card .text-muted {
+  color: #666666 !important;
 }
 
 .certificate-icon {
   text-align: center;
   padding: 20px;
-  background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
+  background: #ffffff !important;
+  border: 2px solid #f0f0f0;
   border-radius: 10px;
 }
 
 .certificate-meta {
-  padding: 10px;
-  background-color: #f8f9fa;
-  border-radius: 5px;
+  padding: 12px;
+  background-color: #f8f8f8 !important;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.certificate-meta small {
+  color: #000000 !important;
 }
 
 .certificate-details strong {
-  color: #495057;
+  color: #000000 !important;
   display: block;
   margin-bottom: 5px;
+  font-weight: 600;
 }
 
 .certificate-details p {
   margin-bottom: 0;
-  color: #212529;
+  color: #333333 !important;
+}
+
+/* Button styling for better contrast */
+.certificate-card .btn-primary {
+  background-color: #000000 !important;
+  border-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.certificate-card .btn-primary:hover {
+  background-color: #333333 !important;
+  border-color: #333333 !important;
+}
+
+.certificate-card .btn-outline-success {
+  border-color: #000000 !important;
+  color: #000000 !important;
+  background-color: #ffffff !important;
+}
+
+.certificate-card .btn-outline-success:hover {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.certificate-card .btn-outline-primary {
+  border-color: #666666 !important;
+  color: #666666 !important;
+  background-color: #ffffff !important;
+}
+
+.certificate-card .btn-outline-primary:hover {
+  background-color: #666666 !important;
+  color: #ffffff !important;
+  border-color: #666666 !important;
+}
+
+/* Badge styling */
+.certificate-card .badge {
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {

@@ -18,11 +18,26 @@ function CompletionCelebration({
     const [showConfetti, setShowConfetti] = useState(false);
 
     useEffect(() => {
-        if (show && !showConfetti) {
-            setShowConfetti(true);
-            triggerConfetti();
+        console.log('[CompletionCelebration] Props received:', {
+            show,
+            courseTitle,
+            certificate: certificate ? 'present' : 'missing',
+            score,
+            timeSpent
+        });
+        if (show) {
+            console.log('[CompletionCelebration] Modal should be visible now');
+            // Reset confetti state when modal opens
+            setShowConfetti(false);
+            // Trigger confetti after a small delay
+            const timer = setTimeout(() => {
+                console.log('[CompletionCelebration] Triggering confetti');
+                triggerConfetti();
+                setShowConfetti(true);
+            }, 100);
+            return () => clearTimeout(timer);
         }
-    }, [show, showConfetti]);
+    }, [show, courseTitle, certificate, score, timeSpent]);
 
     const triggerConfetti = () => {
         const duration = 3000;
@@ -78,13 +93,13 @@ function CompletionCelebration({
                         🎉
                     </div>
                     <Modal.Title className="celebration-title">
-                        {t('completion.congratulations')}
+                        {t('completion.congratulations') || 'Congratulations!'}
                     </Modal.Title>
                 </div>
             </Modal.Header>
 
             <Modal.Body className="text-center px-4 pb-4">
-                <h4 className="mb-3">{t('completion.courseCompleted')}</h4>
+                <h4 className="mb-3">{t('completion.courseCompleted') || 'Course Completed!'}</h4>
                 <h5 className="text-primary mb-4">{courseTitle}</h5>
 
                 {/* Stats Cards */}
@@ -118,7 +133,7 @@ function CompletionCelebration({
                             <Card className="stat-card certificate-card">
                                 <Card.Body>
                                     <div className="stat-icon">🏆</div>
-                                    <div className="stat-label">{t('completion.certificateReady')}</div>
+                                    <div className="stat-label">{t('completion.certificateReady') || 'Certificate Ready!'}</div>
                                 </Card.Body>
                             </Card>
                         </div>
@@ -127,25 +142,55 @@ function CompletionCelebration({
 
                 {/* Certificate Actions */}
                 {certificate && (
-                    <div className="certificate-actions mb-4">
-                        <Link
-                            to={`/certificates/${certificate._id}`}
-                            className="btn btn-primary btn-lg me-2"
-                        >
-                            📜 {t('completion.viewCertificate')}
-                        </Link>
-                        <Button
-                            variant="outline-primary"
-                            size="lg"
-                            onClick={() => {
-                                const link = document.createElement('a');
-                                link.href = certificate.pdfUrl;
-                                link.download = `certificate-${certificate._id}.pdf`;
-                                link.click();
-                            }}
-                        >
-                            ⬇️ {t('completion.downloadCertificate')}
-                        </Button>
+                    <div className="certificate-section mb-4">
+                        {/* Certificate Details */}
+                        <Card className="mb-3 border-success">
+                            <Card.Body>
+                                <div className="d-flex align-items-center mb-3">
+                                    <span className="fs-2 me-3">🏆</span>
+                                    <div className="text-start">
+                                        <h6 className="mb-0 fw-bold">Certificate Earned!</h6>
+                                        <small className="text-muted">
+                                            {certificate.certificateNumber || certificate.id}
+                                        </small>
+                                    </div>
+                                </div>
+                                <div className="row text-start">
+                                    <div className="col-6">
+                                        <small className="text-muted">Grade</small>
+                                        <div className="fw-bold text-success">{certificate.grade || 'A'}</div>
+                                    </div>
+                                    <div className="col-6">
+                                        <small className="text-muted">Score</small>
+                                        <div className="fw-bold">{certificate.score || score}%</div>
+                                    </div>
+                                </div>
+                                {certificate.verificationCode && (
+                                    <div className="mt-2 text-start">
+                                        <small className="text-muted">Verification Code</small>
+                                        <div className="font-monospace small">{certificate.verificationCode}</div>
+                                    </div>
+                                )}
+                            </Card.Body>
+                        </Card>
+
+                        <div className="certificate-actions">
+                            {!certificate.isLocal ? (
+                                <Link
+                                    to={`/certificates/${certificate.certificateNumber || certificate._id || certificate.id}`}
+                                    className="btn btn-primary btn-lg me-2"
+                                >
+                                    📜 {t('completion.viewCertificate') || 'View Certificate'}
+                                </Link>
+                            ) : (
+                                <Link
+                                    to="/certificates"
+                                    className="btn btn-primary btn-lg me-2"
+                                >
+                                    📜 {t('completion.viewCertificates') || 'View Certificates'}
+                                </Link>
+                            )}
+                        </div>
                     </div>
                 )}
 
@@ -153,7 +198,7 @@ function CompletionCelebration({
                 {nextCourse && (
                     <Card className="next-course-card">
                         <Card.Body>
-                            <h6 className="mb-3">{t('completion.nextCourse')}</h6>
+                            <h6 className="mb-3">{t('completion.nextCourse') || 'Recommended Next Course'}</h6>
                             <div className="d-flex align-items-center justify-content-between">
                                 <div className="text-start">
                                     <div className="fw-bold">{nextCourse.title}</div>
@@ -163,7 +208,7 @@ function CompletionCelebration({
                                     to={`/learning/${nextCourse._id}`}
                                     className="btn btn-success"
                                 >
-                                    {t('common.continue')} →
+                                    {t('common.continue') || 'Continue'} →
                                 </Link>
                             </div>
                         </Card.Body>
@@ -172,7 +217,7 @@ function CompletionCelebration({
 
                 {/* Social Share */}
                 <div className="social-share mt-4">
-                    <p className="text-muted mb-2">{t('completion.shareSuccess')}</p>
+                    <p className="text-muted mb-2">{t('completion.shareSuccess') || 'Share your achievement!'}</p>
                     <div className="d-flex gap-2 justify-content-center">
                         <Button
                             variant="outline-secondary"
@@ -213,10 +258,10 @@ function CompletionCelebration({
 
             <Modal.Footer className="border-0 justify-content-center">
                 <Button variant="secondary" onClick={onHide}>
-                    {t('common.close')}
+                    {t('common.close') || 'Close'}
                 </Button>
-                <Link to="/learning" className="btn btn-primary">
-                    {t('completion.continueLearning')}
+                <Link to="/certificates" className="btn btn-primary">
+                    {t('completion.viewCertificates') || 'View My Certificates'}
                 </Link>
             </Modal.Footer>
         </Modal>

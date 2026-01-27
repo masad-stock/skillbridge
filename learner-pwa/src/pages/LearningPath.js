@@ -7,12 +7,15 @@ import { SKILL_CATEGORIES } from '../services/aiAssessment';
 import YouTubePlayer from '../components/YouTubePlayer';
 import ContentRenderer from '../components/ContentRenderer';
 import InAppViewer from '../components/InAppViewer';
+import CompletionCelebration from '../components/CompletionCelebration';
 import { learningAPI, certificateAPI } from '../services/api';
 import offlineCertificateGenerator from '../services/offlineStorage/OfflineCertificateGenerator';
 
 function LearningPath() {
     const { learningPath, progress, dispatch } = useUser();
     const isOnline = useOffline();
+    const [showCelebration, setShowCelebration] = useState(false);
+    const [completedModuleTitle, setCompletedModuleTitle] = useState('');
     const location = useLocation();
     const [selectedModule, setSelectedModule] = useState(null);
     const [showModule, setShowModule] = useState(false);
@@ -29,6 +32,12 @@ function LearningPath() {
     const [viewerContent, setViewerContent] = useState(null);
     const [materialProgress, setMaterialProgress] = useState({});
     const [autoStartHandled, setAutoStartHandled] = useState(false);
+
+    // Debug: Log when celebration modal state changes
+    useEffect(() => {
+        console.log('[LearningPath] showCelebration state changed:', showCelebration);
+        console.log('[LearningPath] certificateGenerated state changed:', certificateGenerated);
+    }, [showCelebration, certificateGenerated]);
 
     // Load modules from API
     useEffect(() => {
@@ -183,6 +192,7 @@ function LearningPath() {
     };
 
     const completeModule = async () => {
+        console.log('[LearningPath] completeModule called');
         try {
             // Calculate overall score based on video watch progress
             const lessonScores = Object.values(lessonProgress).map(p => p.progress || 0);
@@ -193,6 +203,8 @@ function LearningPath() {
             const completedAt = new Date().toISOString();
             const score = Math.round(averageScore);
             const totalWatchTime = Object.values(lessonProgress).reduce((total, p) => total + (p.watchTime || 0), 0);
+
+            console.log('[LearningPath] Score calculated:', score);
 
             const progressData = {
                 completed: true,
@@ -208,46 +220,27 @@ function LearningPath() {
                 moduleId: selectedModule._id,
                 progress: progressData
             });
+            console.log('[LearningPath] Progress updated in context');
 
             // Get user info for certificate
-            const userStr = localStorage.getItem('user');
+            const userStr = localStorage.getItem('user') || localStorage.getItem('cachedUser');
             const user = userStr ? JSON.parse(userStr) : null;
+            const userName = user?.profile?.firstName
+                ? `${user.profile.firstName} ${user.profile.lastName || ''}`.trim()
+                : user?.name || user?.email || 'Learner';
 
-            // Try offline certificate generation first
+            // Extract skills from module
+            const skillsAcquired = selectedModule.skills ||
+                (selectedModule.content?.skills ? selectedModule.content.skills.map(s => s.name || s) : []) ||
+                [];
+
             let certificateGenerated = false;
-            try {
-                console.log('[LearningPath] Generating offline certificate...');
 
-                // Extract skills from module
-                const skillsAcquired = selectedModule.skills ||
-                    (selectedModule.content?.skills ? selectedModule.content.skills.map(s => s.name || s) : []) ||
-                    [];
-
-                const offlineCertificate = await offlineCertificateGenerator.generateCertificate({
-                    userName: user?.name || user?.email || 'Learner',
-                    courseName: selectedModule.title,
-                    completionDate: completedAt,
-                    skillsAcquired: skillsAcquired.slice(0, 5), // Max 5 skills
-                    courseId: selectedModule._id,
-                    userId: user?._id || user?.id
-                });
-
-                setGeneratedCertificate({
-                    ...offlineCertificate,
-                    certificateNumber: offlineCertificate.id,
-                    grade: calculateGrade(score),
-                    score: score
-                });
-                setCertificateGenerated(true);
-                certificateGenerated = true;
-                console.log('[LearningPath] Offline certificate generated successfully');
-            } catch (offlineError) {
-                console.error('[LearningPath] Offline certificate generation failed:', offlineError);
-            }
-
-            // Try to update progress on server if online
+            // Try online certificate generation first if online
             if (navigator.onLine) {
                 try {
+                    console.log('[LearningPath] Attempting online certificate generation...');
+                    // First update progress on server
                     await learningAPI.updateProgress(selectedModule._id, {
                         progress: 100,
                         status: 'completed',
@@ -260,56 +253,126 @@ function LearningPath() {
                             score
                         }
                     });
+                    console.log('[LearningPath] Progress updated on server');
 
-                    // Try online certificate generation if offline failed
-                    if (!certificateGenerated) {
-                        const generateCertificateWithRetry = async (retries = 3) => {
-                            for (let attempt = 1; attempt <= retries; attempt++) {
-                                try {
-                                    const certificateResponse = await certificateAPI.generate(selectedModule._id);
-                                    if (certificateResponse.data.success) {
-                                        setGeneratedCertificate(certificateResponse.data.certificate);
-                                        setCertificateGenerated(true);
-                                        console.log('[LearningPath] Online certificate generated successfully');
-                                        return true;
-                                    }
-                                } catch (certError) {
-                                    console.error(`[LearningPath] Certificate generation attempt ${attempt} failed:`, certError);
+                    // Small delay to ensure progress is saved
+                    await new Promise(resolve => setTimeout(resolve, 500));
 
-                                    if (certError.response?.data?.message?.includes('not completed') && attempt < retries) {
-                                        console.log('[LearningPath] Re-sending progress update before retry...');
-                                        await learningAPI.updateProgress(selectedModule._id, {
-                                            progress: 100,
-                                            status: 'completed',
-                                            completedAt,
-                                            score,
-                                            timeSpent: totalWatchTime
-                                        });
-                                        await new Promise(resolve => setTimeout(resolve, 1000));
-                                    }
-                                }
-                            }
-                            return false;
+                    // Generate certificate online
+                    console.log('[LearningPath] Calling certificate API...');
+                    const certificateResponse = await certificateAPI.generate(selectedModule._id);
+                    console.log('[LearningPath] Certificate API response:', certificateResponse.data);
+
+                    if (certificateResponse.data?.success || certificateResponse.data?.certificate) {
+                        const cert = certificateResponse.data.certificate || certificateResponse.data.data;
+                        const certificateData = {
+                            ...cert,
+                            courseName: selectedModule.title,
+                            userName: userName
                         };
-
-                        await generateCertificateWithRetry();
+                        console.log('[LearningPath] Setting certificate data:', certificateData);
+                        setGeneratedCertificate(certificateData);
+                        setCertificateGenerated(true);
+                        certificateGenerated = true;
+                        console.log('[LearningPath] Online certificate generated successfully');
                     }
                 } catch (onlineError) {
-                    console.error('[LearningPath] Online operations failed:', onlineError);
-                    // Continue - offline certificate already generated
+                    console.error('[LearningPath] Online certificate generation failed:', onlineError);
+                    console.error('[LearningPath] Error details:', onlineError.response?.data);
                 }
+            } else {
+                console.log('[LearningPath] Offline - skipping online certificate generation');
             }
 
+            // Fallback to offline certificate generation
+            if (!certificateGenerated) {
+                try {
+                    console.log('[LearningPath] Generating offline certificate...');
+                    console.log('[LearningPath] Offline cert params:', {
+                        userName,
+                        courseName: selectedModule.title,
+                        completionDate: completedAt,
+                        skillsAcquired: skillsAcquired.slice(0, 5),
+                        courseId: selectedModule._id,
+                        userId: user?._id || user?.id
+                    });
+
+                    const offlineCertificate = await offlineCertificateGenerator.generateCertificate({
+                        userName: userName,
+                        courseName: selectedModule.title,
+                        completionDate: completedAt,
+                        skillsAcquired: skillsAcquired.slice(0, 5),
+                        courseId: selectedModule._id,
+                        userId: user?._id || user?.id
+                    });
+
+                    const certificateData = {
+                        ...offlineCertificate,
+                        certificateNumber: offlineCertificate.id,
+                        grade: calculateGrade(score),
+                        score: score,
+                        courseName: selectedModule.title,
+                        userName: userName
+                    };
+                    console.log('[LearningPath] Setting offline certificate data:', certificateData);
+                    setGeneratedCertificate(certificateData);
+                    setCertificateGenerated(true);
+                    console.log('[LearningPath] Offline certificate generated successfully');
+                } catch (offlineError) {
+                    console.error('[LearningPath] Offline certificate generation failed:', offlineError);
+                    console.error('[LearningPath] Offline error stack:', offlineError.stack);
+
+                    // Create a simple fallback certificate for display
+                    const fallbackCertificate = {
+                        id: `local-${Date.now()}`,
+                        certificateNumber: `SB-${new Date().getFullYear()}-LOCAL`,
+                        verificationCode: `LOCAL-${Date.now().toString(36).toUpperCase()}`,
+                        courseName: selectedModule.title,
+                        userName: userName,
+                        score: score,
+                        grade: calculateGrade(score),
+                        completionDate: completedAt,
+                        issueDate: completedAt,
+                        skillsAcquired: skillsAcquired.slice(0, 5),
+                        isLocal: true
+                    };
+                    console.log('[LearningPath] Setting fallback certificate:', fallbackCertificate);
+                    setGeneratedCertificate(fallbackCertificate);
+                    setCertificateGenerated(true);
+                    console.log('[LearningPath] Fallback certificate created');
+                }
+            } else {
+                console.log('[LearningPath] Skipping offline generation - certificate already generated');
+            }
+
+            // Store the module title before clearing selectedModule
+            const moduleTitle = selectedModule.title;
+            setCompletedModuleTitle(moduleTitle);
+            console.log('[LearningPath] Module title stored:', moduleTitle);
+
+            // Close the module modal first
             setShowModule(false);
+            console.log('[LearningPath] Module modal closed');
+
+            // Small delay to ensure modal transition completes
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            // Clear selected module
             setSelectedModule(null);
+
+            // Show celebration modal
+            console.log('[LearningPath] About to show celebration modal');
+            console.log('[LearningPath] Certificate data:', generatedCertificate);
+            setShowCelebration(true);
+            console.log('[LearningPath] Celebration modal state set to true');
         } catch (error) {
             console.error('[LearningPath] Failed to complete module:', error);
+            console.error('[LearningPath] Error stack:', error.stack);
             // Still close modal even if operations fail
             setShowModule(false);
             setSelectedModule(null);
         }
     };
-
     // Helper function to calculate grade from score
     const calculateGrade = (score) => {
         if (score >= 95) return 'A+';
@@ -719,53 +782,19 @@ function LearningPath() {
                 />
             )}
 
-            {/* Certificate Success Modal */}
-            <Modal
-                show={certificateGenerated}
-                onHide={() => setCertificateGenerated(false)}
-                size="lg"
-                centered
-            >
-                <Modal.Header closeButton className="bg-success text-white">
-                    <Modal.Title>
-                        <span className="me-2">🎉</span>
-                        Congratulations!
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body className="text-center p-5">
-                    <div className="fs-1 mb-4">🏆</div>
-                    <h3 className="fw-bold mb-3">Course Completed Successfully!</h3>
-                    <p className="text-muted mb-4">
-                        You have successfully completed <strong>{selectedModule?.title}</strong> and earned your certificate!
-                    </p>
-
-                    {generatedCertificate && (
-                        <div className="bg-light p-4 rounded mb-4">
-                            <h6 className="fw-bold mb-2">Certificate Details</h6>
-                            <p className="mb-1"><strong>Certificate Number:</strong> {generatedCertificate.certificateNumber}</p>
-                            <p className="mb-1"><strong>Score:</strong> {generatedCertificate.score}%</p>
-                            <p className="mb-1"><strong>Grade:</strong> {generatedCertificate.grade}</p>
-                            <p className="mb-0"><strong>Verification Code:</strong> {generatedCertificate.verificationCode}</p>
-                        </div>
-                    )}
-
-                    <div className="d-flex gap-3 justify-content-center">
-                        <Button
-                            variant="primary"
-                            onClick={() => window.open('/certificates', '_blank')}
-                        >
-                            <span className="me-2">📜</span>
-                            View Certificate
-                        </Button>
-                        <Button
-                            variant="outline-primary"
-                            onClick={() => setCertificateGenerated(false)}
-                        >
-                            Continue Learning
-                        </Button>
-                    </div>
-                </Modal.Body>
-            </Modal>
+            {/* Completion Celebration Modal */}
+            <CompletionCelebration
+                show={showCelebration || certificateGenerated}
+                onHide={() => {
+                    setShowCelebration(false);
+                    setCertificateGenerated(false);
+                    setCompletedModuleTitle('');
+                }}
+                courseTitle={generatedCertificate?.courseName || completedModuleTitle || 'Course'}
+                certificate={generatedCertificate}
+                score={generatedCertificate?.score}
+                timeSpent={Object.values(lessonProgress).reduce((total, p) => total + (p.watchTime || 0), 0)}
+            />
         </Container>
     );
 }

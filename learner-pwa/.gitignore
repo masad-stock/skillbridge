@@ -130,10 +130,8 @@ jspm_packages/
 .pnp.*
 
 # User uploaded files
-backend/uploads/*
-!backend/uploads/.gitkeep
-!backend/uploads/profiles/.gitkeep
-
-# Keep directory structure but ignore uploaded files
-backend/uploads/profiles/*
-!backend/uploads/profiles/.gitkeep
+uploads/*
+!uploads/.gitkeep
+!uploads/profiles/
+uploads/profiles/*
+!uploads/profiles/.gitkeep

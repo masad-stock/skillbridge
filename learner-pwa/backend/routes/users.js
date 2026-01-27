@@ -10,17 +10,22 @@ const { protect, authorize } = require('../middleware/auth');
 // Configure multer for file uploads
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
-        const uploadDir = path.join(__dirname, '../../uploads/profiles');
+        const uploadDir = path.join(__dirname, '../uploads/profiles');
         try {
             await fs.mkdir(uploadDir, { recursive: true });
+            console.log('Upload directory ensured:', uploadDir);
             cb(null, uploadDir);
         } catch (error) {
+            console.error('Error creating upload directory:', error);
             cb(error);
         }
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, `profile-${req.user.id}-${uniqueSuffix}${path.extname(file.originalname)}`);
+        const userId = req.user?.id || 'temp';
+        const filename = `profile-${userId}-${uniqueSuffix}${path.extname(file.originalname)}`;
+        console.log('Generated filename:', filename);
+        cb(null, filename);
     }
 });
 
@@ -30,13 +35,16 @@ const upload = multer({
         fileSize: 5 * 1024 * 1024 // 5MB limit
     },
     fileFilter: (req, file, cb) => {
+        console.log('File filter - mimetype:', file.mimetype, 'originalname:', file.originalname);
         const allowedTypes = /jpeg|jpg|png|gif|webp/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = allowedTypes.test(file.mimetype);
 
         if (mimetype && extname) {
+            console.log('File accepted');
             return cb(null, true);
         } else {
+            console.log('File rejected - invalid type');
             cb(new Error('Only image files are allowed (jpeg, jpg, png, gif, webp)'));
         }
     }
@@ -117,17 +125,37 @@ router.put('/:id', protect, async (req, res) => {
 // @access  Private
 router.post('/profile/photo', protect, upload.single('photo'), async (req, res) => {
     try {
+        console.log('Upload request received');
+        console.log('File:', req.file);
+        console.log('Body:', req.body);
+        console.log('User:', req.user?.id);
+
         if (!req.file) {
+            console.log('No file in request');
             return res.status(400).json({ success: false, message: 'No file uploaded' });
         }
 
         // Delete old profile photo if exists
         const user = await User.findById(req.user.id);
+        if (!user) {
+            console.log('User not found:', req.user.id);
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        // Initialize profile object if it doesn't exist
+        if (!user.profile) {
+            user.profile = {};
+        }
+
         if (user.profile?.profilePhoto) {
-            const oldPhotoPath = path.join(__dirname, '../../', user.profile.profilePhoto);
+            // Extract filename from URL path
+            const photoFilename = path.basename(user.profile.profilePhoto);
+            const oldPhotoPath = path.join(__dirname, '../uploads/profiles', photoFilename);
             try {
                 await fs.unlink(oldPhotoPath);
+                console.log('Deleted old photo:', oldPhotoPath);
             } catch (error) {
+                console.log('Could not delete old photo:', error.message);
                 // Ignore error if file doesn't exist
             }
         }
@@ -135,7 +163,13 @@ router.post('/profile/photo', protect, upload.single('photo'), async (req, res) 
         // Update user with new photo URL
         const photoUrl = `/uploads/profiles/${req.file.filename}`;
         user.profile.profilePhoto = photoUrl;
+
+        // Mark profile as modified to ensure it saves
+        user.markModified('profile');
+
         await user.save();
+
+        console.log('Photo uploaded successfully:', photoUrl);
 
         res.json({
             success: true,
@@ -143,15 +177,17 @@ router.post('/profile/photo', protect, upload.single('photo'), async (req, res) 
             data: { profilePhoto: photoUrl }
         });
     } catch (error) {
+        console.error('Upload error:', error);
+        console.error('Error stack:', error.stack);
         // Clean up uploaded file if database update fails
         if (req.file) {
             try {
                 await fs.unlink(req.file.path);
             } catch (unlinkError) {
-                // Ignore error
+                console.error('Failed to clean up file:', unlinkError);
             }
         }
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: error.message || 'Upload failed' });
     }
 });
 
@@ -167,10 +203,13 @@ router.delete('/profile/photo', protect, async (req, res) => {
         }
 
         // Delete photo file
-        const photoPath = path.join(__dirname, '../../', user.profile.profilePhoto);
+        const photoFilename = path.basename(user.profile.profilePhoto);
+        const photoPath = path.join(__dirname, '../uploads/profiles', photoFilename);
         try {
             await fs.unlink(photoPath);
+            console.log('Deleted photo file:', photoPath);
         } catch (error) {
+            console.log('Could not delete photo file:', error.message);
             // Ignore error if file doesn't exist
         }
 
@@ -183,6 +222,7 @@ router.delete('/profile/photo', protect, async (req, res) => {
             message: 'Profile photo deleted successfully'
         });
     } catch (error) {
+        console.error('Delete photo error:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 });

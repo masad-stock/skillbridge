@@ -124,9 +124,22 @@ function Header() {
                                 <Link to="/dashboard" className="text-decoration-none">
                                     <div className="user-profile">
                                         <div className="user-avatar">
-                                            <span className="avatar-text">
-                                                {(user?.profile?.firstName || 'U')[0].toUpperCase()}
-                                            </span>
+                                            {user?.profile?.profilePhoto ? (
+                                                <img
+                                                    src={user.profile.profilePhoto}
+                                                    alt="Profile"
+                                                    style={{
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        objectFit: 'cover',
+                                                        borderRadius: '50%'
+                                                    }}
+                                                />
+                                            ) : (
+                                                <span className="avatar-text">
+                                                    {(user?.profile?.firstName || 'U')[0].toUpperCase()}
+                                                </span>
+                                            )}
                                         </div>
                                         <span className="user-name">{user?.profile?.firstName || 'Profile'}</span>
                                     </div>
@@ -232,9 +245,22 @@ function Header() {
                             <div className="user-section-mobile">
                                 <div className="user-info-mobile">
                                     <div className="user-avatar-mobile">
-                                        <span className="avatar-text">
-                                            {(user?.profile?.firstName || 'U')[0].toUpperCase()}
-                                        </span>
+                                        {user?.profile?.profilePhoto ? (
+                                            <img
+                                                src={user.profile.profilePhoto}
+                                                alt="Profile"
+                                                style={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    objectFit: 'cover',
+                                                    borderRadius: '50%'
+                                                }}
+                                            />
+                                        ) : (
+                                            <span className="avatar-text">
+                                                {(user?.profile?.firstName || 'U')[0].toUpperCase()}
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="user-details">
                                         <div className="welcome-text">{t('dashboard.welcome')}</div>

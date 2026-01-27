@@ -27,9 +27,11 @@ class BusinessApiService {
         this.client.interceptors.response.use(
             (response) => response,
             (error) => {
+                // Don't auto-redirect on 401 - let components handle it gracefully
+                // This allows offline-first components to fall back to localStorage
                 if (error.response?.status === 401) {
+                    // Only remove token, don't redirect
                     localStorage.removeItem('token');
-                    window.location.href = '/profile';
                 }
                 return Promise.reject(error);
             }

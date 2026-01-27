@@ -82,6 +82,14 @@ router.put('/progress/:moduleId', protect, async (req, res) => {
     try {
         const { progress: progressValue, timeSpent, activity, status, completedAt, score } = req.body;
 
+        console.log('[Learning] Progress update request:', {
+            moduleId: req.params.moduleId,
+            userId: req.user.id,
+            status,
+            score,
+            progressValue
+        });
+
         let progress = await Progress.findOne({
             user: req.user.id,
             module: req.params.moduleId
@@ -95,6 +103,7 @@ router.put('/progress/:moduleId', protect, async (req, res) => {
                 status: 'in_progress',
                 startedAt: Date.now()
             });
+            console.log('[Learning] Created new progress record');
         }
 
         // Update progress percentage
@@ -102,9 +111,13 @@ router.put('/progress/:moduleId', protect, async (req, res) => {
         if (timeSpent) progress.timeSpent += timeSpent;
         progress.lastAccessedAt = Date.now();
 
-        // Add activity
+        // Add activity (skip if type validation fails)
         if (activity) {
-            progress.activities.push(activity);
+            try {
+                progress.activities.push(activity);
+            } catch (activityError) {
+                console.log('[Learning] Skipping activity due to validation:', activityError.message);
+            }
         }
 
         // Handle explicit status update from frontend (critical for certificate generation)
@@ -112,6 +125,8 @@ router.put('/progress/:moduleId', protect, async (req, res) => {
             progress.status = 'completed';
             progress.completedAt = completedAt ? new Date(completedAt) : Date.now();
             progress.score = score || activity?.score || progressValue || 100;
+
+            console.log('[Learning] Marking module as completed with score:', progress.score);
 
             // Update user's completed modules
             await User.findByIdAndUpdate(req.user.id, {
@@ -131,9 +146,11 @@ router.put('/progress/:moduleId', protect, async (req, res) => {
         }
 
         await progress.save();
+        console.log('[Learning] Progress saved successfully');
 
         res.json({ success: true, data: progress });
     } catch (error) {
+        console.error('[Learning] Progress update error:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 });

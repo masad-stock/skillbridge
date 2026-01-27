@@ -1,7 +1,26 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Card, Row, Col, Button, Badge, Alert, ProgressBar, Table, Form } from 'react-bootstrap';
-import { Line, Bar } from 'react-chartjs-2';
+import React, { useState, useEffect } from 'react';
+import { Card, Row, Col, Button, Badge, Alert, Table, Form } from 'react-bootstrap';
+import { Bar } from 'react-chartjs-2';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+} from 'chart.js';
 import businessApi from '../services/businessApi';
+
+// Register Chart.js components
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+);
 
 function InventoryForecast() {
     const [forecastData, setForecastData] = useState(null);
@@ -21,7 +40,14 @@ function InventoryForecast() {
             setUseLocalData(false);
 
             const response = await businessApi.getInventoryForecast(period);
-            setForecastData(response.data);
+            // Handle both response formats: direct data or nested in data property
+            const data = response?.data || response;
+            if (data && (data.inventoryForecast || data.cashFlowProjection)) {
+                setForecastData(data);
+            } else {
+                // No valid data from API, fall back to local storage
+                loadLocalStorageData();
+            }
         } catch (err) {
             console.error('Forecast API error:', err);
             // Fallback to localStorage data
@@ -124,6 +150,24 @@ function InventoryForecast() {
             case 'High': return <Badge bg="success">High</Badge>;
             case 'Medium': return <Badge bg="warning">Medium</Badge>;
             default: return <Badge bg="secondary">Low</Badge>;
+        }
+    };
+
+    // Safe render helper for chart data
+    const getChartData = () => {
+        try {
+            if (!forecastData?.cashFlowProjection?.length) return null;
+            return {
+                labels: forecastData.cashFlowProjection.map(p => p.month || 'Unknown'),
+                datasets: [{
+                    label: 'Revenue (KSh)',
+                    data: forecastData.cashFlowProjection.map(p => p.revenue || 0),
+                    backgroundColor: 'rgba(75, 192, 192, 0.8)',
+                }]
+            };
+        } catch (err) {
+            console.error('Error preparing chart data:', err);
+            return null;
         }
     };
 
@@ -322,31 +366,27 @@ function InventoryForecast() {
                     </Card>
 
                     {/* Cash Flow Projection */}
-                    {forecastData.cashFlowProjection?.length > 0 && (
-                        <Card className="border-0 shadow-sm">
-                            <Card.Header className="bg-white border-0 pt-3">
-                                <h6 className="fw-bold mb-0">💰 Revenue Trend</h6>
-                            </Card.Header>
-                            <Card.Body>
-                                <Bar
-                                    data={{
-                                        labels: forecastData.cashFlowProjection.map(p => p.month),
-                                        datasets: [{
-                                            label: 'Revenue (KSh)',
-                                            data: forecastData.cashFlowProjection.map(p => p.revenue),
-                                            backgroundColor: 'rgba(75, 192, 192, 0.8)',
-                                        }]
-                                    }}
-                                    options={{
-                                        responsive: true,
-                                        plugins: {
-                                            legend: { display: false }
-                                        }
-                                    }}
-                                />
-                            </Card.Body>
-                        </Card>
-                    )}
+                    {(() => {
+                        const chartData = getChartData();
+                        return chartData && (
+                            <Card className="border-0 shadow-sm">
+                                <Card.Header className="bg-white border-0 pt-3">
+                                    <h6 className="fw-bold mb-0">💰 Revenue Trend</h6>
+                                </Card.Header>
+                                <Card.Body>
+                                    <Bar
+                                        data={chartData}
+                                        options={{
+                                            responsive: true,
+                                            plugins: {
+                                                legend: { display: false }
+                                            }
+                                        }}
+                                    />
+                                </Card.Body>
+                            </Card>
+                        );
+                    })()}
                 </>
             )}
         </div>

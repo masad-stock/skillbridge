@@ -12,6 +12,7 @@ const modules = [
         difficulty: 1,
         priority: 10,
         estimatedTime: 45,
+        imageUrl: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=600&fit=crop',
         content: {
             youtubeId: 'pWPO_1y_Fk8',
             videoUrl: 'https://www.youtube.com/watch?v=pWPO_1y_Fk8',
@@ -193,6 +194,7 @@ Remember: Practice makes perfect! Don't be afraid to explore your phone.
         difficulty: 1,
         priority: 9,
         estimatedTime: 50,
+        imageUrl: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=600&fit=crop',
         content: {
             youtubeId: 'y2Khx8hZ_kQ',
             videoUrl: 'https://www.youtube.com/watch?v=y2Khx8hZ_kQ',
@@ -440,6 +442,7 @@ Remember: When in doubt, don't click! Ask someone you trust for help.
         difficulty: 2,
         priority: 8,
         estimatedTime: 55,
+        imageUrl: 'https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800&h=600&fit=crop',
         content: {
             youtubeId: 'AEQOK_g09Qs',
             videoUrl: 'https://www.youtube.com/watch?v=AEQOK_g09Qs',
@@ -744,6 +747,7 @@ Remember: Clear communication builds trust and professionalism!
         difficulty: 2,
         priority: 8,
         estimatedTime: 90,
+        imageUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&h=600&fit=crop',
         content: {
             youtubeId: 'B7wKi5yqXn0',
             videoUrl: 'https://www.youtube.com/watch?v=B7wKi5yqXn0',
@@ -774,6 +778,7 @@ Remember: Clear communication builds trust and professionalism!
         difficulty: 2,
         priority: 7,
         estimatedTime: 120,
+        imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop',
         content: {
             youtubeId: 'H_v66m9TqC4',
             videoUrl: 'https://www.youtube.com/watch?v=H_v66m9TqC4',
@@ -804,6 +809,7 @@ Remember: Clear communication builds trust and professionalism!
         difficulty: 2,
         priority: 7,
         estimatedTime: 120,
+        imageUrl: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop',
         content: {
             youtubeId: '7o0jQ_j4G-0',
             videoUrl: 'https://www.youtube.com/watch?v=7o0jQ_j4G-0',
@@ -834,6 +840,7 @@ Remember: Clear communication builds trust and professionalism!
         difficulty: 2,
         priority: 8,
         estimatedTime: 90,
+        imageUrl: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=600&fit=crop',
         content: {
             youtubeId: 'Ka56J66g_Wk',
             videoUrl: 'https://www.youtube.com/watch?v=Ka56J66g_Wk',
@@ -864,6 +871,7 @@ Remember: Clear communication builds trust and professionalism!
         difficulty: 1,
         priority: 9,
         estimatedTime: 60,
+        imageUrl: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=800&h=600&fit=crop',
         content: {
             youtubeId: 'W1YfzF1f6rE',
             videoUrl: 'https://www.youtube.com/watch?v=W1YfzF1f6rE',
@@ -894,6 +902,7 @@ Remember: Clear communication builds trust and professionalism!
         difficulty: 2,
         priority: 7,
         estimatedTime: 120,
+        imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=600&fit=crop',
         content: {
             youtubeId: '0Y_B5nJ6o1w',
             videoUrl: 'https://www.youtube.com/watch?v=0Y_B5nJ6o1w',

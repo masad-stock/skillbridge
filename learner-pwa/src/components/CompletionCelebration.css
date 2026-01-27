@@ -118,3 +118,29 @@
     width: 100%;
   }
 }
+
+
+/* Certificate Section Styles */
+.certificate-section {
+  margin-top: 1rem;
+}
+
+.certificate-section .card {
+  border-radius: 12px;
+}
+
+.certificate-section .border-success {
+  border-width: 2px !important;
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.05) 0%, rgba(40, 167, 69, 0.1) 100%);
+}
+
+.certificate-section .font-monospace {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 4px 8px;
+  border-radius: 4px;
+  word-break: break-all;
+}
+
+[data-theme="dark"] .certificate-section .font-monospace {
+  background: rgba(255, 255, 255, 0.1);
+}

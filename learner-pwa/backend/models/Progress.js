@@ -9,12 +9,14 @@ const progressSchema = new mongoose.Schema({
         default: 'not_started'
     },
     progress: { type: Number, min: 0, max: 100, default: 0 },
+    score: { type: Number, min: 0, max: 100, default: 0 },
     timeSpent: { type: Number, default: 0 }, // minutes
     lastAccessedAt: { type: Date, default: Date.now },
     startedAt: Date,
     completedAt: Date,
+    skillsAcquired: [{ type: String }],
     activities: [{
-        type: { type: String, enum: ['video_watched', 'quiz_completed', 'material_downloaded', 'practice_completed'] },
+        type: { type: String, enum: ['video_watched', 'quiz_completed', 'material_downloaded', 'practice_completed', 'module_completed', 'lesson_completed'] },
         timestamp: { type: Date, default: Date.now },
         data: mongoose.Schema.Types.Mixed
     }],

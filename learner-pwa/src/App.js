@@ -38,6 +38,7 @@ import './App.css';
 const SearchResults = lazy(() => import('./pages/SearchResults'));
 const PaymentHistory = lazy(() => import('./pages/PaymentHistory'));
 const Certificates = lazy(() => import('./pages/Certificates'));
+const CertificateView = lazy(() => import('./pages/CertificateView'));
 const VerifyCertificate = lazy(() => import('./pages/VerifyCertificate'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
@@ -144,6 +145,7 @@ function App() {
                             <Route path="/business-tools" element={<ProtectedRoute><BusinessTools /></ProtectedRoute>} />
                             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                             <Route path="/certificates" element={<ProtectedRoute><Certificates /></ProtectedRoute>} />
+                            <Route path="/certificates/:id" element={<ProtectedRoute><CertificateView /></ProtectedRoute>} />
                             <Route path="/change-password" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
                             <Route path="/search" element={<ProtectedRoute><SearchResults /></ProtectedRoute>} />
                             <Route path="/payments" element={<ProtectedRoute><PaymentHistory /></ProtectedRoute>} />

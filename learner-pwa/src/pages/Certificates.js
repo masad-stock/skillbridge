@@ -39,8 +39,8 @@ function Certificates() {
             setError(null);
 
             // Check if user is authenticated
-            const token = localStorage.getItem('authToken');
-            const userStr = localStorage.getItem('user');
+            const token = localStorage.getItem('authToken') || localStorage.getItem('token');
+            const userStr = localStorage.getItem('user') || localStorage.getItem('cachedUser');
 
             if (!token || !userStr) {
                 setError('Please log in to view your certificates');
@@ -48,29 +48,39 @@ function Certificates() {
                 return;
             }
 
-            const user = JSON.parse(userStr);
+            let user;
+            try {
+                user = JSON.parse(userStr);
+            } catch (e) {
+                setError('Please log in to view your certificates');
+                setLoading(false);
+                return;
+            }
+
             const userId = user._id || user.id;
 
             // Load offline certificates first (always available)
-            const offlineCerts = await offlineCertificateGenerator.getCertificates(userId);
-            setOfflineCertificates(offlineCerts);
+            try {
+                const offlineCerts = await offlineCertificateGenerator.getCertificates(userId);
+                setOfflineCertificates(offlineCerts || []);
+            } catch (offlineErr) {
+                console.error('Offline certificate load error:', offlineErr);
+                setOfflineCertificates([]);
+            }
 
             // Try to load online certificates if connected
-            if (isOnline) {
+            if (navigator.onLine) {
                 try {
                     const response = await certificateAPI.getMyCertificates();
-                    setCertificates(response.data.data || []);
+                    const onlineCerts = response.data?.data || response.data?.certificates || response.data || [];
+                    setCertificates(Array.isArray(onlineCerts) ? onlineCerts : []);
                 } catch (err) {
                     console.error('Online certificate load error:', err);
                     // If online load fails, we still have offline certificates
                     if (err.response?.status === 401) {
                         setError('Please log in to view your certificates');
-                    } else {
-                        // Don't show error if we have offline certificates
-                        if (offlineCerts.length === 0) {
-                            setError(err.response?.data?.message || err.message || 'Failed to load certificates');
-                        }
                     }
+                    // Don't show error if we have offline certificates
                 }
             }
         } catch (err) {
@@ -82,8 +92,9 @@ function Certificates() {
     };
 
     const handleView = (certificate) => {
-        setSelectedCertificate(certificate);
-        setShowModal(true);
+        // Navigate to the certificate view page
+        const certId = certificate.certificateNumber || certificate._id || certificate.id;
+        window.location.href = `/certificates/${certId}`;
     };
 
     const handleDownload = async (certificate) => {
@@ -129,19 +140,17 @@ function Certificates() {
     };
 
     const getGradeColor = (grade) => {
-        if (grade === 'A+' || grade === 'A') return 'success';
-        if (grade === 'B+' || grade === 'B') return 'primary';
-        if (grade === 'C+' || grade === 'C') return 'info';
-        return 'warning';
+        // All grades use green color scheme
+        return 'success';
     };
 
     const getSyncStatusBadge = (certificate) => {
         if (certificate.syncStatus === 'pending') {
-            return <Badge bg="warning" className="ms-2"><FaSync className="me-1" />Pending Sync</Badge>;
+            return <Badge bg="success" className="ms-2 bg-opacity-75"><FaSync className="me-1" />Pending Sync</Badge>;
         } else if (certificate.syncStatus === 'synced' || certificate.verified) {
             return <Badge bg="success" className="ms-2"><FaCheckCircle className="me-1" />Verified</Badge>;
         } else if (certificate.syncStatus === 'failed') {
-            return <Badge bg="danger" className="ms-2">Sync Failed</Badge>;
+            return <Badge bg="success" className="ms-2 bg-opacity-50">Sync Failed</Badge>;
         }
         return null;
     };
@@ -169,7 +178,7 @@ function Certificates() {
         return (
             <Container className="certificates-page py-5">
                 <div className="text-center">
-                    <div className="spinner-border text-primary" role="status">
+                    <div className="spinner-border text-success" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </div>
                 </div>
@@ -183,7 +192,7 @@ function Certificates() {
                 <Col>
                     <div className="d-flex align-items-center justify-content-between mb-3">
                         <div className="d-flex align-items-center">
-                            <FaAward className="text-warning me-3" size={40} />
+                            <FaAward className="text-success me-3" size={40} />
                             <div>
                                 <h2 className="mb-0">My Certificates</h2>
                                 <p className="text-muted mb-0">Your achievements and completed courses</p>
@@ -191,13 +200,13 @@ function Certificates() {
                         </div>
                         <div className="d-flex align-items-center gap-2">
                             {!isOnline && (
-                                <Badge bg="warning">
+                                <Badge bg="success" className="bg-opacity-75">
                                     <FaWifi className="me-1" />
                                     Offline Mode
                                 </Badge>
                             )}
                             {offlineCertificates.length > 0 && (
-                                <Badge bg="info">
+                                <Badge bg="success" className="bg-opacity-50">
                                     {offlineCertificates.length} Offline
                                 </Badge>
                             )}
@@ -207,13 +216,13 @@ function Certificates() {
             </Row>
 
             {error && (
-                <Alert variant="danger" dismissible onClose={() => setError(null)}>
+                <Alert variant="success" className="border-success" dismissible onClose={() => setError(null)}>
                     {error}
                 </Alert>
             )}
 
             {!isOnline && offlineCertificates.length > 0 && (
-                <Alert variant="info" className="mb-4">
+                <Alert variant="success" className="mb-4 bg-opacity-10 border-success">
                     <FaWifi className="me-2" />
                     You're viewing offline certificates. Connect to the internet to sync and verify your certificates.
                 </Alert>
@@ -227,7 +236,7 @@ function Certificates() {
                         <p className="text-muted">
                             Complete courses and assessments to earn certificates
                         </p>
-                        <Button variant="primary" href="/learning">
+                        <Button variant="success" href="/learning">
                             Browse Courses
                         </Button>
                     </Card.Body>
@@ -245,14 +254,14 @@ function Certificates() {
 
                         return (
                             <Col key={cert._id || cert.id} md={6} lg={4} className="mb-4">
-                                <Card className={`certificate-card h-100 shadow-sm ${isOffline ? 'border-warning' : ''}`}>
+                                <Card className={`certificate-card h-100 shadow-sm ${isOffline ? 'border-success' : ''}`}>
                                     <Card.Body>
                                         <div className="d-flex justify-content-between align-items-start mb-3">
                                             <div className="certificate-icon">
-                                                <FaAward size={50} className="text-warning" />
+                                                <FaAward size={50} className="text-success" />
                                             </div>
                                             {isOffline && (
-                                                <Badge bg="warning" className="ms-2">
+                                                <Badge bg="success" className="ms-2 bg-opacity-75">
                                                     Offline
                                                 </Badge>
                                             )}
@@ -266,7 +275,7 @@ function Certificates() {
                                                 <Badge bg={getGradeColor(grade)} className="me-2">
                                                     Grade: {grade}
                                                 </Badge>
-                                                <Badge bg="secondary">
+                                                <Badge bg="success" className="bg-opacity-75">
                                                     Score: {score}%
                                                 </Badge>
                                             </div>
