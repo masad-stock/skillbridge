@@ -57,9 +57,19 @@ const eventTrackingService = require('./services/research/EventTrackingService')
 
 const app = express();
 const httpServer = createServer(app);
+// CORS origins - include production URLs
+const corsOrigins = [
+    process.env.CORS_ORIGIN || 'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'http://localhost:3003',
+    'https://skillbridge-tau.vercel.app',
+    'https://skillbridge.vercel.app'
+].filter(Boolean);
+
 const io = new Server(httpServer, {
     cors: {
-        origin: [process.env.CORS_ORIGIN || 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003'],
+        origin: corsOrigins,
         methods: ['GET', 'POST']
     }
 });
@@ -68,7 +78,7 @@ const io = new Server(httpServer, {
 app.use(helmet());
 app.use(compression());
 app.use(cors({
-    origin: [process.env.CORS_ORIGIN || 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003'],
+    origin: corsOrigins,
     credentials: true
 }));
 app.use(require('./middleware/requestContext'));
