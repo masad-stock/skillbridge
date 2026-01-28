@@ -58,6 +58,11 @@ const eventTrackingService = require('./services/research/EventTrackingService')
 // const contentDiagnosticsRoutes = require('./routes/contentDiagnostics'); // Temporarily disabled
 
 const app = express();
+
+// Trust proxy - CRITICAL for Render deployment
+// This allows express-rate-limit to correctly identify users behind proxies
+app.set('trust proxy', 1);
+
 const httpServer = createServer(app);
 // CORS origins - include production URLs
 const corsOrigins = [
