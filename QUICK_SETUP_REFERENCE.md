@@ -29,39 +29,36 @@
 
 ---
 
-### Step 2: Set Up Redis (3 minutes)
+### Step 2: Set Up Redis (Optional - See Note Below)
 
-**Create Redis Instance**:
+**⚠️ IMPORTANT**: Render no longer offers free Redis. See `REDIS_ALTERNATIVES.md` for options.
 
-1. **Add Redis**:
-   - Go to https://dashboard.render.com/
-   - Click "New +" → "Redis"
-   - Name: `skillbridge-redis`
-   - Region: Same as your backend
-   - Plan: Free
-   - Click "Create Redis"
+**Recommended**: Skip Redis for now - your app works fine without it!
 
-2. **Get Connection URL**:
-   - Click on your Redis instance
-   - Copy the **Internal Redis URL** (looks like: `redis://red-xxxxx:6379`)
+**If you want Redis**, use Upstash (free tier):
 
-3. **Add to Backend**:
+1. **Create Upstash Account**:
+   - Go to https://upstash.com/
+   - Sign up and create a database
+   - Copy the Redis URL
+
+2. **Add to Backend**:
    - Go to your backend service
    - Go to "Environment" tab
    - Add these variables:
    ```
    REDIS_ENABLED=true
-   REDIS_URL=redis://red-xxxxx:6379
+   REDIS_URL=rediss://default:password@host:port
    ```
    - Click "Save Changes"
 
-✅ **Done!** Redis is now connected.
+✅ **Or skip this entirely** - emails will still work!
 
 ---
 
 ## 📋 Environment Variables Checklist
 
-Copy these to Render → Backend Service → Environment:
+**Minimal Setup (Email Only - Recommended)**:
 
 ```bash
 # Email Configuration
@@ -69,9 +66,21 @@ EMAIL_USER=your-email@gmail.com
 EMAIL_PASS=your-16-char-app-password
 EMAIL_FROM=your-email@gmail.com
 
-# Redis Configuration
+# Redis (optional - skip for now)
+REDIS_ENABLED=false
+```
+
+**With Redis (Optional - if using Upstash)**:
+
+```bash
+# Email Configuration
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-16-char-app-password
+EMAIL_FROM=your-email@gmail.com
+
+# Redis Configuration (Upstash)
 REDIS_ENABLED=true
-REDIS_URL=redis://red-xxxxx:6379
+REDIS_URL=rediss://default:password@host:port
 ```
 
 ---
@@ -82,14 +91,19 @@ After deployment completes, check Render logs for:
 
 **Email Success**:
 ```
-✅ info: Email queue connected to Redis successfully
-✅ No "Connection timeout" errors
+✅ No "Connection timeout" errors (after adding email config)
 ```
 
-**Redis Success**:
+**Redis (if configured)**:
 ```
 ✅ info: Email queue connected to Redis successfully
 ✅ No "[ioredis] Unhandled error event" messages
+```
+
+**Without Redis (default)**:
+```
+✅ info: Redis disabled - emails will be sent directly
+✅ This is normal and expected!
 ```
 
 ---
@@ -114,17 +128,23 @@ After deployment completes, check Render logs for:
 
 ## 💰 Cost
 
+**Recommended Setup (Email Only)**:
 - **Gmail**: Free (500 emails/day)
-- **Redis**: Free (25 MB storage)
+- **Redis**: Not needed
 
 **Total Cost**: $0/month 🎉
+
+**With Redis (Optional)**:
+- **Upstash Redis**: Free (10,000 commands/day, 256 MB)
+- **Total Cost**: Still $0/month 🎉
 
 ---
 
 ## 📚 Full Documentation
 
 For detailed setup instructions, see:
-- `EMAIL_AND_REDIS_SETUP_GUIDE.md` - Complete guide with all options
+- `REDIS_ALTERNATIVES.md` - **START HERE** for Redis options
+- `EMAIL_AND_REDIS_SETUP_GUIDE.md` - Complete email setup guide
 - `PRODUCTION_ISSUES_DIAGNOSIS.md` - Troubleshooting and diagnostics
 
 ---
@@ -137,11 +157,13 @@ For detailed setup instructions, see:
 - ✅ Assessment completion notifications
 - ✅ Module completion certificates
 
-**With Redis**:
+**With Redis (Optional)**:
 - ✅ Background email processing (faster response times)
 - ✅ Email queue management
 - ✅ Better reliability for email delivery
 - ✅ Reduced server load
+
+**Note**: Redis is optional. Your app works great without it!
 
 ---
 
