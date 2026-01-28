@@ -3,9 +3,7 @@ const mongoose = require('mongoose');
 const imageMetadataSchema = new mongoose.Schema({
     contentId: {
         type: String,
-        required: true,
-        unique: true,
-        index: true
+        required: true
     },
     contentType: {
         type: String,
@@ -21,8 +19,7 @@ const imageMetadataSchema = new mongoose.Schema({
         required: true
     },
     category: {
-        type: String,
-        index: true
+        type: String
     },
     isCustom: {
         type: Boolean,
@@ -44,8 +41,7 @@ const imageMetadataSchema = new mongoose.Schema({
         default: Date.now
     },
     expiresAt: {
-        type: Date,
-        index: true
+        type: Date
     },
     accessCount: {
         type: Number,
@@ -57,6 +53,8 @@ const imageMetadataSchema = new mongoose.Schema({
 });
 
 // Index for efficient queries
+imageMetadataSchema.index({ contentId: 1 }, { unique: true });
+imageMetadataSchema.index({ category: 1 });
 imageMetadataSchema.index({ category: 1, contentType: 1 });
 imageMetadataSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 

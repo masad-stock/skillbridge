@@ -8,14 +8,10 @@ const paymentSchema = new mongoose.Schema({
     },
     transactionId: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     idempotencyKey: {
-        type: String,
-        index: true,
-        unique: true,
-        sparse: true
+        type: String
     },
     provider: {
         type: String,

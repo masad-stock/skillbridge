@@ -9,19 +9,16 @@ const researchEventSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
-        index: true
+        required: true
     },
     sessionId: {
         type: String,
-        required: true,
-        index: true
+        required: true
     },
     timestamp: {
         type: Date,
         required: true,
-        default: Date.now,
-        index: true
+        default: Date.now
     },
     eventType: {
         type: String,
@@ -45,14 +42,12 @@ const researchEventSchema = new mongoose.Schema({
             'economic_survey',
             'voice_command',
             'accessibility_toggle'
-        ],
-        index: true
+        ]
     },
     eventCategory: {
         type: String,
         required: true,
-        enum: ['learning', 'assessment', 'business_tool', 'navigation', 'system', 'research', 'accessibility'],
-        index: true
+        enum: ['learning', 'assessment', 'business_tool', 'navigation', 'system', 'research', 'accessibility']
     },
     eventData: {
         moduleId: { type: mongoose.Schema.Types.ObjectId, ref: 'Module' },
