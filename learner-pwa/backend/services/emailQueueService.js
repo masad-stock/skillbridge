@@ -2,30 +2,150 @@ const Queue = require('bull');
 const emailService = require('./emailService');
 const logger = require('../utils/logger');
 
-// Create email queue
-const emailQueue = new Queue('email', {
-    redis: {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT) || 6379,
-        password: process.env.REDIS_PASSWORD || undefined
-    },
-    defaultJobOptions: {
-        attempts: 3,
-        backoff: {
-            type: 'exponential',
-            delay: 2000
-        },
-        removeOnComplete: true,
-        removeOnFail: false
+// Check if Redis is enabled
+const REDIS_ENABLED = process.env.REDIS_ENABLED !== 'false';
+
+// Create email queue only if Redis is enabled
+let emailQueue = null;
+let queueAvailable = false;
+
+if (REDIS_ENABLED) {
+    try {
+        emailQueue = new Queue('email', {
+            redis: {
+                host: process.env.REDIS_HOST || 'localhost',
+                port: parseInt(process.env.REDIS_PORT) || 6379,
+                password: process.env.REDIS_PASSWORD || undefined,
+                maxRetriesPerRequest: 3, // Reduce retries to fail faster
+                enableReadyCheck: true,
+                connectTimeout: 5000 // 5 second timeout
+            },
+            defaultJobOptions: {
+                attempts: 3,
+                backoff: {
+                    type: 'exponential',
+                    delay: 2000
+                },
+                removeOnComplete: true,
+                removeOnFail: false
+            }
+        });
+
+        // Test Redis connection
+        emailQueue.isReady().then(() => {
+            queueAvailable = true;
+            logger.info('Email queue connected to Redis successfully');
+        }).catch((err) => {
+            queueAvailable = false;
+            logger.warn('Email queue Redis connection failed - emails will be sent directly:', err.message);
+        });
+    } catch (error) {
+        logger.warn('Failed to initialize email queue - emails will be sent directly:', error.message);
+        queueAvailable = false;
     }
-});
+} else {
+    logger.info('Redis disabled - emails will be sent directly');
+}
 
-// Process email jobs
-emailQueue.process(async (job) => {
-    const { type, data } = job.data;
+// Process email jobs only if queue is available
+if (emailQueue && REDIS_ENABLED) {
+    emailQueue.process(async (job) => {
+        const { type, data } = job.data;
 
-    logger.info(`Processing email job: ${type}`, { jobId: job.id });
+        logger.info(`Processing email job: ${type}`, { jobId: job.id });
 
+        try {
+            let result;
+
+            switch (type) {
+                case 'welcome':
+                    result = await emailService.sendWelcomeEmail(data.user);
+                    break;
+
+                case 'assessment-completion':
+                    result = await emailService.sendAssessmentCompletionEmail(
+                        data.user,
+                        data.assessment
+                    );
+                    break;
+
+                case 'module-completion':
+                    result = await emailService.sendModuleCompletionEmail(
+                        data.user,
+                        data.module,
+                        data.progress
+                    );
+                    break;
+
+                case 'certificate-issued':
+                    result = await emailService.sendCertificateEmail(
+                        data.user,
+                        data.certificate,
+                        data.module
+                    );
+                    break;
+
+                case 'password-reset':
+                    result = await emailService.sendPasswordResetEmail(
+                        data.user,
+                        data.resetToken
+                    );
+                    break;
+
+                case 'weekly-progress':
+                    result = await emailService.sendWeeklyProgressEmail(
+                        data.user,
+                        data.stats
+                    );
+                    break;
+
+                case 'email-verification':
+                    result = await emailService.sendVerificationEmail(
+                        data.user,
+                        data.verificationToken
+                    );
+                    break;
+
+                case 'admin-notification':
+                    result = await emailService.sendAdminNotification(
+                        data.subject,
+                        data.message,
+                        data.data
+                    );
+                    break;
+
+                default:
+                    throw new Error(`Unknown email type: ${type}`);
+            }
+
+            if (!result.success) {
+                throw new Error(result.error || 'Email sending failed');
+            }
+
+            logger.info(`Email job completed: ${type}`, { jobId: job.id });
+            return result;
+        } catch (error) {
+            logger.error(`Email job failed: ${type}`, { jobId: job.id, error: error.message });
+            throw error;
+        }
+    });
+
+    // Queue event handlers
+    emailQueue.on('completed', (job, result) => {
+        logger.info(`Email job ${job.id} completed successfully`);
+    });
+
+    emailQueue.on('failed', (job, err) => {
+        logger.error(`Email job ${job.id} failed:`, err.message);
+    });
+
+    emailQueue.on('stalled', (job) => {
+        logger.warn(`Email job ${job.id} stalled`);
+    });
+}
+
+// Helper function to send email directly (fallback when queue unavailable)
+async function sendEmailDirectly(type, data) {
     try {
         let result;
 
@@ -33,87 +153,21 @@ emailQueue.process(async (job) => {
             case 'welcome':
                 result = await emailService.sendWelcomeEmail(data.user);
                 break;
-
-            case 'assessment-completion':
-                result = await emailService.sendAssessmentCompletionEmail(
-                    data.user,
-                    data.assessment
-                );
-                break;
-
-            case 'module-completion':
-                result = await emailService.sendModuleCompletionEmail(
-                    data.user,
-                    data.module,
-                    data.progress
-                );
-                break;
-
-            case 'certificate-issued':
-                result = await emailService.sendCertificateEmail(
-                    data.user,
-                    data.certificate,
-                    data.module
-                );
-                break;
-
             case 'password-reset':
-                result = await emailService.sendPasswordResetEmail(
-                    data.user,
-                    data.resetToken
-                );
+                result = await emailService.sendPasswordResetEmail(data.user, data.resetToken);
                 break;
-
-            case 'weekly-progress':
-                result = await emailService.sendWeeklyProgressEmail(
-                    data.user,
-                    data.stats
-                );
-                break;
-
-            case 'email-verification':
-                result = await emailService.sendVerificationEmail(
-                    data.user,
-                    data.verificationToken
-                );
-                break;
-
-            case 'admin-notification':
-                result = await emailService.sendAdminNotification(
-                    data.subject,
-                    data.message,
-                    data.data
-                );
-                break;
-
+            // Add other cases as needed
             default:
-                throw new Error(`Unknown email type: ${type}`);
+                logger.warn(`Direct email sending not implemented for type: ${type}`);
+                return { success: false, error: 'Email type not supported for direct sending' };
         }
 
-        if (!result.success) {
-            throw new Error(result.error || 'Email sending failed');
-        }
-
-        logger.info(`Email job completed: ${type}`, { jobId: job.id });
         return result;
     } catch (error) {
-        logger.error(`Email job failed: ${type}`, { jobId: job.id, error: error.message });
-        throw error;
+        logger.error(`Direct email sending failed: ${type}`, error);
+        return { success: false, error: error.message };
     }
-});
-
-// Queue event handlers
-emailQueue.on('completed', (job, result) => {
-    logger.info(`Email job ${job.id} completed successfully`);
-});
-
-emailQueue.on('failed', (job, err) => {
-    logger.error(`Email job ${job.id} failed:`, err.message);
-});
-
-emailQueue.on('stalled', (job) => {
-    logger.warn(`Email job ${job.id} stalled`);
-});
+}
 
 // Helper functions to add jobs to queue
 class EmailQueueService {
@@ -121,6 +175,12 @@ class EmailQueueService {
      * Add email to queue
      */
     async queueEmail(type, data, options = {}) {
+        // If queue is not available, try to send email directly
+        if (!queueAvailable || !emailQueue) {
+            logger.warn(`Email queue unavailable, attempting direct send: ${type}`);
+            return await sendEmailDirectly(type, data);
+        }
+
         try {
             const job = await emailQueue.add(
                 { type, data },
@@ -135,7 +195,9 @@ class EmailQueueService {
             return { success: true, jobId: job.id };
         } catch (error) {
             logger.error(`Failed to queue email: ${type}`, error);
-            return { success: false, error: error.message };
+            // Fallback to direct sending
+            logger.warn(`Attempting direct email send as fallback: ${type}`);
+            return await sendEmailDirectly(type, data);
         }
     }
 
@@ -199,6 +261,18 @@ class EmailQueueService {
      * Get queue stats
      */
     async getQueueStats() {
+        if (!queueAvailable || !emailQueue) {
+            return {
+                waiting: 0,
+                active: 0,
+                completed: 0,
+                failed: 0,
+                delayed: 0,
+                total: 0,
+                queueAvailable: false
+            };
+        }
+
         const [waiting, active, completed, failed, delayed] = await Promise.all([
             emailQueue.getWaitingCount(),
             emailQueue.getActiveCount(),
@@ -213,7 +287,8 @@ class EmailQueueService {
             completed,
             failed,
             delayed,
-            total: waiting + active + completed + failed + delayed
+            total: waiting + active + completed + failed + delayed,
+            queueAvailable: true
         };
     }
 
@@ -221,6 +296,9 @@ class EmailQueueService {
      * Get failed jobs
      */
     async getFailedJobs(limit = 10) {
+        if (!queueAvailable || !emailQueue) {
+            return [];
+        }
         return await emailQueue.getFailed(0, limit);
     }
 
@@ -228,6 +306,9 @@ class EmailQueueService {
      * Retry failed job
      */
     async retryFailedJob(jobId) {
+        if (!queueAvailable || !emailQueue) {
+            return { success: false, error: 'Queue not available' };
+        }
         const job = await emailQueue.getJob(jobId);
         if (job) {
             await job.retry();
@@ -240,6 +321,9 @@ class EmailQueueService {
      * Clean old jobs
      */
     async cleanOldJobs(grace = 24 * 60 * 60 * 1000) {
+        if (!queueAvailable || !emailQueue) {
+            return { success: false, error: 'Queue not available' };
+        }
         await emailQueue.clean(grace, 'completed');
         await emailQueue.clean(grace * 7, 'failed'); // Keep failed jobs for 7 days
         return { success: true };
@@ -249,6 +333,9 @@ class EmailQueueService {
      * Pause queue
      */
     async pauseQueue() {
+        if (!queueAvailable || !emailQueue) {
+            return { success: false, error: 'Queue not available' };
+        }
         await emailQueue.pause();
         return { success: true };
     }
@@ -257,6 +344,9 @@ class EmailQueueService {
      * Resume queue
      */
     async resumeQueue() {
+        if (!queueAvailable || !emailQueue) {
+            return { success: false, error: 'Queue not available' };
+        }
         await emailQueue.resume();
         return { success: true };
     }

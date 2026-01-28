@@ -70,11 +70,12 @@ exports.register = async (req, res) => {
 
         const token = generateToken(user._id);
 
-        // Queue welcome email
+        // Queue welcome email (non-blocking)
         try {
             await emailQueueService.queueWelcomeEmail(user);
         } catch (emailError) {
             logger.error('Failed to queue welcome email:', emailError);
+            // Continue without email - don't block registration
         }
 
         res.status(201).json({
