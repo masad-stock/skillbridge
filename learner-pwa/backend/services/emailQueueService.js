@@ -11,15 +11,17 @@ let queueAvailable = false;
 
 if (REDIS_ENABLED) {
     try {
-        emailQueue = new Queue('email', {
-            redis: {
-                host: process.env.REDIS_HOST || 'localhost',
-                port: parseInt(process.env.REDIS_PORT) || 6379,
-                password: process.env.REDIS_PASSWORD || undefined,
-                maxRetriesPerRequest: 3, // Reduce retries to fail faster
-                enableReadyCheck: true,
-                connectTimeout: 5000 // 5 second timeout
-            },
+        // Redis configuration - Bull requires specific settings for bclient/subscriber
+        const redisConfig = {
+            host: process.env.REDIS_HOST || 'localhost',
+            port: parseInt(process.env.REDIS_PORT) || 6379,
+            password: process.env.REDIS_PASSWORD || undefined,
+            connectTimeout: 5000, // 5 second timeout
+            // Note: maxRetriesPerRequest and enableReadyCheck are NOT allowed for Bull's bclient/subscriber
+            // See: https://github.com/OptimalBits/bull/issues/1873
+        };
+
+        emailQueue = new Queue('email', redisConfig, {
             defaultJobOptions: {
                 attempts: 3,
                 backoff: {
