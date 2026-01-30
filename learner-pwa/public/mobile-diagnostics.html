@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Login Diagnostics - SkillBridge254</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .test {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #ccc;
+            background: #f9f9f9;
+        }
+
+        .test.pass {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        .test.fail {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+
+        .test.pending {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+
+        .test-name {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .test-icon {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .test-details {
+            font-size: 13px;
+            color: #555;
+            margin-top: 5px;
+            word-break: break-word;
+        }
+
+        .test-code {
+            background: #f4f4f4;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-top: 5px;
+            overflow-x: auto;
+        }
+
+        .summary {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e7f3ff;
+            border-radius: 6px;
+            border-left: 4px solid #0066cc;
+        }
+
+        .summary-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .action-buttons {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            background: #0066cc;
+            color: white;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0052a3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0066cc;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-log {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .error-log h3 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .log-entry {
+            padding: 8px;
+            margin: 5px 0;
+            background: #f9f9f9;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: monospace;
+        }
+
+        .log-entry.error {
+            background: #fee;
+            color: #c00;
+        }
+
+        .log-entry.warning {
+            background: #ffc;
+            color: #860;
+        }
+
+        .log-entry.info {
+            background: #eff;
+            color: #066;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Mobile Login Diagnostics</h1>
+        <p class="subtitle">Testing authentication and connectivity for SkillBridge254</p>
+
+        <div class="action-buttons">
+            <button onclick="runAllTests()">🔄 Run All Tests</button>
+            <button onclick="testLogin()">🔐 Test Login</button>
+            <button onclick="clearStorage()">🗑️ Clear Storage</button>
+            <button onclick="exportResults()">📥 Export Results</button>
+        </div>
+
+        <div class="summary" id="summary" style="display: none;">
+            <strong>Test Summary</strong>
+            <div class="summary-stats">
+                <div class="stat">
+                    <div class="stat-value" id="passCount">0</div>
+                    <div class="stat-label">Passed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="failCount">0</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="totalCount">0</div>
+                    <div class="stat-label">Total</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="results"></div>
+
+        <div class="error-log" id="errorLog" style="display: none;">
+            <h3>📋 Error Log</h3>
+            <div id="logEntries"></div>
+        </div>
+    </div>
+
+    <script>
+        const results = document.getElementById('results');
+        const summary = document.getElementById('summary');
+        const errorLog = document.getElementById('errorLog');
+        const logEntries = document.getElementById('logEntries');
+        let testResults = [];
+        let logs = [];
+
+        const API_BASE_URL = 'https://skillbridge-backend-t35r.onrender.com/api/v1';
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            logs.push({ timestamp, message, type });
+            
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${timestamp}] ${message}`;
+            logEntries.appendChild(entry);
+            errorLog.style.display = 'block';
+            
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function addResult(name, passed, details, code = null) {
+            testResults.push({ name, passed, details, code });
+            
+            const div = document.createElement('div');
+            div.className = `test ${passed ? 'pass' : 'fail'}`;
+            div.innerHTML = `
+                <div class="test-name">
+                    <span class="test-icon">${passed ? '✓' : '✗'}</span>
+                    ${name}
+                </div>
+                <div class="test-details">${details}</div>
+                ${code ? `<div class="test-code">${code}</div>` : ''}
+            `;
+            results.appendChild(div);
+
+            updateSummary();
+            
+            if (!passed) {
+                log(`Test failed: ${name} - ${details}`, 'error');
+            }
+        }
+
+        function addPending(name, details) {
+            const div = document.createElement('div');
+            div.className = 'test pending';
+            div.id = `test-${name.replace(/\s+/g, '-')}`;
+            div.innerHTML = `
+                <div class="test-name">
+                    <span class="test-icon">⏳</span>
+                    ${name}
+                </div>
+                <div class="test-details">${details}</div>
+            `;
+            results.appendChild(div);
+        }
+
+        function updateSummary() {
+            const passed = testResults.filter(t => t.passed).length;
+            const failed = testResults.filter(t => !t.passed).length;
+            const total = testResults.length;
+
+            document.getElementById('passCount').textContent = passed;
+            document.getElementById('failCount').textContent = failed;
+            document.getElementById('totalCount').textContent = total;
+            summary.style.display = 'block';
+        }
+
+        async function runAllTests() {
+            results.innerHTML = '';
+            logEntries.innerHTML = '';
+            testResults = [];
+            logs = [];
+            
+            log('Starting diagnostic tests...', 'info');
+
+            // Test 1: LocalStorage
+            try {
+                localStorage.setItem('__test__', 'test');
+                localStorage.removeItem('__test__');
+                addResult('LocalStorage', true, 'LocalStorage is available and working');
+            } catch (e) {
+                addResult('LocalStorage', false, `LocalStorage error: ${e.message}`, e.stack);
+            }
+
+            // Test 2: SessionStorage
+            try {
+                sessionStorage.setItem('__test__', 'test');
+                sessionStorage.removeItem('__test__');
+                addResult('SessionStorage', true, 'SessionStorage is available and working');
+            } catch (e) {
+                addResult('SessionStorage', false, `SessionStorage error: ${e.message}`);
+            }
+
+            // Test 3: Cookies
+            try {
+                document.cookie = '__test__=test';
+                const cookiesEnabled = document.cookie.indexOf('__test__') !== -1;
+                document.cookie = '__test__=; expires=Thu, 01 Jan 1970 00:00:00 UTC';
+                addResult('Cookies', cookiesEnabled, cookiesEnabled ? 'Cookies are enabled' : 'Cookies are disabled');
+            } catch (e) {
+                addResult('Cookies', false, `Cookie error: ${e.message}`);
+            }
+
+            // Test 4: User Agent
+            const ua = navigator.userAgent;
+            const isMobile = /Mobile|Android|iPhone|iPad/i.test(ua);
+            addResult('User Agent', true, `Device: ${isMobile ? 'Mobile' : 'Desktop'}`, ua);
+
+            // Test 5: Network Information
+            if (navigator.connection) {
+                const conn = navigator.connection;
+                const details = `Type: ${conn.effectiveType || 'unknown'}, Downlink: ${conn.downlink || 'unknown'} Mbps, RTT: ${conn.rtt || 'unknown'} ms`;
+                addResult('Network Info', true, details);
+            } else {
+                addResult('Network Info', false, 'Network Information API not available');
+            }
+
+            // Test 6: Service Worker
+            if ('serviceWorker' in navigator) {
+                try {
+                    const regs = await navigator.serviceWorker.getRegistrations();
+                    const details = regs.length > 0 
+                        ? `${regs.length} service worker(s) registered. Scopes: ${regs.map(r => r.scope).join(', ')}`
+                        : 'No service workers registered';
+                    addResult('Service Worker', true, details);
+                } catch (e) {
+                    addResult('Service Worker', false, `Error checking service workers: ${e.message}`);
+                }
+            } else {
+                addResult('Service Worker', false, 'Service Worker API not supported');
+            }
+
+            // Test 7: Backend Health Check
+            addPending('Backend Health', 'Checking backend connectivity...');
+            try {
+                const startTime = Date.now();
+                const response = await fetch(`${API_BASE_URL.replace('/api/v1', '')}/health`, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+                const responseTime = Date.now() - startTime;
+                const data = await response.json();
+                
+                const testDiv = document.getElementById('test-Backend-Health');
+                if (testDiv) testDiv.remove();
+                
+                addResult('Backend Health', response.ok, 
+                    `Status: ${data.status}, Response time: ${responseTime}ms`,
+                    JSON.stringify(data, null, 2));
+            } catch (e) {
+                const testDiv = document.getElementById('test-Backend-Health');
+                if (testDiv) testDiv.remove();
+                addResult('Backend Health', false, `Connection failed: ${e.message}`);
+            }
+
+            // Test 8: CORS Preflight
+            addPending('CORS Check', 'Testing CORS configuration...');
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Origin': window.location.origin,
+                        'Access-Control-Request-Method': 'POST',
+                        'Access-Control-Request-Headers': 'Content-Type'
+                    }
+                });
+                
+                const corsHeader = response.headers.get('Access-Control-Allow-Origin');
+                const testDiv = document.getElementById('test-CORS-Check');
+                if (testDiv) testDiv.remove();
+                
+                addResult('CORS Check', !!corsHeader, 
+                    corsHeader ? `CORS enabled for: ${corsHeader}` : 'CORS headers missing',
+                    `Access-Control-Allow-Origin: ${corsHeader || 'Not set'}`);
+            } catch (e) {
+                const testDiv = document.getElementById('test-CORS-Check');
+                if (testDiv) testDiv.remove();
+                addResult('CORS Check', false, `CORS test failed: ${e.message}`);
+            }
+
+            // Test 9: Token Check
+            const token = localStorage.getItem('authToken') || localStorage.getItem('token');
+            if (token) {
+                try {
+                    const parts = token.split('.');
+                    if (parts.length === 3) {
+                        const payload = JSON.parse(atob(parts[1]));
+                        const expiresAt = new Date(payload.exp * 1000);
+                        const now = new Date();
+                        const expired = now > expiresAt;
+                        const timeLeft = expired ? 'Expired' : `${Math.round((expiresAt - now) / 1000 / 60)} minutes remaining`;
+                        
+                        addResult('Stored Token', !expired, 
+                            `Token ${expired ? 'expired' : 'valid'}. ${timeLeft}`,
+                            `Expires: ${expiresAt.toLocaleString()}`);
+                    } else {
+                        addResult('Stored Token', false, 'Invalid token format');
+                    }
+                } catch (e) {
+                    addResult('Stored Token', false, `Token parsing error: ${e.message}`);
+                }
+            } else {
+                addResult('Stored Token', true, 'No token stored (not logged in)');
+            }
+
+            // Test 10: API Timeout Test
+            addPending('API Timeout', 'Testing API response time...');
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000);
+                
+                const startTime = Date.now();
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: 'test@test.com', password: 'test' }),
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                
+                const responseTime = Date.now() - startTime;
+                const testDiv = document.getElementById('test-API-Timeout');
+                if (testDiv) testDiv.remove();
+                
+                const passed = responseTime < 30000;
+                addResult('API Timeout', passed, 
+                    `Response time: ${responseTime}ms (${passed ? 'Good' : 'Slow'})`,
+                    `Threshold: 30000ms`);
+            } catch (e) {
+                const testDiv = document.getElementById('test-API-Timeout');
+                if (testDiv) testDiv.remove();
+                
+                if (e.name === 'AbortError') {
+                    addResult('API Timeout', false, 'Request timed out after 30 seconds');
+                } else {
+                    addResult('API Timeout', false, `Request failed: ${e.message}`);
+                }
+            }
+
+            // Test 11: Screen Information
+            const screenInfo = `${window.screen.width}x${window.screen.height}, Pixel Ratio: ${window.devicePixelRatio}`;
+            addResult('Screen Info', true, screenInfo);
+
+            // Test 12: Viewport
+            const viewportInfo = `${window.innerWidth}x${window.innerHeight}`;
+            addResult('Viewport', true, viewportInfo);
+
+            log('All tests completed', 'info');
+        }
+
+        async function testLogin() {
+            const email = prompt('Enter test email:', 'test@example.com');
+            const password = prompt('Enter test password:', 'password123');
+
+            if (!email || !password) {
+                alert('Login test cancelled');
+                return;
+            }
+
+            log(`Testing login with email: ${email}`, 'info');
+
+            try {
+                const startTime = Date.now();
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const responseTime = Date.now() - startTime;
+                const data = await response.json();
+
+                log(`Login response received in ${responseTime}ms`, 'info');
+
+                if (response.ok && data.success) {
+                    addResult('Login Test', true, 
+                        `Login successful! Response time: ${responseTime}ms`,
+                        JSON.stringify(data, null, 2));
+                    
+                    // Store token
+                    if (data.token) {
+                        localStorage.setItem('authToken', data.token);
+                        log('Token stored in localStorage', 'info');
+                    }
+                } else {
+                    addResult('Login Test', false, 
+                        `Login failed: ${data.message || 'Unknown error'}`,
+                        JSON.stringify(data, null, 2));
+                }
+            } catch (e) {
+                log(`Login error: ${e.message}`, 'error');
+                addResult('Login Test', false, `Login error: ${e.message}`, e.stack);
+            }
+        }
+
+        function clearStorage() {
+            if (confirm('Clear all stored data (localStorage, sessionStorage, cookies)?')) {
+                localStorage.clear();
+                sessionStorage.clear();
+                document.cookie.split(";").forEach(c => {
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                });
+                log('All storage cleared', 'info');
+                alert('Storage cleared! Refresh the page to run tests again.');
+            }
+        }
+
+        function exportResults() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                tests: testResults,
+                logs: logs,
+                summary: {
+                    total: testResults.length,
+                    passed: testResults.filter(t => t.passed).length,
+                    failed: testResults.filter(t => !t.passed).length
+                }
+            };
+
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `mobile-diagnostics-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            log('Results exported', 'info');
+        }
+
+        // Auto-run tests on load
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 500);
+        });
+
+        // Capture console errors
+        window.addEventListener('error', (e) => {
+            log(`Uncaught error: ${e.message}`, 'error');
+        });
+
+        window.addEventListener('unhandledrejection', (e) => {
+            log(`Unhandled promise rejection: ${e.reason}`, 'error');
+        });
+    </script>
+</body>
+</html>

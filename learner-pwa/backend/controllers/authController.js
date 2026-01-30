@@ -6,8 +6,11 @@ const logger = require('../utils/logger');
 
 // Generate JWT Token
 const generateToken = (id) => {
+    if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET is not defined in environment variables');
+    }
     return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRE
+        expiresIn: process.env.JWT_EXPIRE || '30d'
     });
 };
 
@@ -97,7 +100,17 @@ exports.register = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Email already exists.' });
         }
         logger.error('Registration error:', error);
-        res.status(500).json({ success: false, message: 'Server error during registration.' });
+        logger.error('Error stack:', error.stack);
+        logger.error('Error details:', {
+            name: error.name,
+            message: error.message,
+            code: error.code
+        });
+        res.status(500).json({ 
+            success: false, 
+            message: 'Server error during registration.',
+            ...(process.env.NODE_ENV === 'development' && { error: error.message })
+        });
     }
 };
 
