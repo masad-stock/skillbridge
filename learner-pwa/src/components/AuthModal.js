@@ -157,7 +157,9 @@ function AuthModal({ show, onHide }) {
 
             if (result.success) {
                 registrationRateLimiter.reset(registerData.email);
-                showSuccess('Registration successful! Welcome to SkillBridge254!');
+                
+                // Show success message and redirect to dashboard
+                showSuccess('🎉 Registration successful! Welcome to SkillBridge254! Redirecting to your dashboard...');
 
                 // Reset form
                 setRegisterData({
@@ -169,11 +171,25 @@ function AuthModal({ show, onHide }) {
                     phoneNumber: ''
                 });
 
+                // Close modal and redirect to dashboard
                 setTimeout(() => {
                     onHide();
-                }, 1000);
+                    navigate('/dashboard');
+                }, 1500);
             } else {
-                const errorMsg = result.message || 'Registration failed. Please try again.';
+                // Handle specific error messages
+                let errorMsg = result.message || 'Registration failed. Please try again.';
+                
+                // Provide more helpful error messages
+                if (errorMsg.includes('already exists') || errorMsg.includes('duplicate')) {
+                    errorMsg = 'This email is already registered. Please login instead or use a different email.';
+                    // Optionally switch to login tab
+                    setTimeout(() => {
+                        setActiveTab('login');
+                        setLoginData({ ...loginData, email: registerData.email });
+                    }, 2000);
+                }
+                
                 setError(errorMsg);
                 showError(errorMsg);
             }
