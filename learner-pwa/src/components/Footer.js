@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useUser } from '../context/UserContext';
 import AuthModal from './AuthModal';
@@ -47,19 +48,19 @@ function Footer() {
                         <Col md={3}>
                             <h6 className="mb-3">Quick Links</h6>
                             <ul className="list-unstyled">
-                                <li><a href="/courses" className="text-light text-decoration-none">📚 Courses</a></li>
-                                <li><a href="/instructors" className="text-light text-decoration-none">👨‍🏫 Instructors</a></li>
-                                <li><a href="/blog" className="text-light text-decoration-none">📝 Blog</a></li>
-                                <li><a href="/events" className="text-light text-decoration-none">📅 Events</a></li>
-                                <li><a href="/contact" className="text-light text-decoration-none">📞 Contact</a></li>
-                                <li><a href="/faq" className="text-light text-decoration-none">❓ FAQ</a></li>
+                                <li><Link to="/courses" className="text-light text-decoration-none">📚 Courses</Link></li>
+                                <li><Link to="/instructors" className="text-light text-decoration-none">👨‍🏫 Instructors</Link></li>
+                                <li><Link to="/blog" className="text-light text-decoration-none">📝 Blog</Link></li>
+                                <li><Link to="/events" className="text-light text-decoration-none">📅 Events</Link></li>
+                                <li><Link to="/contact" className="text-light text-decoration-none">📞 Contact</Link></li>
+                                <li><Link to="/faq" className="text-light text-decoration-none">❓ FAQ</Link></li>
                             </ul>
                         </Col>
                         <Col md={3}>
                             <h6 className="mb-3">Legal</h6>
                             <ul className="list-unstyled">
-                                <li><a href="/privacy" className="text-light text-decoration-none">🔒 Privacy Policy</a></li>
-                                <li><a href="/terms" className="text-light text-decoration-none">📋 Terms of Service</a></li>
+                                <li><Link to="/privacy" className="text-light text-decoration-none">🔒 Privacy Policy</Link></li>
+                                <li><Link to="/terms" className="text-light text-decoration-none">📋 Terms of Service</Link></li>
                             </ul>
                         </Col>
                         <Col md={3}>
