@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Login/Registration Testing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0d6efd;
+            border-bottom: 3px solid #0d6efd;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #198754;
+            margin-top: 30px;
+        }
+        .test-section {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #0d6efd;
+        }
+        .test-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status.pending {
+            background: #ffc107;
+            color: #000;
+        }
+        .status.pass {
+            background: #198754;
+            color: white;
+        }
+        .status.fail {
+            background: #dc3545;
+            color: white;
+        }
+        .instructions {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #0d6efd;
+        }
+        .code {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        button {
+            background: #0d6efd;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0b5ed7;
+        }
+        button.success {
+            background: #198754;
+        }
+        button.danger {
+            background: #dc3545;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .result.success {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+        .result.error {
+            background: #f8d7da;
+            color: #842029;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid #6c757d;
+        }
+        .checklist li.checked {
+            border-left-color: #198754;
+            background: #d1e7dd;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Frontend Login/Registration Testing Guide</h1>
+        
+        <div class="instructions">
+            <h3>📋 Testing Instructions</h3>
+            <p>Follow these steps to thoroughly test the login and registration functionality on the deployed frontend.</p>
+            <p><strong>Production URL:</strong> <a href="https://skillbridge-tau.vercel.app" target="_blank">https://skillbridge-tau.vercel.app</a></p>
+        </div>
+
+        <h2>1️⃣ Pre-Test Verification</h2>
+        <div class="test-section">
+            <div class="test-item">
+                <h4>✅ Environment Variables Check</h4>
+                <p>Verify that <code>REACT_APP_API_URL</code> is set on Vercel:</p>
+                <div class="code">
+                    REACT_APP_API_URL=https://skillbridge-backend-t35r.onrender.com/api/v1
+                </div>
+                <button onclick="window.open('https://vercel.com/dashboard', '_blank')">Open Vercel Dashboard</button>
+            </div>
+
+            <div class="test-item">
+                <h4>✅ Backend Health Check</h4>
+                <button onclick="testBackendHealth()">Test Backend Health</button>
+                <div id="health-result"></div>
+            </div>
+        </div>
+
+        <h2>2️⃣ Registration Flow Testing</h2>
+        <div class="test-section">
+            <h3>Test Case 1: New User Registration</h3>
+            <div class="instructions">
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li>Open <a href="https://skillbridge-tau.vercel.app" target="_blank">https://skillbridge-tau.vercel.app</a></li>
+                    <li>Click "Get Started" or "Create Free Account" button</li>
+                    <li>Click on the "Register" tab</li>
+                    <li>Fill in the registration form with NEW credentials:
+                        <div class="code">
+                            First Name: Test<br>
+                            Last Name: User<br>
+                            Email: test<span id="timestamp"></span>@example.com<br>
+                            Password: TestPass123!<br>
+                            Confirm Password: TestPass123!
+                        </div>
+                    </li>
+                    <li>Click "Create Account"</li>
+                </ol>
+                <p><strong>Expected Result:</strong></p>
+                <ul>
+                    <li>✅ Success message: "🎉 Registration successful! Welcome to SkillBridge254! Redirecting to your dashboard..."</li>
+                    <li>✅ Modal closes after 1.5 seconds</li>
+                    <li>✅ Automatically redirected to /dashboard</li>
+                    <li>✅ User stays logged in (no immediate logout)</li>
+                </ul>
+            </div>
+            <ul class="checklist">
+                <li><input type="checkbox" id="reg1"> Registration form loads correctly</li>
+                <li><input type="checkbox" id="reg2"> All fields accept input</li>
+                <li><input type="checkbox" id="reg3"> Success message shows correctly</li>
+                <li><input type="checkbox" id="reg4"> Redirects to dashboard</li>
+                <li><input type="checkbox" id="reg5"> User stays logged in</li>
+            </ul>
+
+            <h3>Test Case 2: Duplicate Email Registration</h3>
+            <div class="instructions">
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li>Try to register again with the SAME email</li>
+                    <li>Fill in the form with the same email address</li>
+                    <li>Click "Create Account"</li>
+                </ol>
+                <p><strong>Expected Result:</strong></p>
+                <ul>
+                    <li>✅ Error message: "This email is already registered. Please login instead or use a different email."</li>
+                    <li>✅ After 2 seconds, automatically switches to Login tab</li>
+                    <li>✅ Email field pre-filled in login form</li>
+                </ul>
+            </div>
+            <ul class="checklist">
+                <li><input type="checkbox" id="dup1"> Error message shows correctly</li>
+                <li><input type="checkbox" id="dup2"> Switches to login tab</li>
+                <li><input type="checkbox" id="dup3"> Email pre-filled</li>
+            </ul>
+        </div>
+
+        <h2>3️⃣ Login Flow Testing</h2>
+        <div class="test-section">
+            <h3>Test Case 3: Successful Login</h3>
+            <div class="instructions">
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li>Logout if logged in (click profile → Logout)</li>
+                    <li>Click "Get Started" button</li>
+                    <li>Stay on "Login" tab</li>
+                    <li>Enter credentials:
+                        <div class="code">
+                            Email: test1769801993674@example.com<br>
+                            Password: TestPass123!
+                        </div>
+                    </li>
+                    <li>Click "Login"</li>
+                </ol>
+                <p><strong>Expected Result:</strong></p>
+                <ul>
+                    <li>✅ Success message: "Login successful! Welcome back!"</li>
+                    <li>✅ Modal closes</li>
+                    <li>✅ Redirected to /dashboard</li>
+                    <li>✅ User stays logged in (token persists)</li>
+                </ul>
+            </div>
+            <ul class="checklist">
+                <li><input type="checkbox" id="login1"> Login form loads correctly</li>
+                <li><input type="checkbox" id="login2"> Success message shows</li>
+                <li><input type="checkbox" id="login3"> Redirects to dashboard</li>
+                <li><input type="checkbox" id="login4"> User stays logged in</li>
+            </ul>
+
+            <h3>Test Case 4: Wrong Password</h3>
+            <div class="instructions">
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li>Try to login with wrong password</li>
+                    <li>Email: test1769801993674@example.com</li>
+                    <li>Password: WrongPassword123!</li>
+                    <li>Click "Login"</li>
+                </ol>
+                <p><strong>Expected Result:</strong></p>
+                <ul>
+                    <li>✅ Error message: "Invalid credentials"</li>
+                    <li>✅ Stays on login page</li>
+                    <li>✅ No redirect</li>
+                </ul>
+            </div>
+            <ul class="checklist">
+                <li><input type="checkbox" id="wrong1"> Error message shows</li>
+                <li><input type="checkbox" id="wrong2"> No redirect occurs</li>
+            </ul>
+        </div>
+
+        <h2>4️⃣ Token Persistence Testing</h2>
+        <div class="test-section">
+            <h3>Test Case 5: Page Refresh</h3>
+            <div class="instructions">
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li>Login successfully</li>
+                    <li>Navigate to dashboard</li>
+                    <li>Press F5 or Ctrl+R to refresh the page</li>
+                </ol>
+                <p><strong>Expected Result:</strong></p>
+                <ul>
+                    <li>✅ User stays logged in</li>
+                    <li>✅ Dashboard loads correctly</li>
+                    <li>✅ No redirect to login page</li>
+                </ul>
+            </div>
+            <ul class="checklist">
+                <li><input type="checkbox" id="persist1"> User stays logged in after refresh</li>
+                <li><input type="checkbox" id="persist2"> Dashboard loads correctly</li>
+            </ul>
+
+            <h3>Test Case 6: Browser Tab Close/Reopen</h3>
+            <div class="instructions">
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li>Login successfully</li>
+                    <li>Close the browser tab</li>
+                    <li>Open a new tab and go to https://skillbridge-tau.vercel.app</li>
+                </ol>
+                <p><strong>Expected Result:</strong></p>
+                <ul>
+                    <li>✅ User stays logged in</li>
+                    <li>✅ Token persists in localStorage</li>
+                    <li>✅ Can access dashboard without re-login</li>
+                </ul>
+            </div>
+            <ul class="checklist">
+                <li><input type="checkbox" id="tab1"> User stays logged in after tab close</li>
+                <li><input type="checkbox" id="tab2"> Can access dashboard</li>
+            </ul>
+        </div>
+
+        <h2>5️⃣ Network & Error Handling</h2>
+        <div class="test-section">
+            <h3>Test Case 7: Slow Network</h3>
+            <div class="instructions">
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li>Open Chrome DevTools (F12)</li>
+                    <li>Go to Network tab</li>
+                    <li>Select "Slow 3G" from throttling dropdown</li>
+                    <li>Try to login</li>
+                </ol>
+                <p><strong>Expected Result:</strong></p>
+                <ul>
+                    <li>✅ Loading spinner shows</li>
+                    <li>✅ Request completes within 60 seconds</li>
+                    <li>✅ Login succeeds (retry logic works)</li>
+                </ul>
+            </div>
+            <ul class="checklist">
+                <li><input type="checkbox" id="slow1"> Loading indicator shows</li>
+                <li><input type="checkbox" id="slow2"> Request completes successfully</li>
+                <li><input type="checkbox" id="slow3"> Retry logic works</li>
+            </ul>
+        </div>
+
+        <h2>6️⃣ Mobile Testing</h2>
+        <div class="test-section">
+            <h3>Test Case 8: Mobile Device Testing</h3>
+            <div class="instructions">
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li>Open on mobile device (iOS or Android)</li>
+                    <li>Test registration flow</li>
+                    <li>Test login flow</li>
+                    <li>Test token persistence</li>
+                </ol>
+                <p><strong>Alternative: Use Chrome DevTools</strong></p>
+                <ol>
+                    <li>Open Chrome DevTools (F12)</li>
+                    <li>Click device toolbar icon (Ctrl+Shift+M)</li>
+                    <li>Select "iPhone 12 Pro" or "Pixel 5"</li>
+                    <li>Test all flows</li>
+                </ol>
+            </div>
+            <ul class="checklist">
+                <li><input type="checkbox" id="mobile1"> Registration works on mobile</li>
+                <li><input type="checkbox" id="mobile2"> Login works on mobile</li>
+                <li><input type="checkbox" id="mobile3"> UI is responsive</li>
+                <li><input type="checkbox" id="mobile4"> Token persists on mobile</li>
+            </ul>
+        </div>
+
+        <h2>7️⃣ Browser Console Check</h2>
+        <div class="test-section">
+            <div class="instructions">
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li>Open Chrome DevTools (F12)</li>
+                    <li>Go to Console tab</li>
+                    <li>Perform login/registration</li>
+                    <li>Check for errors</li>
+                </ol>
+                <p><strong>Expected Result:</strong></p>
+                <ul>
+                    <li>✅ No red errors in console</li>
+                    <li>✅ API calls show correct URL (not localhost)</li>
+                    <li>✅ Token stored in localStorage</li>
+                </ul>
+            </div>
+            <ul class="checklist">
+                <li><input type="checkbox" id="console1"> No console errors</li>
+                <li><input type="checkbox" id="console2"> API URL is correct</li>
+                <li><input type="checkbox" id="console3"> Token stored correctly</li>
+            </ul>
+        </div>
+
+        <h2>📊 Test Summary</h2>
+        <div class="test-section">
+            <button class="success" onclick="generateReport()">Generate Test Report</button>
