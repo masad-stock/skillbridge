@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { getCSRFToken, isTokenExpired } from '../utils/security';
 import { sanitizeObject } from '../utils/validation';
+import { retryWithBackoff, retryPresets } from '../utils/apiRetry';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api/v1';
 
-// Request timeout
-const REQUEST_TIMEOUT = 30000; // 30 seconds
+// Request timeout - increased for mobile networks and cold starts
+// Mobile networks (especially 3G) and Render cold starts can take longer
+const REQUEST_TIMEOUT = process.env.REACT_APP_REQUEST_TIMEOUT || 60000; // 60 seconds
 
 // Create axios instance
 const api = axios.create({
@@ -152,15 +154,42 @@ api.interceptors.response.use(
     }
 );
 
-// Auth API
+// Auth API - with retry logic for critical operations
 export const authAPI = {
-    register: (userData) => api.post('/auth/register', userData),
-    login: (credentials) => api.post('/auth/login', credentials),
-    getMe: () => api.get('/auth/me'),
+    // Registration with patient retry (important for mobile networks)
+    register: (userData) => retryWithBackoff(
+        () => api.post('/auth/register', userData),
+        3, // max retries
+        2000 // initial delay (2 seconds)
+    ),
+    
+    // Login with patient retry (important for mobile networks)
+    login: (credentials) => retryWithBackoff(
+        () => api.post('/auth/login', credentials),
+        3, // max retries
+        2000 // initial delay (2 seconds)
+    ),
+    
+    // Get current user with standard retry
+    getMe: () => retryWithBackoff(
+        () => api.get('/auth/me'),
+        2, // max retries
+        1000 // initial delay (1 second)
+    ),
+    
+    // Profile updates without retry (user can manually retry)
     updateProfile: (profileData) => api.put('/auth/update-profile', profileData),
-    forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
+    
+    // Password operations with standard retry
+    forgotPassword: (email) => retryWithBackoff(
+        () => api.post('/auth/forgot-password', { email }),
+        2,
+        1000
+    ),
     resetPassword: (token, data) => api.post(`/auth/reset-password/${token}`, data),
     changePassword: (data) => api.post('/auth/change-password', data),
+    
+    // File uploads without retry (large payloads)
     uploadProfilePhoto: (formData) => {
         return api.post('/users/profile/photo', formData, {
             headers: {

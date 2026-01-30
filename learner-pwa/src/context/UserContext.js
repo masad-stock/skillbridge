@@ -176,11 +176,36 @@ export function UserProvider({ children }) {
             dispatch({ type: 'SET_USER', payload: user });
             dispatch({ type: 'SET_SKILLS_PROFILE', payload: user.skillsProfile });
 
-            return { success: true };
+            return { success: true, user };
         } catch (error) {
+            // Detailed error handling for better user experience
+            let message = 'Login failed';
+            
+            if (error.isNetworkError) {
+                message = 'Unable to connect to server. Please check your internet connection.';
+            } else if (error.message?.includes('timeout')) {
+                message = 'Request timed out. Please try again with a better connection.';
+            } else if (error.response?.status === 401) {
+                message = 'Invalid email or password. Please try again.';
+            } else if (error.response?.status === 429) {
+                message = 'Too many login attempts. Please wait a few minutes and try again.';
+            } else if (error.response?.status >= 500) {
+                message = 'Server error. Please try again in a few moments.';
+            } else if (error.response?.data?.message) {
+                message = error.response.data.message;
+            }
+            
+            console.error('[Login Error]', {
+                message: error.message,
+                status: error.response?.status,
+                data: error.response?.data,
+                isNetworkError: error.isNetworkError
+            });
+            
             return {
                 success: false,
-                message: error.response?.data?.message || 'Login failed'
+                message,
+                error
             };
         }
     };
@@ -195,37 +220,45 @@ export function UserProvider({ children }) {
 
             dispatch({ type: 'SET_USER', payload: user });
 
-            return { success: true };
+            return { success: true, user };
         } catch (error) {
-            // Handle different error types
-            if (error.response) {
-                // Server responded with error
-                const errorData = error.response.data;
-                if (errorData.details && Array.isArray(errorData.details)) {
-                    // Validation errors
-                    const validationMessages = errorData.details.map(d => d.message).join(', ');
-                    return {
-                        success: false,
-                        message: `Validation error: ${validationMessages}`
-                    };
+            // Detailed error handling for better user experience
+            let message = 'Registration failed';
+            
+            if (error.isNetworkError) {
+                message = 'Unable to connect to server. Please check your internet connection.';
+            } else if (error.message?.includes('timeout')) {
+                message = 'Request timed out. Please try again with a better connection.';
+            } else if (error.response?.status === 400) {
+                // Validation errors
+                if (error.response.data?.details && Array.isArray(error.response.data.details)) {
+                    const validationErrors = error.response.data.details
+                        .map(d => d.message)
+                        .join(', ');
+                    message = `Validation error: ${validationErrors}`;
+                } else {
+                    message = error.response.data?.message || 'Invalid registration data. Please check your information.';
                 }
-                return {
-                    success: false,
-                    message: errorData.message || errorData.error || 'Registration failed. Please check your information and try again.'
-                };
-            } else if (error.request) {
-                // Request made but no response
-                return {
-                    success: false,
-                    message: 'Unable to connect to server. Please check your internet connection and ensure the backend is running.'
-                };
-            } else {
-                // Something else happened
-                return {
-                    success: false,
-                    message: error.message || 'An unexpected error occurred. Please try again.'
-                };
+            } else if (error.response?.status === 429) {
+                message = 'Too many registration attempts. Please wait a few minutes and try again.';
+            } else if (error.response?.status >= 500) {
+                message = 'Server error. Please try again in a few moments.';
+            } else if (error.response?.data?.message) {
+                message = error.response.data.message;
             }
+            
+            console.error('[Registration Error]', {
+                message: error.message,
+                status: error.response?.status,
+                data: error.response?.data,
+                isNetworkError: error.isNetworkError
+            });
+            
+            return {
+                success: false,
+                message,
+                error
+            };
         }
     };
 
