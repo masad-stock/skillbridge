@@ -1,125 +1,137 @@
-# Requirements Document: Production Deployment Fix
+# Requirements Document
 
 ## Introduction
 
-This specification addresses critical production deployment issues where login, registration, and chatbot functionality fail when deployed to Vercel (frontend) and Render (backend). The root cause is improper environment configuration and missing backend deployment.
+This specification addresses server errors occurring when the application runs on mobile devices in production. The system needs comprehensive database debugging, error catching, and logging to identify and resolve production issues that don't appear in development environments.
 
 ## Glossary
 
-- **Frontend**: React application deployed on Vercel
-- **Backend**: Node.js/Express API server that should be deployed on Render
-- **Environment Variables**: Configuration values that differ between development and production
-- **CORS**: Cross-Origin Resource Sharing - security mechanism for cross-domain requests
-- **API_URL**: The base URL where the backend API is accessible
-- **Groq**: AI service provider for chatbot functionality
-- **MongoDB Atlas**: Cloud database service
+- **System**: The learner PWA backend server and database layer
+- **Database_Layer**: MongoDB connection, models, and query operations
+- **Error_Handler**: Middleware and services that catch and log errors
+- **Production_Environment**: The deployed application running on Render/Netlify
+- **Mobile_Client**: The PWA running on mobile devices (phones/tablets)
+- **Diagnostic_Service**: Service that monitors and reports database health
+- **Connection_Pool**: MongoDB connection management system
 
 ## Requirements
 
-### Requirement 1: Backend Deployment
+### Requirement 1: Database Connection Monitoring
 
-**User Story:** As a platform administrator, I want the backend API deployed to a production server, so that the frontend can communicate with it in production.
-
-#### Acceptance Criteria
-
-1. THE Backend SHALL be deployed to Render (or equivalent cloud platform)
-2. WHEN the backend is deployed, THE Backend SHALL be accessible via HTTPS URL
-3. THE Backend SHALL connect to MongoDB Atlas database successfully
-4. THE Backend SHALL expose all required API endpoints at `/api/v1/*`
-5. WHEN accessing the health endpoint, THE Backend SHALL return status 200 with health information
-
-### Requirement 2: Environment Variable Configuration
-
-**User Story:** As a developer, I want proper environment variables configured in both frontend and backend, so that they can communicate correctly in production.
+**User Story:** As a system administrator, I want to monitor database connection health, so that I can identify connection issues before they affect users.
 
 #### Acceptance Criteria
 
-1. THE Frontend SHALL have `REACT_APP_API_URL` environment variable set in Vercel
-2. THE Backend SHALL have `MONGODB_URI` environment variable set
-3. THE Backend SHALL have `JWT_SECRET` environment variable set
-4. THE Backend SHALL have `GROQ_API_KEY` environment variable set for chatbot
-5. THE Backend SHALL have `FRONTEND_URL` environment variable set for CORS
-6. WHEN environment variables are missing, THE System SHALL log clear error messages
-7. THE Backend SHALL validate required environment variables on startup
+1. WHEN the server starts, THE System SHALL verify MongoDB connection and log connection status
+2. WHEN a database connection fails, THE System SHALL log detailed error information including connection string (sanitized), timeout values, and network conditions
+3. WHEN the database connection is lost during operation, THE System SHALL attempt reconnection and log all reconnection attempts
+4. THE System SHALL expose a health check endpoint that reports database connection status
+5. WHEN connection pool is exhausted, THE System SHALL log pool statistics and waiting requests
 
-### Requirement 3: Authentication System
+### Requirement 2: Query Error Logging
 
-**User Story:** As a user, I want to register and login to the platform, so that I can access my personalized learning content.
+**User Story:** As a developer, I want detailed logging of all database query errors, so that I can identify which queries are failing in production.
 
 #### Acceptance Criteria
 
-1. WHEN a user submits registration form, THE Frontend SHALL send POST request to backend `/api/v1/auth/register`
-2. WHEN registration is successful, THE Backend SHALL create user account and return JWT token
-3. WHEN a user submits login form, THE Frontend SHALL send POST request to backend `/api/v1/auth/login`
-4. WHEN login is successful, THE Backend SHALL validate credentials and return JWT token
-5. THE Frontend SHALL store JWT token in localStorage
-6. WHEN API requests are made, THE Frontend SHALL include JWT token in Authorization header
-7. IF backend is unreachable, THE Frontend SHALL display clear error message to user
+1. WHEN a database query fails, THE System SHALL log the query operation, collection name, query parameters (sanitized), and full error stack trace
+2. WHEN a query times out, THE System SHALL log the timeout duration and query complexity metrics
+3. WHEN a validation error occurs, THE System SHALL log the document that failed validation and the specific validation rules that failed
+4. WHEN a duplicate key error occurs, THE System SHALL log the conflicting field and value
+5. THE System SHALL include request context (user ID, endpoint, timestamp) with all query error logs
 
-### Requirement 4: Chatbot Functionality
+### Requirement 3: Model Validation Error Handling
 
-**User Story:** As a user, I want to interact with the AI chatbot, so that I can get help with learning content.
+**User Story:** As a developer, I want to catch and log all Mongoose model validation errors, so that I can identify data integrity issues.
 
 #### Acceptance Criteria
 
-1. WHEN a user sends a chat message, THE Frontend SHALL send POST request to backend `/api/v1/chatbot/message`
-2. THE Backend SHALL forward message to Groq AI service
-3. THE Backend SHALL stream AI response back to frontend
-4. THE Frontend SHALL display AI response in chat interface
-5. WHEN Groq API key is not configured, THE Backend SHALL return clear error message
-6. THE Chatbot SHALL work for both authenticated and unauthenticated users
-7. WHEN unauthenticated, THE Frontend SHALL use `/api/v1/chatbot/message-public` endpoint
+1. WHEN a model validation fails, THE System SHALL return a structured error response with field-level error details
+2. WHEN required fields are missing, THE System SHALL log which fields are missing and the operation being attempted
+3. WHEN data type mismatches occur, THE System SHALL log the expected type and received type
+4. WHEN custom validators fail, THE System SHALL log the validator name and the value that failed validation
+5. THE System SHALL prevent invalid data from being saved to the database
 
-### Requirement 5: CORS Configuration
+### Requirement 4: Transaction Error Handling
 
-**User Story:** As a system architect, I want proper CORS configuration, so that the frontend can make requests to the backend without security errors.
+**User Story:** As a developer, I want proper error handling for database transactions, so that data remains consistent even when errors occur.
 
 #### Acceptance Criteria
 
-1. THE Backend SHALL allow requests from Vercel frontend URL
-2. THE Backend SHALL include Vercel URL in CORS origins list
-3. WHEN frontend makes API request, THE Backend SHALL include proper CORS headers in response
-4. THE Backend SHALL allow credentials in CORS requests
-5. THE Backend SHALL allow GET, POST, PUT, DELETE, PATCH methods
+1. WHEN a transaction fails, THE System SHALL rollback all changes and log the transaction operations
+2. WHEN a transaction times out, THE System SHALL abort the transaction and log timeout details
+3. WHEN concurrent modification conflicts occur, THE System SHALL log both versions of the conflicting data
+4. THE System SHALL retry failed transactions up to a configured maximum with exponential backoff
+5. WHEN transaction retry limit is reached, THE System SHALL log all retry attempts and final failure reason
 
-### Requirement 6: Error Handling and Diagnostics
+### Requirement 5: Mobile-Specific Error Detection
 
-**User Story:** As a developer, I want clear error messages and diagnostic tools, so that I can quickly identify and fix deployment issues.
-
-#### Acceptance Criteria
-
-1. WHEN backend is unreachable, THE Frontend SHALL display "Unable to connect to server" message
-2. WHEN environment variables are missing, THE Backend SHALL log specific missing variables
-3. THE Backend SHALL expose `/health` endpoint for health checks
-4. THE Backend SHALL expose `/api/v1/chatbot/health` endpoint for chatbot status
-5. WHEN chatbot is not configured, THE Health endpoint SHALL return `"configured": false`
-6. THE Frontend SHALL log API request URLs in browser console for debugging
-7. THE Backend SHALL log all incoming requests with correlation IDs
-
-### Requirement 7: Deployment Verification
-
-**User Story:** As a platform administrator, I want a systematic verification process, so that I can confirm all features work in production.
+**User Story:** As a developer, I want to identify errors that only occur on mobile devices, so that I can fix mobile-specific issues.
 
 #### Acceptance Criteria
 
-1. THE System SHALL provide health check endpoint that returns 200 OK
-2. THE System SHALL allow test user registration
-3. THE System SHALL allow test user login
-4. THE System SHALL allow chatbot interaction
-5. THE System SHALL display no console errors in browser
-6. THE Backend logs SHALL show no critical errors
-7. THE System SHALL complete full user flow: register → login → chat → logout
+1. WHEN an error occurs, THE System SHALL log the client user agent and device information
+2. WHEN network errors occur, THE System SHALL distinguish between client-side and server-side network issues
+3. WHEN payload size limits are exceeded, THE System SHALL log the payload size and the limit
+4. WHEN CORS errors occur, THE System SHALL log the origin and the blocked request details
+5. THE System SHALL track error rates by device type (mobile vs desktop)
 
-### Requirement 8: Documentation and Guides
+### Requirement 6: Comprehensive Error Logging Service
 
-**User Story:** As a developer, I want clear deployment documentation, so that I can deploy and troubleshoot the application.
+**User Story:** As a system administrator, I want centralized error logging, so that I can review all errors in one place.
 
 #### Acceptance Criteria
 
-1. THE Documentation SHALL include step-by-step backend deployment guide
-2. THE Documentation SHALL include environment variable configuration guide
-3. THE Documentation SHALL include troubleshooting guide for common errors
-4. THE Documentation SHALL include verification checklist
-5. THE Documentation SHALL include architecture diagram showing component connections
-6. THE Documentation SHALL include example environment variable values
-7. THE Documentation SHALL explain the difference between development and production configuration
+1. THE System SHALL log all errors to both console and persistent log files
+2. WHEN an error occurs, THE System SHALL include timestamp, severity level, error type, and full context
+3. THE System SHALL rotate log files when they exceed a configured size limit
+4. THE System SHALL maintain separate log files for different error categories (database, authentication, validation)
+5. WHEN critical errors occur, THE System SHALL send notifications to administrators
+
+### Requirement 7: Database Diagnostic Endpoints
+
+**User Story:** As a developer, I want diagnostic endpoints to check database health, so that I can troubleshoot production issues.
+
+#### Acceptance Criteria
+
+1. THE System SHALL provide an endpoint that returns current database connection status
+2. THE System SHALL provide an endpoint that returns collection statistics (document counts, indexes)
+3. THE System SHALL provide an endpoint that tests read and write operations
+4. THE System SHALL provide an endpoint that returns recent error summaries
+5. THE System SHALL protect diagnostic endpoints with authentication
+
+### Requirement 8: Error Recovery Mechanisms
+
+**User Story:** As a user, I want the system to recover from transient errors automatically, so that temporary issues don't disrupt my experience.
+
+#### Acceptance Criteria
+
+1. WHEN a transient network error occurs, THE System SHALL retry the operation with exponential backoff
+2. WHEN the database is temporarily unavailable, THE System SHALL queue operations and retry when connection is restored
+3. WHEN a query fails due to timeout, THE System SHALL retry with increased timeout
+4. THE System SHALL limit retry attempts to prevent infinite loops
+5. WHEN retry limit is reached, THE System SHALL return a user-friendly error message
+
+### Requirement 9: Production Environment Configuration
+
+**User Story:** As a system administrator, I want proper production configuration for database connections, so that the system performs reliably under load.
+
+#### Acceptance Criteria
+
+1. THE System SHALL use connection pooling with appropriate pool size for production load
+2. THE System SHALL configure appropriate timeout values for production network conditions
+3. THE System SHALL enable MongoDB query logging in production
+4. THE System SHALL configure appropriate memory limits for the Node.js process
+5. THE System SHALL use environment-specific error handling (detailed in dev, sanitized in production)
+
+### Requirement 10: Error Response Standardization
+
+**User Story:** As a frontend developer, I want consistent error response formats, so that I can handle errors predictably.
+
+#### Acceptance Criteria
+
+1. THE System SHALL return errors in a consistent JSON format with error code, message, and details
+2. WHEN validation errors occur, THE System SHALL return field-level error information
+3. WHEN authentication errors occur, THE System SHALL return appropriate HTTP status codes
+4. THE System SHALL sanitize error messages in production to avoid exposing sensitive information
+5. THE System SHALL include a request ID in error responses for tracing
