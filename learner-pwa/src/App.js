@@ -16,6 +16,15 @@ import Profile from './pages/Profile';
 import AssessmentInfo from './pages/AssessmentInfo';
 import LearningInfo from './pages/LearningInfo';
 import BusinessToolsInfo from './pages/BusinessToolsInfo';
+import Courses from './pages/Courses';
+import CourseDetails from './pages/CourseDetails';
+import Instructors from './pages/Instructors';
+import InstructorProfile from './pages/InstructorProfile';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+import Events from './pages/Events';
+import EventDetails from './pages/EventDetails';
+import Pricing from './pages/Pricing';
 import AdminLayout from './components/AdminLayout';
 import OfflineIndicator from './components/OfflineIndicator';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -51,6 +60,8 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 const UserManagement = lazy(() => import('./pages/admin/UserManagement'));
 const ModuleManagement = lazy(() => import('./pages/admin/EnhancedModuleManagement'));
+const BlogManagement = lazy(() => import('./pages/admin/BlogManagement'));
+const EventManagement = lazy(() => import('./pages/admin/EventManagement'));
 const Analytics = lazy(() => import('./pages/admin/Analytics'));
 const Settings = lazy(() => import('./pages/admin/Settings'));
 const ContentDeliveryDashboard = lazy(() => import('./components/admin/ContentDeliveryDashboard'));
@@ -127,6 +138,15 @@ function App() {
 
                             {/* Info Pages - Accessible to all */}
                             <Route path="/about" element={<About />} />
+                            <Route path="/courses" element={<Courses />} />
+                            <Route path="/courses/:id" element={<CourseDetails />} />
+                            <Route path="/instructors" element={<Instructors />} />
+                            <Route path="/instructors/:id" element={<InstructorProfile />} />
+                            <Route path="/blog" element={<Blog />} />
+                            <Route path="/blog/:slug" element={<BlogPost />} />
+                            <Route path="/events" element={<Events />} />
+                            <Route path="/events/:id" element={<EventDetails />} />
+                            <Route path="/pricing" element={<Pricing />} />
                             <Route path="/assessment-info" element={<AssessmentInfo />} />
                             <Route path="/learning-info" element={<LearningInfo />} />
                             <Route path="/business-tools-info" element={<BusinessToolsInfo />} />
@@ -159,6 +179,8 @@ function App() {
                               <Route index element={<AdminDashboard />} />
                               <Route path="users" element={<UserManagement />} />
                               <Route path="modules" element={<ModuleManagement />} />
+                              <Route path="blog" element={<BlogManagement />} />
+                              <Route path="events" element={<EventManagement />} />
                               <Route path="content-delivery" element={<ContentDeliveryDashboard />} />
                               <Route path="analytics" element={<Analytics />} />
                               <Route path="settings" element={<Settings />} />

@@ -15,6 +15,7 @@ This platform addresses the challenge of digital skills education in Kenya and s
 - 🤖 **ML Integration** - Dropout prediction and learning style detection
 - 💼 **Business Tools** - Inventory, sales tracking, and forecasting
 - 🌐 **Multi-language** - English and Swahili support
+- 📝 **Blog & Events** - Content management system for announcements and events
 
 ---
 
@@ -23,6 +24,7 @@ This platform addresses the challenge of digital skills education in Kenya and s
 - [Quick Start](#-quick-start)
 - [Architecture](#-architecture)
 - [Project Structure](#-project-structure)
+- [Features](#-features)
 - [Deployment](#-deployment)
 - [Testing](#-testing)
 - [Configuration](#-configuration)
@@ -212,6 +214,8 @@ Research specifications are available in `.kiro/specs/thesis-research-validation
 - ✅ Offline learning support
 - ✅ Multi-language interface (English/Swahili)
 - ✅ Mobile-responsive design
+- ✅ AI chatbot for learning assistance
+- ✅ Personalized learning paths
 
 ### For Business Owners
 - ✅ Inventory management
@@ -223,10 +227,13 @@ Research specifications are available in `.kiro/specs/thesis-research-validation
 ### For Administrators
 - ✅ User management
 - ✅ Content management (modules, assessments)
+- ✅ Blog and events management
 - ✅ Analytics dashboard
 - ✅ Certificate management
 - ✅ Research data export
 - ✅ System settings
+- ✅ Image management with AI generation
+- ✅ Success stories management
 
 ## 🛠️ Technology Stack
 

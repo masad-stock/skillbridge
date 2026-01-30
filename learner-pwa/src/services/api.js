@@ -162,24 +162,24 @@ export const authAPI = {
         3, // max retries
         2000 // initial delay (2 seconds)
     ),
-    
+
     // Login with patient retry (important for mobile networks)
     login: (credentials) => retryWithBackoff(
         () => api.post('/auth/login', credentials),
         3, // max retries
         2000 // initial delay (2 seconds)
     ),
-    
+
     // Get current user with standard retry
     getMe: () => retryWithBackoff(
         () => api.get('/auth/me'),
         2, // max retries
         1000 // initial delay (1 second)
     ),
-    
+
     // Profile updates without retry (user can manually retry)
     updateProfile: (profileData) => api.put('/auth/update-profile', profileData),
-    
+
     // Password operations with standard retry
     forgotPassword: (email) => retryWithBackoff(
         () => api.post('/auth/forgot-password', { email }),
@@ -188,7 +188,7 @@ export const authAPI = {
     ),
     resetPassword: (token, data) => api.post(`/auth/reset-password/${token}`, data),
     changePassword: (data) => api.post('/auth/change-password', data),
-    
+
     // File uploads without retry (large payloads)
     uploadProfilePhoto: (formData) => {
         return api.post('/users/profile/photo', formData, {
@@ -327,6 +327,40 @@ export const uploadAPI = {
     },
     deleteModuleFile: (filename) => api.delete(`/upload/module-files/${filename}`),
     getFileInfo: (filename) => api.get(`/upload/module-files/${filename}`)
+};
+
+// Instructor API
+export const instructorAPI = {
+    getAllInstructors: (params) => api.get('/instructors', { params }),
+    getInstructorById: (id) => api.get(`/instructors/${id}`),
+    getInstructorCourses: (id) => api.get(`/instructors/${id}/courses`),
+    createInstructor: (data) => api.post('/instructors', data),
+    updateInstructor: (id, data) => api.put(`/instructors/${id}`, data),
+    deleteInstructor: (id) => api.delete(`/instructors/${id}`)
+};
+
+// Blog API
+export const blogAPI = {
+    getAllPosts: (params) => api.get('/blog', { params }),
+    getPostBySlug: (slug) => api.get(`/blog/${slug}`),
+    getPostsByCategory: (category) => api.get(`/blog/category/${category}`),
+    incrementViewCount: (slug) => api.post(`/blog/${slug}/view`),
+    createPost: (data) => api.post('/blog', data),
+    updatePost: (id, data) => api.put(`/blog/${id}`, data),
+    publishPost: (id) => api.post(`/blog/${id}/publish`),
+    deletePost: (id) => api.delete(`/blog/${id}`)
+};
+
+// Event API
+export const eventAPI = {
+    getAllEvents: (params) => api.get('/events', { params }),
+    getEventById: (id) => api.get(`/events/${id}`),
+    createEvent: (data) => api.post('/events', data),
+    updateEvent: (id, data) => api.put(`/events/${id}`, data),
+    deleteEvent: (id) => api.delete(`/events/${id}`),
+    registerForEvent: (id) => api.post(`/events/${id}/register`),
+    unregisterFromEvent: (id) => api.delete(`/events/${id}/register`),
+    getEventAttendees: (id) => api.get(`/events/${id}/attendees`)
 };
 
 export default api;

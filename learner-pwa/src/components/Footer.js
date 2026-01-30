@@ -47,10 +47,19 @@ function Footer() {
                         <Col md={3}>
                             <h6 className="mb-3">Quick Links</h6>
                             <ul className="list-unstyled">
+                                <li><a href="/courses" className="text-light text-decoration-none">📚 Courses</a></li>
+                                <li><a href="/instructors" className="text-light text-decoration-none">👨‍🏫 Instructors</a></li>
+                                <li><a href="/blog" className="text-light text-decoration-none">📝 Blog</a></li>
+                                <li><a href="/events" className="text-light text-decoration-none">📅 Events</a></li>
                                 <li><a href="/contact" className="text-light text-decoration-none">📞 Contact</a></li>
                                 <li><a href="/faq" className="text-light text-decoration-none">❓ FAQ</a></li>
-                                <li><a href="/privacy" className="text-light text-decoration-none">🔒 Privacy</a></li>
-                                <li><a href="/terms" className="text-light text-decoration-none">📋 Terms</a></li>
+                            </ul>
+                        </Col>
+                        <Col md={3}>
+                            <h6 className="mb-3">Legal</h6>
+                            <ul className="list-unstyled">
+                                <li><a href="/privacy" className="text-light text-decoration-none">🔒 Privacy Policy</a></li>
+                                <li><a href="/terms" className="text-light text-decoration-none">📋 Terms of Service</a></li>
                             </ul>
                         </Col>
                         <Col md={3}>

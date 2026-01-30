@@ -1,0 +1,145 @@
+.blog-page {
+  min-height: 100vh;
+}
+
+.blog-hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.featured-post {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.featured-card {
+  border: none;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.featured-card:hover {
+  transform: translateY(-5px);
+}
+
+.featured-image,
+.featured-image-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  object-fit: cover;
+}
+
+.featured-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filters-section {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.blog-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  overflow: hidden;
+}
+
+.blog-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.blog-image-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 60%; /* 5:3 Aspect Ratio */
+  overflow: hidden;
+}
+
+.blog-image,
+.blog-image-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.blog-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blog-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tags .badge {
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .blog-hero .display-4 {
+    font-size: 2rem;
+  }
+
+  .blog-hero .lead {
+    font-size: 1rem;
+  }
+
+  .featured-image,
+  .featured-image-placeholder {
+    min-height: 250px;
+  }
+
+  .featured-card .h3 {
+    font-size: 1.5rem;
+  }
+
+  .filters-section .col-md-1 {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+/* Pagination styling */
+.pagination {
+  margin-bottom: 0;
+}
+
+.pagination .page-link {
+  color: #667eea;
+  border-color: #dee2e6;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #667eea;
+  border-color: #667eea;
+}
+
+.pagination .page-link:hover {
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+  color: #667eea;
+}
+
+/* Loading skeleton */
+.blog-card-skeleton {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

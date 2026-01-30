@@ -13,6 +13,9 @@ function AdminLayout() {
         { path: '/admin', label: 'Dashboard', icon: '📊' },
         { path: '/admin/users', label: 'Users', icon: '👥' },
         { path: '/admin/modules', label: 'Modules', icon: '📚' },
+        { path: '/admin/instructors', label: 'Instructors', icon: '👨‍🏫' },
+        { path: '/admin/blog', label: 'Blog', icon: '📝' },
+        { path: '/admin/events', label: 'Events', icon: '📅' },
         { path: '/admin/analytics', label: 'Analytics', icon: '📈' },
         { path: '/admin/settings', label: 'Settings', icon: '⚙️' }
     ];

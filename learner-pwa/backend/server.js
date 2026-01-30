@@ -54,6 +54,9 @@ const economicSurveyRoutes = require('./routes/economicSurvey');
 const researchAssessmentRoutes = require('./routes/researchAssessment');
 const competencyRoutes = require('./routes/competency');
 const learningPathwayRoutes = require('./routes/learningPathway');
+const instructorRoutes = require('./routes/instructors');
+const blogRoutes = require('./routes/blog');
+const eventRoutes = require('./routes/events');
 const eventTrackingService = require('./services/research/EventTrackingService');
 // const contentDiagnosticsRoutes = require('./routes/contentDiagnostics'); // Temporarily disabled
 
@@ -174,6 +177,9 @@ app.use(`/api/${API_VERSION}/economic-surveys`, economicSurveyRoutes);
 app.use(`/api/${API_VERSION}/research-assessments`, researchAssessmentRoutes);
 app.use(`/api/${API_VERSION}/competency`, competencyRoutes);
 app.use(`/api/${API_VERSION}/learning-pathway`, learningPathwayRoutes);
+app.use(`/api/${API_VERSION}/instructors`, instructorRoutes);
+app.use(`/api/${API_VERSION}/blog`, blogRoutes);
+app.use(`/api/${API_VERSION}/events`, eventRoutes);
 app.use(`/api/${API_VERSION}/upload`, require('./routes/upload'));
 // app.use(`/api/${API_VERSION}/content-diagnostics`, contentDiagnosticsRoutes); // Temporarily disabled
 app.use(`/api/${API_VERSION}`, coursesRoutes);

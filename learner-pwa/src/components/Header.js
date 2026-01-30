@@ -31,6 +31,12 @@ function Header() {
 
     const navItems = [
         { path: '/', label: t('nav.home'), hideWhenAuth: true }, // Hide Home when authenticated
+        { path: '/about', label: t('nav.about') },
+        { path: '/courses', label: 'Courses' },
+        { path: '/instructors', label: 'Instructors' },
+        { path: '/blog', label: 'Blog' },
+        { path: '/events', label: 'Events' },
+        { path: '/pricing', label: 'Pricing' },
         { path: '/dashboard', label: t('nav.dashboard'), authRequired: true },
         { path: '/learning', label: t('nav.learning'), authRequired: true },
         { path: '/certificates', label: t('nav.certificates'), authRequired: true },
