@@ -9,9 +9,16 @@ const generateToken = (id) => {
     if (!process.env.JWT_SECRET) {
         throw new Error('JWT_SECRET is not defined in environment variables');
     }
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRE || '30d'
-    });
+    
+    // Parse JWT_EXPIRE to ensure it's in the correct format
+    // JWT library expects: '30d', '7d', '24h', '60m', etc.
+    const expiresIn = process.env.JWT_EXPIRE || '30d';
+    
+    return jwt.sign(
+        { id }, 
+        process.env.JWT_SECRET, 
+        { expiresIn }
+    );
 };
 
 /**
